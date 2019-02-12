@@ -1,0 +1,20 @@
+// CoreBar schema file
+
+namespace mts;
+
+table CoreBar {
+  endTicksSinceEpoch	:long;			//end time
+  openPrice					:double;
+  highPrice					:double;
+  lowPrice					:double;
+  closePrice				:double;
+  volume					:long; //TODO check double
+  turnover					:double;		//vwap=turnover/volume/volumeMultiple
+  openInterest			:double;
+  fairPrice					:double;		//last
+  midPrice					:double;		//last
+  spread						:double;		//last
+  bidAskDepth			:int;				//last
+}
+
+root_type CoreBar;
