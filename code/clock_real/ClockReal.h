@@ -1,3 +1,17 @@
+/*****************************************************************************
+* Copyright [2018-2019] [3fellows]
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*  http://www.apache.org/licenses/LICENSE-2.0
+*
+*  Unless required by applicable law or agreed to in writing, software
+*  distributed under the License is distributed on an "AS IS" BASIS,
+*  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*  See the License for the specific language governing permissions and
+*  limitations under the License.
+*****************************************************************************/
 #pragma once
 #include "base/DateTime.h"
 #include "mts_core/Clock.h"
@@ -34,7 +48,7 @@ namespace mts
 		virtual QObject* doCreateTimer(int id, qint64 beginTicks, int interval, TimerCallback*) override;
 		virtual bool doDestroyTimer(QObject*) override;
 
-		// Í¨¹ý Clock ¼Ì³Ð
+		// Í¨ï¿½ï¿½ Clock ï¿½Ì³ï¿½
 		virtual bool initialize(const QVariantMap & params) override;
 	};
 
