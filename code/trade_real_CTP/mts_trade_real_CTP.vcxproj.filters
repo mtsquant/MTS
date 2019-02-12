@@ -1,0 +1,251 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;cxx;c;def</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h</Extensions>
+    </Filter>
+    <Filter Include="Form Files">
+      <UniqueIdentifier>{99349809-55BA-4b9d-BF79-8FDBB0286EB3}</UniqueIdentifier>
+      <Extensions>ui</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{D9D6E242-F8AF-46E4-B9FD-80ECBC20BA3E}</UniqueIdentifier>
+      <Extensions>qrc;*</Extensions>
+      <ParseFiles>false</ParseFiles>
+    </Filter>
+    <Filter Include="Generated Files">
+      <UniqueIdentifier>{71ED8ED8-ACB9-4CE9-BBE1-E00B30144E11}</UniqueIdentifier>
+      <Extensions>moc;h;cpp</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\Debug">
+      <UniqueIdentifier>{88bc515b-b6a2-4fd7-852a-af77b055d7cf}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\Release">
+      <UniqueIdentifier>{da0e225e-8331-4e8d-afb3-937f0829d568}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\DebugWithTest">
+      <UniqueIdentifier>{b90affa7-e29a-4165-862b-a05cb023ce95}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+    <Filter Include="Generated Files\ReleaseWithTest">
+      <UniqueIdentifier>{55fa9172-b5cb-46c9-bc17-55d17be7a132}</UniqueIdentifier>
+      <Extensions>cpp;moc</Extensions>
+      <SourceControlFiles>False</SourceControlFiles>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AbstractAction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\DebugWithTest\moc_AbstractAction.cpp">
+      <Filter>Generated Files\DebugWithTest</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_AbstractAction.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\ReleaseWithTest\moc_AbstractAction.cpp">
+      <Filter>Generated Files\ReleaseWithTest</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_AbstractAction.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="CTPCancelOrderField.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CTPInputOrderField.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="CTPOrderMgr.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\DebugWithTest\moc_CTPOrderMgr.cpp">
+      <Filter>Generated Files\DebugWithTest</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_CTPOrderMgr.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\ReleaseWithTest\moc_CTPOrderMgr.cpp">
+      <Filter>Generated Files\ReleaseWithTest</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_CTPOrderMgr.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="CTPTradeClientBase.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\DebugWithTest\moc_CTPTradeClientBase.cpp">
+      <Filter>Generated Files\DebugWithTest</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_CTPTradeClientBase.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\ReleaseWithTest\moc_CTPTradeClientBase.cpp">
+      <Filter>Generated Files\ReleaseWithTest</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_CTPTradeClientBase.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="mts_trade_real.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="OrderIdImplCtp.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="QueryFillAction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\DebugWithTest\moc_QueryFillAction.cpp">
+      <Filter>Generated Files\DebugWithTest</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_QueryFillAction.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\ReleaseWithTest\moc_QueryFillAction.cpp">
+      <Filter>Generated Files\ReleaseWithTest</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_QueryFillAction.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="QueryInstrumentAction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\DebugWithTest\moc_QueryInstrumentAction.cpp">
+      <Filter>Generated Files\DebugWithTest</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_QueryInstrumentAction.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\ReleaseWithTest\moc_QueryInstrumentAction.cpp">
+      <Filter>Generated Files\ReleaseWithTest</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_QueryInstrumentAction.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="QueryOrderAction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\DebugWithTest\moc_QueryOrderAction.cpp">
+      <Filter>Generated Files\DebugWithTest</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_QueryOrderAction.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\ReleaseWithTest\moc_QueryOrderAction.cpp">
+      <Filter>Generated Files\ReleaseWithTest</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_QueryOrderAction.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="QueryPositionAction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\DebugWithTest\moc_QueryPositionAction.cpp">
+      <Filter>Generated Files\DebugWithTest</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_QueryPositionAction.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\ReleaseWithTest\moc_QueryPositionAction.cpp">
+      <Filter>Generated Files\ReleaseWithTest</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_QueryPositionAction.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="QuerySettlementInfoAction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\DebugWithTest\moc_QuerySettlementInfoAction.cpp">
+      <Filter>Generated Files\DebugWithTest</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_QuerySettlementInfoAction.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\ReleaseWithTest\moc_QuerySettlementInfoAction.cpp">
+      <Filter>Generated Files\ReleaseWithTest</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_QuerySettlementInfoAction.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="QueryTradingAccountAction.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\DebugWithTest\moc_QueryTradingAccountAction.cpp">
+      <Filter>Generated Files\DebugWithTest</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_QueryTradingAccountAction.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\ReleaseWithTest\moc_QueryTradingAccountAction.cpp">
+      <Filter>Generated Files\ReleaseWithTest</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_QueryTradingAccountAction.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
+    <ClCompile Include="TradeReal.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="AbstractAction.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="CTPOrderMgr.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="CTPTradeClientBase.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="QueryFillAction.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="QueryInstrumentAction.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="QueryOrderAction.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="QueryPositionAction.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="QuerySettlementInfoAction.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+    <CustomBuild Include="QueryTradingAccountAction.h">
+      <Filter>Header Files</Filter>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="CTPCancelOrderField.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CTPInputOrderField.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="OrderIdImplCtp.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="QueryAction.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="trade_real_api.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TradeEvent.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TradeReal.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
