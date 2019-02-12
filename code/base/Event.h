@@ -12,15 +12,38 @@
 *  See the License for the specific language governing permissions and
 *  limitations under the License.
 *****************************************************************************/
-#ifndef BASE_GLOBAL_H
-#define BASE_GLOBAL_H
+#pragma once
+#include <QtCore/QSharedPointer>
+#include "base/base_api.h"
 
-#include <QtCore/qglobal.h>
+class BASE_API Event {
+public:
+	virtual ~Event();
+	int type() const;
+protected:
+	Event(int type);
+private:
+	const int _type;
+};
 
-#ifdef BASE_LIB
-# define BASE_API Q_DECL_EXPORT
-#else
-# define BASE_API Q_DECL_IMPORT
-#endif
+typedef QSharedPointer<Event>  EventPtr;
 
-#endif // BASE_GLOBAL_H
+
+template<class _Ty,int _EvtType>
+class DataEvent :public Event {
+public:
+	DataEvent(const _Ty& data) 
+		:Event(_EvtType), _data(data)
+	{
+	}
+	virtual ~DataEvent() {
+
+	}
+
+	_Ty data() const {
+		return _data;
+	}
+private:
+	_Ty  _data;
+};
+

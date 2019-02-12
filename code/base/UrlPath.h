@@ -12,15 +12,34 @@
 *  See the License for the specific language governing permissions and
 *  limitations under the License.
 *****************************************************************************/
-#ifndef BASE_GLOBAL_H
-#define BASE_GLOBAL_H
+#pragma once
+#include <QtCore/QString>
 
-#include <QtCore/qglobal.h>
+#include <QtCore/QVariantMap>
+#include "base/base_api.h"
 
-#ifdef BASE_LIB
-# define BASE_API Q_DECL_EXPORT
-#else
-# define BASE_API Q_DECL_IMPORT
-#endif
+class BASE_API UrlPath
+{
+public:
+	UrlPath();
+	UrlPath(const QString& url);
+	~UrlPath();
 
-#endif // BASE_GLOBAL_H
+	QString schema () const;
+	bool isValid () const;
+	QString toString () const;
+	QString userName () const;
+	QString password () const;
+
+	QString setUserPassword(const QString& user, const QString& password);
+	QString clearUserPassword();
+	QString toLocalPath () const;
+	QVariantMap queryItems () const;
+
+	bool operator==( const UrlPath& ) const;
+
+	static UrlPath fromLocalPath(const QString&);
+private:
+	QString _url;
+};
+

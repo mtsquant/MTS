@@ -1,3 +1,17 @@
+/*****************************************************************************
+* Copyright [2018-2019] [3fellows]
+*
+* Licensed under the Apache License, Version 2.0 (the "License");
+* you may not use this file except in compliance with the License.
+* You may obtain a copy of the License at
+*  http://www.apache.org/licenses/LICENSE-2.0
+*
+*  Unless required by applicable law or agreed to in writing, software
+*  distributed under the License is distributed on an "AS IS" BASIS,
+*  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+*  See the License for the specific language governing permissions and
+*  limitations under the License.
+*****************************************************************************/
 
 /*****************************************************************************
 * Copyright [2018] [3fellows]
@@ -23,12 +37,12 @@
 
 
 #define CURRENCY_ID_ENUM(declare) \
-	declare(CURRENCY_UNKNOWN , "UNKNOWN", "ÎÞÐ§±ÒÖÖ") \
-	declare(CURRENCY_CNY , "CNY", "ÈËÃñ±Ò") \
-	declare(CURRENCY_USD , "USD", "ÃÀÔª")	\
-	declare(CURRENCY_HKD , "HKD", "¸ÛÔª")	\
+	declare(CURRENCY_UNKNOWN , "UNKNOWN", "ï¿½ï¿½Ð§ï¿½ï¿½ï¿½ï¿½") \
+	declare(CURRENCY_CNY , "CNY", "ï¿½ï¿½ï¿½ï¿½ï¿½") \
+	declare(CURRENCY_USD , "USD", "ï¿½ï¿½Ôª")	\
+	declare(CURRENCY_HKD , "HKD", "ï¿½ï¿½Ôª")	\
 	declare(CURRENCY_EUR , "EUR", "Å·Ôª")	\
-	declare(CURRENCY_GBP , "GBP", "Ó¢°÷") 
+	declare(CURRENCY_GBP , "GBP", "Ó¢ï¿½ï¿½") 
 
 enum CurrencyId { CURRENCY_ID_ENUM(SELECT_1_AND_COMMA_IN_3) CURRENCY_MAX };
 

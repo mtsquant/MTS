@@ -12,15 +12,37 @@
 *  See the License for the specific language governing permissions and
 *  limitations under the License.
 *****************************************************************************/
-#ifndef BASE_GLOBAL_H
-#define BASE_GLOBAL_H
+#pragma once
+#include <QtCore/QString>
+#include <QtCore/QObject>
+#include "base/base_api.h"
+#ifdef _WIN32
+#include <windows.h>
 
-#include <QtCore/qglobal.h>
+class BASE_API Library
+{
+public:
+	Library ( QObject *parent = Q_NULLPTR );
+	Library(const QString &fileName, QObject *parent = Q_NULLPTR);
+	~Library();
 
-#ifdef BASE_LIB
-# define BASE_API Q_DECL_EXPORT
+	QString errorString() const;
+	QString fileName() const;
+	bool isLoaded() const;
+	bool load();
+	QFunctionPointer resolve(const char* symbol);
+	void setFileName(const QString&);
+	bool unload ();
+
+private:
+	QString _fileName;
+	QString _errorString;
+	HMODULE _dllHandle;
+};
+
 #else
-# define BASE_API Q_DECL_IMPORT
-#endif
+#include <QtCore/QLibrary>
 
-#endif // BASE_GLOBAL_H
+typedef QLibrary Library;
+
+#endif

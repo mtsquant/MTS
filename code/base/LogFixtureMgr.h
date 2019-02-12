@@ -12,15 +12,22 @@
 *  See the License for the specific language governing permissions and
 *  limitations under the License.
 *****************************************************************************/
-#ifndef BASE_GLOBAL_H
-#define BASE_GLOBAL_H
+#pragma once
+#include <QtCore/QString>
+#include <QtCore/QHash>
+#include <QtCore/QMutex>
 
-#include <QtCore/qglobal.h>
-
-#ifdef BASE_LIB
-# define BASE_API Q_DECL_EXPORT
-#else
-# define BASE_API Q_DECL_IMPORT
-#endif
-
-#endif // BASE_GLOBAL_H
+class LogFixtureMgr
+{
+public:
+	static LogFixtureMgr* instance(const QString& logPath = QString());
+	FILE* getLogFile();
+	FILE* getLogFile(const QString& prefix);
+	bool closeLogFile(const QString& prefix);
+private:
+	LogFixtureMgr(const QString& logPath);
+	QMutex _mutex;
+	const QString _logPath;
+	QHash<QString, FILE*> _logFiles;
+	FILE* _defaultLogFile;
+};

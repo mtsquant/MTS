@@ -1,0 +1,5 @@
+<RCC>
+    <qresource prefix="/date">
+        <file alias="date_time_zonespec.csv">Resources/date_time_zonespec.csv</file>
+    </qresource>
+</RCC>

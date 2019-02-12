@@ -12,15 +12,35 @@
 *  See the License for the specific language governing permissions and
 *  limitations under the License.
 *****************************************************************************/
-#ifndef BASE_GLOBAL_H
-#define BASE_GLOBAL_H
+#pragma once
+#include <QtCore/QMutex>
+#include <QtCore/QMutexLocker>
+#include <QtCore/QList>
+#include "Event.h"
 
-#include <QtCore/qglobal.h>
 
-#ifdef BASE_LIB
-# define BASE_API Q_DECL_EXPORT
-#else
-# define BASE_API Q_DECL_IMPORT
-#endif
+//EventQueue for multi-writers and single reader
+class BASE_API EventQueue 
+{
+public:
+	EventQueue();
+	~EventQueue();
 
-#endif // BASE_GLOBAL_H
+	static EventQueue* defaultQueue();
+
+	//just push threads call the push()
+	void  push(const EventPtr& evt);
+
+	//the following functions shoule be called by pop thread
+	EventPtr pop();
+	bool isEmpty() const;
+
+private:
+	QList<EventPtr>  _pushedQueue;
+	QList<EventPtr>  _popedQueue;
+	mutable QMutex _mutex;
+
+
+
+};
+

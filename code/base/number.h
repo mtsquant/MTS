@@ -12,15 +12,7 @@
 *  See the License for the specific language governing permissions and
 *  limitations under the License.
 *****************************************************************************/
-#ifndef BASE_GLOBAL_H
-#define BASE_GLOBAL_H
+#pragma once
 
-#include <QtCore/qglobal.h>
-
-#ifdef BASE_LIB
-# define BASE_API Q_DECL_EXPORT
-#else
-# define BASE_API Q_DECL_IMPORT
-#endif
-
-#endif // BASE_GLOBAL_H
+#define Nan -99999
+#define isNan(v) (v==Nan)

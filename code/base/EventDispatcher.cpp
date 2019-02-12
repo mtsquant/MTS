@@ -12,15 +12,29 @@
 *  See the License for the specific language governing permissions and
 *  limitations under the License.
 *****************************************************************************/
-#ifndef BASE_GLOBAL_H
-#define BASE_GLOBAL_H
+#include "EventDispatcher.h"
+#include "EventQueue.h"
 
-#include <QtCore/qglobal.h>
 
-#ifdef BASE_LIB
-# define BASE_API Q_DECL_EXPORT
-#else
-# define BASE_API Q_DECL_IMPORT
-#endif
+EventDispatcher::EventDispatcher(EventQueue* queue)
+	:NotifiableObserver<EventCallback, EventPtr>(&EventCallback::onEvent),_queue(queue)
+{
+}
 
-#endif // BASE_GLOBAL_H
+
+EventDispatcher::~EventDispatcher() {
+}
+
+EventDispatcher * EventDispatcher::defaultDispatcher() {
+	static EventDispatcher dispatcher(EventQueue::defaultQueue());
+	return &dispatcher;
+}
+
+int EventDispatcher::processEvents() {
+	int i = 0;
+	while (EventPtr evt = _queue->pop()) {
+		this->notifyAll(evt);
+		++i;
+	}
+	return i;
+}
