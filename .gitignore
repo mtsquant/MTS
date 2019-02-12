@@ -30,3 +30,11 @@
 *.exe
 *.out
 *.app
+code/.vs/mts_opensrc/v14/.suo
+*.user
+
+GeneratedFiles/
+x64/
+build/
+*.db
+*.test.cpp
