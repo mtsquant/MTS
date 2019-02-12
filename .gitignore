@@ -38,3 +38,4 @@ x64/
 build/
 *.db
 *.test.cpp
+code/base/PerfTest.h
