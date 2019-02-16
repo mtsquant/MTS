@@ -1,0 +1,34 @@
+{
+	"*":{
+		"order_size_limit_open": 1000,
+		"order_size_limit_close": 1000,
+		"order_amount_limit_open": 100000,
+		"order_amount_limit_close": 10000000,
+		"pos_long_soft_limit":3500,
+		"pos_long_hard_limit":4000,
+		"pos_short_soft_limit":3500,
+		"pos_short_hard_limit":4000,
+		"account_margin_soft_limit_rate":80.0,
+		"account_margin_hard_limit_rate":100.0
+	},
+	"ag":{
+		"order_size_limit_open": 1000,
+		"order_size_limit_close": 1000,
+		"order_amount_limit_open": 100000,
+		"order_amount_limit_close": 10000000,
+		"pos_long_soft_limit":150,
+		"pos_long_hard_limit":200,
+		"pos_short_soft_limit":150,
+		"pos_short_hard_limit":200
+	},
+	"ag1801":{
+		"order_size_limit_open": 100,
+		"order_size_limit_close": 1000,
+		"order_amount_limit_open": 100000,
+		"order_amount_limit_close": 10000000,
+		"pos_long_soft_limit":150,
+		"pos_long_hard_limit":200,
+		"pos_short_soft_limit":150,
+		"pos_short_hard_limit":200
+	}
+}
