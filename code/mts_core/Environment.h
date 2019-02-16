@@ -14,7 +14,6 @@
 *  limitations under the License.
 *****************************************************************************/
 #pragma once
-//#include "TickSrc.h"
 #include <QtCore/QLibrary>
 #include <QtCore/QThread>
 #include "enums.h"
@@ -22,10 +21,8 @@
 #include "Clock.h"
 #include "Feeds.h"
 #include "Trade.h"
-//#include "mts_core/EventLoopRunner.h"
 #include "StrategyInterface.h"
 #include "mts_core/OrderId.h"
-//#include "MtsMode.h"
 
 namespace mts
 {
@@ -41,17 +38,12 @@ namespace mts
 		bool load(EnvironmentMode,  const QString& libraryPath); //根据mode来load不同的component dll
 		bool initialize(FeedsCallback*, TradeCallback*, AccountCallback* ,const QVariantMap & params);
 	public:
-		//QString name() const;
-		//MtsMode* mode() const;
 		QString libraryPath()const;
 		EnvironmentMode mode() const;
 		bool isCurrentMainThread() const;
 		bool isCurrentMtsThread() const;
 		mts::OrderId genOrderReferenceId(int strategyId/*1-9*/,int orderType, const InstrumentId& instrumentId) const;
 		bool isCurrentInstanceInstanceId(int instanceId) const;
-		//static bool isStrategyReferenceId ( qint64 referenceId , int strategyId );
-		//static int parseStrategyId ( qint64 referenceId );
-		//static int parseOrderType(qint64 referenceId);
 		int instanceId()const;
 		int strategyPosCheck() const;
 
@@ -59,9 +51,7 @@ namespace mts
 		Clock*	clock() const;
 		Feeds*	feeds() const;
 		Trade*	trade() const;
-		//EventLoopRunner* eventLoopRunner() const;
 
-		//utility 
 		DateTime now() const {
 			assert(isValid());
 			return clock()->now();
@@ -82,7 +72,6 @@ namespace mts
 		Clock* 	_clock;
 		Feeds* 	_feeds;
 		Trade* 	_trade;
-		//EventLoopRunner* _eventLoopRunner;
 		int _instanceId;
 		int _strategyPosCheck;
 	};

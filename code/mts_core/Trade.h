@@ -27,7 +27,6 @@ namespace mts
 {
 
 	class TradeNotifier;
-	//统一交易接口
 	class MTS_CORE_API TradeBase:public Component
 	{
 	public:
@@ -38,7 +37,6 @@ namespace mts
 		virtual bool isMtsOrder(const QString& idStr) = 0;
 
 		virtual int addCallback(TradeCallback*)=0;
-		//virtual bool removeCallback(TradeCallback*)=0;
 
 		virtual bool sendOrderNewAction(OrderActionNew*) = 0;
 		virtual bool sendOrderCancelAction(OrderActionCancel*) = 0;
@@ -55,7 +53,6 @@ namespace mts
 		virtual ~Trade();
 
 		virtual int addCallback(TradeCallback*) override;
-		//virtual bool removeCallback(TradeCallback*) override;
 
 	protected Q_SLOTS:
 		void notifyAll(mts::OrderReportNewDone*);

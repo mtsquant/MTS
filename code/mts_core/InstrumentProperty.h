@@ -57,7 +57,6 @@ namespace mts
 
 		bool isNull () const;
 
-		//MemberMethodDefine(InstrumentId, instrumentId, setInstrumentId);
 		const InstrumentId& instrumentId() const {
 			return _instrumentId;
 		}
@@ -85,7 +84,6 @@ namespace mts
 		InstrumentId _instrumentId;
 	};
 
-	//FUT related
 	class MTS_CORE_API InstrumentProperty :public InstrumentBaseProperty
 	{
 	public:

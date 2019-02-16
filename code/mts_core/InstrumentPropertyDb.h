@@ -52,7 +52,6 @@ namespace mts
 
 		mutable QMutex _locker;
 		InstrumentPropertySet  _instrumentProperties;
-		//QSet<InstrumentId> _seriesInstruments;
 		SymPropertySet   _symbolProperties;
 		SymPropertySet   _mtsSymbolProperties; //mts format symbol (AByyyy) , 品种大小，年份月份采用四位表示
 	};

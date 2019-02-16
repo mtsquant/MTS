@@ -32,7 +32,6 @@ Q_SIGNALS:
 	void responseQueryPositions(const QList<CThostFtdcInvestorPositionField>& positions);
 
 public:
-	///请求查询投资者持仓
 	virtual void OnRspQryInvestorPosition(CThostFtdcInvestorPositionField *pInvestorPosition, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) override {
 		this->onResponse(pInvestorPosition, pRspInfo, bIsLast);
 	}

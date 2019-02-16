@@ -32,7 +32,6 @@ namespace mts {
 		: InstrumentObject(action.instrumentId()), _type(action._type)
 	{
 		_accountId=action._accountId;
-		//_instumentId = action._instumentId;
 		_book = action._book;
 		_tradingDay = action._tradingDay;
 		_createTicksSinceEpoch = action._createTicksSinceEpoch;
@@ -50,10 +49,6 @@ namespace mts {
 		return _accountId;
 	}
 
-	//const InstrumentId& OrderAction::instrumentId() const
-	//{
-	//	return _instumentId;
-	//}
 
 	char OrderAction::type() const
 	{
@@ -80,10 +75,6 @@ namespace mts {
 		_accountId = id;
 	}
 
-	//void OrderAction::setInstrumentId(const InstrumentId& id)
-	//{
-	//	_instumentId = id;
-	//}
 
 	void OrderAction::setBook(int bk)
 	{
@@ -129,7 +120,6 @@ namespace mts {
 	{
 		return _perfNote;
 	}
-	//====================================
 	OrderActionNew::OrderActionNew(char type)
 		:OrderAction(type), _orderType(int(OT_DIRECT)), _priceType(PriceType::PRICE_LIMIT),
 		_condition(TimeCondition::TC_UNKNOWN), _offset(CombOffsetFlag::OF_UNKNOWN), _side(DirectionSide::D_UNKNOWN),
@@ -334,7 +324,6 @@ namespace mts {
 		jsonObj.insert("directionSide", directionSideName(this->directionSide()));
 		jsonObj.insert("offsetFlag", combOffsetFlagName(this->offsetFlag()));
 		jsonObj.insert("timeCondition", timeConditionName(this->timeCondition()));
-		//jsonObj.insert("orderType", orderTypeName(this->orderType()));
 		jsonObj.insert("createSrc", this->createSrc());
 		jsonObj.insert("referenceId", this->referenceId().toString());
 		jsonObj.insert ( "strategyId" , this->strategyId () );
@@ -347,7 +336,6 @@ namespace mts {
 							.arg(this->price()).arg(this->volume())
 		);
 	}
-	//=======================================
 	OrderActionCancel::OrderActionCancel()
 		:OrderActionNew(OrderStatus::OS_CANCEL_REQUEST)
 	{
@@ -359,16 +347,8 @@ namespace mts {
 
 	}
 
-	////========================================
-	//OrderActionReplace::OrderActionReplace()
-	//	:OrderActionNew(OrderStatus::OS_REPLACE_REQUEST)
-	//{
 
-	//}
 
-	//OrderActionReplace::~OrderActionReplace()
-	//{
 
-	//}
 
 }

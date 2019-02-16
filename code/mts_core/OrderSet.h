@@ -26,7 +26,6 @@ namespace mts {
 	class Trade;
 	class Order;
 
-	//all functions will be called in the main thread, so the class does not need any mutex
 	class MTS_CORE_API OrderSet
 	{
 	public:

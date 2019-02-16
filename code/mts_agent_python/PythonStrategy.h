@@ -56,9 +56,6 @@ using namespace boost;
 namespace np=boost::python::numpy;
 #endif
 
-//PythonStrategy 包装类，
-//此类实现StrategyInterface接口获得主线程回调并通知python 脚本
-//Python 脚本通过调用此类的方法实现交易指令
 
 using namespace mts;
 
@@ -70,7 +67,6 @@ public:
 	PythonStrategy(const std::string& name,int strategyId, const std::string& strategyPath = std::string());
 	virtual ~PythonStrategy();
 
-	//request - 此类方法调用后，异步发送到MTS 线程。其结果会有MTS线程异步通知回调（通过ScriptNotifyInterface）
 
 	static bool initialize(dict params);
 	static bool initialize(const std::string& paramsJsonFile);
@@ -89,7 +85,6 @@ public:
 	bool unsubscribeQuotes(list symbols);
 	void unsubscribeAllQuotes ();
 
-	//query - 此类方法，异步发送到MTS 线程， 然后等待结果后，直接返回结果
 	PyQuote getQuote(const std::string& symbol) const;
 
 	list getAllTradingCounts() const;
@@ -101,7 +96,6 @@ public:
 	list getAllOrderFills() const;
 
 	list getAllInstrumentSymbols() const;
-	//list getAllInstrumentMtsSymbols() const;
 
 	PyDateTime getNow() const;
 	qint64 getNowMicrosecs() const;

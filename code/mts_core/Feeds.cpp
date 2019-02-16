@@ -30,7 +30,6 @@ namespace mts
 
 	Feeds::Feeds() 
 		:FeedsBase()
-		//,NotifiableObserver<FeedsCallback, Quote*>(&FeedsCallback::onQuoteUpdate)
 	{
 	}
 
@@ -80,15 +79,6 @@ namespace mts
 		return true;
 	}
 
- //   bool Feeds::destroyCallback(int id) {
-	//	if (id > _callbacks.size() || id <= 0) {
-	//		return false;
-	//	}
-	//	auto cb = _callbacks[id - 1];
-	//	delete cb;
-	//	_callbacks[id - 1] = nullptr;
-	//	return true;
-	//}
 
 	void Feeds::onBusinessDateChanged(int businessDate) {
 		for (int i = 0, size = _callbacks.size(); i < size; ++i) {

@@ -32,14 +32,12 @@ namespace mts {
 		virtual ~OrderAction();
 
 		const TradingAccountId& tradingAccountId()const;
-		//const InstrumentId& instrumentId()const;
 		char type()const;
 		int book() const;
 		int tradingDay()const;
 		qint64 createTicksSinceEpoch()const;
 
 		void setTradingAccountId(const TradingAccountId&);
-		//void setInstrumentId(const InstrumentId&);
 		void setBook(int);
 		void setTradingDay(int);
 		void setCreateTicksSinceEpoch(qint64);
@@ -50,7 +48,6 @@ namespace mts {
 	protected:
 		const char _type;//状态类型
 		TradingAccountId _accountId;
-		//InstrumentId _instumentId;
 		int _book;
 		int _tradingDay;//交易日
 		qint64 _createTicksSinceEpoch;//创建时间

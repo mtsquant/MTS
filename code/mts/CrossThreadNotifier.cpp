@@ -93,7 +93,6 @@ namespace mts
 	}
 
 	void CrossThreadNotifier::onBusinessDateChanged(int dt) {
-		//assert(Environment::instance()->isCurrentMtsThread());
 		Q_EMIT businessDateChanged(dt);
 	}
 
@@ -103,19 +102,10 @@ namespace mts
 	}
 
 	Qt::ConnectionType CrossThreadNotifier::connectionType() const {
-		//return Environment::instance()->mode()->threadConnectionType();
-		//in real mode , all callback will be call by queued
-		//in simu mode , all callback will be call by block queued for reduce 2 event loops to one event loop (mts thread event loop)
-		// THINKING: does real mode use block queued mode also? if use , the nodejs plugin can not support
-		//		for c++, callback can be called all of mode (directly, block queued, queued)
-		//      for python , callback can be called both of mode (block queued , queued)
-		//      for nodejs, callback ONLY can be called of mode (queued)
-		//		NOTE: the queued mode does not support simu because we can not monitor if the 2 event loops empty
 		return (mts::Environment::instance()->mode() == ENVIR_SIMU ?
 			Qt::ConnectionType(Qt::DirectConnection | Qt::UniqueConnection) :
 			Qt::ConnectionType(Qt::QueuedConnection | Qt::UniqueConnection)
 			);
-		//return Qt::QueuedConnection;
 	}
 
 }

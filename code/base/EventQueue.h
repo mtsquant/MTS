@@ -20,7 +20,6 @@
 #include "Event.h"
 
 
-//EventQueue for multi-writers and single reader
 class BASE_API EventQueue 
 {
 public:
@@ -29,10 +28,8 @@ public:
 
 	static EventQueue* defaultQueue();
 
-	//just push threads call the push()
 	void  push(const EventPtr& evt);
 
-	//the following functions shoule be called by pop thread
 	EventPtr pop();
 	bool isEmpty() const;
 

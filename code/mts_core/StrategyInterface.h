@@ -25,9 +25,6 @@
 
 namespace mts
 {
-	//各个脚本包装库实现此接口,此接口将被在mts 线程中调用，
-	//由包装库负责通知到主线程，然后在主线程中回调脚本
-	//由于不同脚本环境通知机制不同，所以把线程通知机制放入到各个脚本包装库中
 	class StrategyInterface:public TimerCallback, public AccountCallback, public FeedsSnapshotCallback, public BarFeedsCallback, public TradeCallback
 	{
 	public:

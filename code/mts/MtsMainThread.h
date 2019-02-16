@@ -30,7 +30,6 @@ namespace mts
 		virtual bool init(const QVariantMap & params,const InitFuntorInThread& initFunInThread) ;
 		virtual void enterEventLoop() = 0;
 		virtual void exitEventLoop()=0;
-		//virtual void runEventLoopRunner() = 0;
 	protected:
 		bool initMgrs(const QVariantMap & params);
 

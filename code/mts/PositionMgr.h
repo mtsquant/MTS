@@ -28,7 +28,6 @@ namespace mts
 
 	class Position;
 	class PosInnerMgr;
-	//NOTS: the class should not be export
 	class MTS_API PositionMgr:public QObject
 	{
 		Q_OBJECT

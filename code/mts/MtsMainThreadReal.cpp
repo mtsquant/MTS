@@ -49,13 +49,10 @@ namespace mts
 		return _initDone;
 	}
 
-	//mts main function
 	void MtsMainThreadReal::run() {
 
 		_initDone = MtsMainThread::initMgrs(_params);
 		_enterEventLoopMutex.unlock();
-		//enter thread event loop, so the signal and timer can be work well
-		//this->exec();
 		auto * qtEventDispatcher = this->eventDispatcher();
 		auto * mtsEventDispatcher = EventDispatcher::defaultDispatcher();
 		while (_quitFlag == 0) {
@@ -71,18 +68,11 @@ namespace mts
 	}
 
 	void MtsMainThreadReal::exitEventLoop() {
-		//TODO: exit evt loop runner
-		//if (_evtLoopRunner) {
-		//	_evtLoopRunner->exit();
-		//}
 		this->quit();
 		_quitFlag = 1;
 		this->wait();
 	}
 
-	//void MtsMainThreadReal::runEventLoopRunner() {
-	//	assert(false);
-	//}
 
 
 

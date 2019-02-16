@@ -76,7 +76,6 @@ namespace mts
 	}
 
 
-	//main thread event loop
 	int MtsProxyBase::exec() {
 		return QCoreApplication::instance()->exec();  //environment has not be initialized yet
 	}
@@ -88,7 +87,6 @@ namespace mts
 	bool MtsProxyBase::createMtsMgrs(const QVariantMap & params) {
 		return MtsMainThread::instance(_mode)->init(params,
 			[]() {
-			//The mgrs should be initialized in the mts thread 
 			ClockMgr::instance();
 			QuoteMgr::instance();
 			OrderMgr::instance();
@@ -96,7 +94,6 @@ namespace mts
 			TradingAccountMgr::instance();
 			InstrumentPropertyDb::instance();
 			PositionMgr::instance();
-			////OrderAssistant::instance(); //TODO:it should be load dynamicly
 		});
 	}
 
@@ -116,10 +113,6 @@ namespace mts
 		QuoteMgr::instance()->setStrategy(_callback);
 		OrderMgr::instance()->setStrategy(_callback);
 		AccountMgr::instance()->setStrategy(_callback);
-		////OrderAssistant::instance()->init(
-		////	boost::bind(&OrderMgr::sendOrder, OrderMgr::instance(), _1, _2),
-		////	boost::bind(&PositionMgr::getPosition, PositionMgr::instance(), _1, GM_GET_OR_CREATE)
-		////);
 		return true;
 	}
 
@@ -161,10 +154,6 @@ namespace mts
 			return false;
 		}
 
-		////if (!loadAlgoSugs(libraryPath)) {//load algo dll
-		////	MtsMainThread::instance(_mode)->exitEventLoop();
-		////	return false;
-		////}
 
 		_callback = callbacks;// the following initialize functions will be use the _callback
 		if (!initMtsMgrs()) {
@@ -172,10 +161,6 @@ namespace mts
 			return false;
 		}
 
-		////if (!loadIndicators()) {
-		////	MtsMainThread::instance(_mode)->exitEventLoop();
-		////	return false;
-		////}
 
 		if (!startRunMtsEnvir(params)) {
 			MtsMainThread::instance(_mode)->exitEventLoop();
@@ -213,7 +198,6 @@ namespace mts
 	mts::OrderId MtsProxyBase::newOrder(OrderActionNew* orderActionNew, int orderType) {
 		mts::OrderId ret;
 		QMetaObject::invokeMethod(OrderMgr::instance(), "sendOrder", this->connectionType(),
-		////QMetaObject::invokeMethod(OrderAssistant::instance(), "sendOrder", this->connectionType(),
 			Q_RETURN_ARG(mts::OrderId, ret),
 			Q_ARG(OrderActionNew*, orderActionNew),
 			Q_ARG(int, orderType)
@@ -266,7 +250,6 @@ namespace mts
 			Q_ARG(QList<InstrumentId>, instruments)
 		);
 		if (QuoteMgr::instance()->subscribedInstrumentCount() == 0) {
-			//TODO: exit MtsMainThread::instance()->exitEventLoop(); and enter exec() .即，进入不产生genTicks 的 事件循环
 		}
 		return ret;
 	}
@@ -346,7 +329,6 @@ namespace mts
 	}
 
 	QList<Position*> MtsProxyBase::getAllPositions(int strategyId) const {
-		//GetMode mode = GM_GET;
 		QList<Position*> positions;
 		QMetaObject::invokeMethod(PositionMgr::instance(), "allPositions", this->connectionType(),
 			Q_RETURN_ARG(QList<Position*>, positions),

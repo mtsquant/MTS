@@ -75,7 +75,6 @@ protected:
 	}
 
 	virtual void OnHeartBeatWarning(int nTimeLapse) override {
-		//std::cout << "Heartbeat timeout from last :" << nTimeLapse << std::endl;
 	}
 
 
@@ -84,12 +83,10 @@ protected:
 		_isLogin = false;
 	}
 
-	///错误应答
 	virtual void OnRspError(CThostFtdcRspInfoField * pRspInfo, int nRequestID, bool bIsLast) override {
 		processRspInfoField(pRspInfo, "OnRspError");
 	}
 
-	///登录请求响应
 	virtual void OnRspUserLogin(CThostFtdcRspUserLoginField * pRspUserLogin, CThostFtdcRspInfoField * pRspInfo, int nRequestID, bool bIsLast) override {
 		if (processRspInfoField(pRspInfo, QString("login ") + _ADDRESS)) {
 			MTS_LOG("Login %s as %s, done\n", qPrintable(name()),qPrintable(_USER_ID));

@@ -42,12 +42,6 @@ public:
 	static QString toJsonString(const CThostFtdcInputOrderActionField*);
 	static QString toJsonString(const CThostFtdcOrderActionField*);
 	static QString toJsonString(const CThostFtdcInstrumentField*);
-	//static QString toString(*);
-	//static QString toString(*);
-	//static QString getFeedsFrontAddress(const QVariantMap & params, QString* feedsFrontAddress); //return error string 
-	//static QString getUserName(const QVariantMap & params,QString* userName); //return error string 
-	//static QString getBrokerId(const QVariantMap & params, QString* borkerId);
-	//static QString getPassword(const QVariantMap & params,QString* password);
 
 	static void toJson(const CThostFtdcTradingAccountField& account, QJsonObject& json);
 	static void toJson(const CThostFtdcInvestorPositionField& pos, QJsonObject& json);

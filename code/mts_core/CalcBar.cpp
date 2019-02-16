@@ -94,7 +94,6 @@ QString CalcBar::toJsonString() const {
 	barObj.insert("instrumentType", instrumentTypeName(this->instrumentId().typeId));
 	barObj.insert("exchId", exchIdName(this->instrumentId().exchId));
 	barObj.insert("interval", _interval);
-	//barObj.insert("isUpdating", _isUpdating);
 	QJsonDocument jsonDoc(barObj);
 	return jsonDoc.toJson().simplified();
 }
@@ -108,10 +107,6 @@ bool CalcBar::fromCsvString(const QString & line, QChar sep/* = ','*/) {
 	return this->_bar->fromCsvString(line.section(sep,2), sep);
 }
 
-//std::string CalcBar::toCsvString() const
-//{
-//	return this->symbol()+"," this->_bar->toCsvString().toStdString();
-//}
 
 void CalcBar::mergeFrom ( const CalcBar & bar){
 	_bar->mergeFrom ( *bar._bar );

@@ -83,7 +83,6 @@ namespace mts
 	{
 		int tradingday = Environment::instance()->clock()->currentTradingDay();
 		QFileInfoList files = QDir(_dir).entryInfoList(QDir::Files, QDir::Name);
-		//Example:20180510_1_pos.txt
 		QRegExp reg(QString("^\\d{8}_%1_pos.txt$").arg(_strategyKey));
 		QString lastFile;
 		for (auto it = files.constBegin(); it != files.constEnd(); ++it)

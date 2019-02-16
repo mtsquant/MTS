@@ -26,9 +26,6 @@
 #include <QtCore/QJsonDocument>
 #include "ctp_ext_api.h"
 
-// 包装 CTP 的 struct，
-// 把需要用的的字段包装成方法方便调用
-// 所以，不要有任何成员变量
 template<typename _CTPField>
 class CTPCommonField:public _CTPField
 {
@@ -60,15 +57,6 @@ public:
 		return this->OrderRef;
 	}
 
-	//QString toString() const {
-	//	return QString("\"BrokerID\":\"%1\",\"InvestorID\":\"%2\",\"UserID\":\"%3\",\"InstrumentID\":\"%4\",\"OrderRef\":\"%5\"")
-	//		.arg(this->brokerID())
-	//		.arg(this->investorID())
-	//		.arg(this->userID())
-	//		.arg(this->instrumentID())
-	//		.arg(this->orderRef())
-	//		;
-	//}
 
 	virtual QJsonObject toJson() const {
 		QJsonObject json;

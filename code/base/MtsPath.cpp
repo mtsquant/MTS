@@ -31,9 +31,6 @@ QString MtsPath::appDirPath() {
     return appDir;
 }
 
-//QString MtsPath::scriptDirPath() {
-//	return _scriptDirPath;
-//}
 
 QString MtsPath::mtsDirPath(bool hasColon) {
 	QString path;
@@ -58,7 +55,6 @@ QString MtsPath::mtsDirPath(bool hasColon) {
 #endif
 #endif
         if (QDir(path).entryList({ dllSuffix }, QDir::Files).isEmpty()) {
-            //QString pythonMtsLibPath = QCoreApplication::applicationDirPath() + "/Lib/mts";
             MTS_DEBUG("pythonMtsLibPath:%s\n",qPrintable(pythonMtsLibPath));
 
 			if (QDir(pythonMtsLibPath).exists()) {

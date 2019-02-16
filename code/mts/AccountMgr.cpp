@@ -45,7 +45,6 @@ namespace mts {
 	void AccountMgr::onInitialized(Account *)
 	{
 		Account account;
-		//TODO: fill instruments, pos, orders to account;
 		_notify->onInitialized(&account);
 	}
 

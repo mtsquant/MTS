@@ -44,7 +44,6 @@ namespace mts
 	private:
 		QString _id;
 	};
-    //inline
 	MTS_CORE_API uint qHash(const mts::OrderId& id);
 }
 

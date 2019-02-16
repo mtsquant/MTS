@@ -23,7 +23,6 @@
 namespace mts
 {
 
-	//class EventLoopRunner;
 	class MtsMainThreadReal :public MtsMainThread, protected QThread {
 	public:
 		MtsMainThreadReal();
@@ -31,7 +30,6 @@ namespace mts
 		virtual bool init(const QVariantMap & params, const InitFuntorInThread& initFunInThread) override;
 		virtual void enterEventLoop() override;
 		virtual void exitEventLoop() override;
-		//virtual void runEventLoopRunner() override;
 
 	private:
 		void waitForEnterEventLoop();
@@ -39,7 +37,6 @@ namespace mts
 	private:
 		virtual void run() override;
 		QMutex _enterEventLoopMutex;
-		//EventLoopRunner* _evtLoopRunner;
 		QVariantMap _params;
 		bool _initDone;
 		QAtomicInt _quitFlag;

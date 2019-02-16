@@ -20,10 +20,6 @@
 #include <boost/bind.hpp>
 #include "AbstractAction.h"
 
-//所有的CTP 的 Query 过程都几乎一样，只有qryField， rspField，qrpFunction 不同
-//采用模板参数化他们，从而让各个子类几乎不用写代码实现功能
-//其中qryField， rspField 为不同的数据结构，采用类模板，
-//而 qrpFunction 是函数指针，采用模板构造函数方式
 template<typename _CTPQryField,typename _CTPRspField>
 class QueryAction :public AbstractAction
 {
@@ -83,7 +79,6 @@ protected:
 			);
 		}
 	}
-	//qt signal 不支持模板，无法模板化signal和slot
 	virtual void emitResponseQueryResults(const QList<_CTPRspField>& results) = 0;
 protected:
 	_CTPQryField _qryField;

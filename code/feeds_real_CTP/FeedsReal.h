@@ -31,13 +31,10 @@ namespace mts
 		FeedsReal();
 		virtual ~FeedsReal();
 
-		// 通过 Feeds 继承
 		virtual bool initialize(const QVariantMap & params) override;
 
 		virtual int subscribe(const QList<InstrumentId>&)  override;
 		virtual int unsubscribe(const QList<InstrumentId>&) override;
-	//private slots:
-	//	void onQuoteUpdate(mts::QuotePtr);
 	private:
 		CTPFeedsClient* _feedsClient;
 		virtual void onEvent(const EventPtr&) override;

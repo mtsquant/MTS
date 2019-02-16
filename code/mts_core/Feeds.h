@@ -18,14 +18,12 @@
 #include <QtCore/QVariant>
 #include "Component.h"
 #include "mts_core/InstrumentId.h"
-//#include "base/NotifiableObserver.h"
 #include "FeedsCallback.h"
 #include "DateCallback.h"
 
 namespace mts
 {
 	class FeedsNotifier;
-	//统一报价接口
 	class MTS_CORE_API FeedsBase :public Component
 	{
 	public:
@@ -54,7 +52,6 @@ namespace mts
 		virtual int findCallback(FeedsCallback* cb) override;
 		virtual bool hasCallback(FeedsCallback* cb) override;
 		virtual bool removeCallback(FeedsCallback* cb) override;
-		//virtual bool destroyCallback(int id);
 
 	protected:
 		virtual void onBusinessDateChanged(int businessDate) override;

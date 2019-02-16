@@ -18,9 +18,6 @@
 #include "MtsUtils.h"
 #include <QtCore/QDir>
 
-//for windows 7 and higher ,the dll serach order has been changed, the order of current dir  is the lowest priority insteads of highest.
-// so we use the param LOAD_WITH_ALTERED_SEARCH_PATH 
-//for linux , there are not the issue
 
 Library::Library ( QObject * parent )
 {

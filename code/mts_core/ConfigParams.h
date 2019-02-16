@@ -26,7 +26,6 @@
 
 namespace mts
 {
-	//QuoteGrade >=0 means use ticks data, <0 means use bar data
 	enum QuoteGrade
 	{
 		QG_TICK						= 0,
@@ -64,7 +63,6 @@ namespace mts
 
 		QString marketTradingTimeType() const;  /*'24H' or not*/
 	protected:
-		//real,beta
 		QString brokerId(const QString& exchSession = "*") const;
 	private:
 		bool readExchParamsSection(const QVariantMap & params,const QString& exchSession);
@@ -90,14 +88,12 @@ namespace mts
 		static ConfigParams* instance();
 		static bool isInitialized();
 
-		//simu
 		int feedsBeginTime() const;
 		int beginTradingDate() const;
 		int endTradingDate() const;
 		qint64 beginUTCTicksSinceEpoch() const;
 		qint64 endUTCTicksSinceEpoch() const;
 
-		//real,beta
 		using CommonConfigParams::brokerId;
 	protected:
 		virtual bool doLoad(const QVariantMap & params) override;

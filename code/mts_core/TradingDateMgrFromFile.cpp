@@ -47,7 +47,6 @@ enum TradingTimePeriod //TODO: need to config by different exch ,now hardcode it
 enum TradingTime
 {
 	TT_DAY_BEGIN_TIME = TP_DAY_PERIOD_ROUND_BEGIN*100000,
-	//TT_NIGHT_BEGIN_TIME_BEFORE = 195959999,
 	TT_NIGHT_BEGIN_TIME = TP_NIGHT_PERIOD_ROUND_BEGIN*100000,
 	TT_END_TIME = TP_DAY_PERIOD_ROUND_END*100000
 };
@@ -81,7 +80,6 @@ namespace mts {
 
 		QString line;
 		int preDate = INVALID_DATE;
-		//int nextDate = INVALID_DATE;
 		int lastDate = INVALID_DATE;
 		bool halfTrade = false;
 		while (!file.atEnd()) {

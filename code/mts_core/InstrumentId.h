@@ -28,7 +28,6 @@ namespace mts
 		InstrumentId(const QString& symbol, InstrumentType/*, ExchId*/);
 		InstrumentId(const QString& symbol, InstrumentType type,ExchId exchId);
 		InstrumentId(const InstrumentId&, const QString& newSymbol); //use new symbol to gen an new InstrumentId
-		//InstrumentId (const InstrumentId&);
 		~InstrumentId();
 		QString symbol;//商品代码
 		InstrumentType typeId;//商品类别
@@ -43,8 +42,6 @@ namespace mts
 		static bool isContinuousSymbol(const QString& symbol);
 
 	};
-    //inline
 	MTS_CORE_API bool operator==(const InstrumentId& e1, const InstrumentId& e2);
-    //inline
 	MTS_CORE_API uint qHash(const InstrumentId& key, uint seed=0);
 }

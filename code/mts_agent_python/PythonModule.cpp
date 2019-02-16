@@ -163,7 +163,6 @@ QStringList getScriptArgv() {
 		const QString argvExp = QString("sys.argv[%1]").arg(i);
 		const std::string arg = extract<std::string>(eval(qPrintable(argvExp)));
 		argv.append(QString::fromStdString(arg));
-		//MTS_DEBUG("argv%d:%s\n", i, arg.c_str());
 	}
 	return argv;
 }
@@ -203,8 +202,6 @@ void initializePythonModule() {
 	def("isTradingDate", &isTradingDate);
 	def("nextNTradingDate", &nextNTradingDate);
 
-	//InitializeByObj ibo = &PythonStrategy::initialize;
-	//InitializeByFile ibf = &PythonStrategy::initialize;
 	def("mtsInitialize", (InitializeByObj)(&PythonStrategy::initialize));
 	def("mtsInitialize", (InitializeByFile)(&PythonStrategy::initialize));
 	def("mtsInitialize", (InitializeByFileAndObj)(&PythonStrategy::initialize));
@@ -231,15 +228,9 @@ void initializePythonModule() {
 	PythonUtil::addObject("OT_DIRECT", OT_DIRECT);
 	PythonUtil::addObject("OT_NET", OT_NET);
 	PythonUtil::addObject("OT_BOX", OT_BOX);
-	//enum_<OrderType> ( "OrderType" )
-	//	.value ( "OT_UNKNOWN" , OT_UNKNOWN )
-	//	.value ( "OT_DIRECT" , OT_DIRECT )
-	//	.value ( "OT_NET", OT_NET)
-	//	.value ("OT_BOX", OT_BOX)
 
 	;
 
-	//涓嶄粠0寮€濮嬩负浜嗚榛樿鍊兼棤鏁堬紝闃叉閬楁紡澶嶅埗鏃跺仛BUY 鎿嶄綔
 	enum_<DirectionSide>("Direction")
 		.value(directionSideName(D_UNKNOWN), D_UNKNOWN)
 		.value(directionSideName(D_BUY), D_BUY)
@@ -252,7 +243,6 @@ void initializePythonModule() {
 		.value(combOffsetFlagName(OF_UNKNOWN), OF_UNKNOWN)
 		.value(combOffsetFlagName(OF_OPEN), OF_OPEN)
 		.value(combOffsetFlagName(OF_CLOSE), OF_CLOSE)
-		//.value ( combOffsetFlagName ( OF_FORCECLOSE ) , OF_FORCECLOSE )
 		.value(combOffsetFlagName(OF_CLOSETODAY), OF_CLOSETODAY)
 		.value(combOffsetFlagName(OF_CLOSEYESTERDAY), OF_CLOSEYESTERDAY)
 		;
@@ -260,7 +250,6 @@ void initializePythonModule() {
 
 	class_<PyDateTime>("DateTime", init<qint64>())
 		.def(init<int, int>())
-		//.def (init<int, int,int,int,int>())
 		.add_property("date", &PyDateTime::date)
 		.add_property("time", &PyDateTime::time)
 		.add_property("ticksSinceMidnight", &PyDateTime::ticksSinceMidnight)
@@ -289,11 +278,8 @@ void initializePythonModule() {
 		.def("toUTC", &PyDateTime::toUTC)
 		.def("toString", &PyDateTime::toString)
 		.def(self + qint64())          // __add__
-									   //.def ( int () + self )          // __radd__
 		.def(self - self)           // __sub__
 		.def(self - qint64())          // __sub__
-									   //.def ( self += int () )         // __iadd__
-									   //.def ( self -= other<int> () )
 		.def(self < self)          // __lt__
 		.def(self > self)          // __lg__
 		.def(self >= self)
@@ -302,14 +288,8 @@ void initializePythonModule() {
 		.def(self == self)
 		.def("__str__", &PyDateTime::toString)
 		.def("__repr__", &PyDateTime::toString)
-		//.def ( str(self) )
 		;
 
-	//class_<InstrumentBaseProperty> ( "InstrumentBaseProperty" , no_init )
-	//	.def ( "volumeMultiple", &InstrumentBaseProperty::volumeMultiple/*, return_value_policy <copy_const_reference>()*/)
-	//	.def ( "priceTick" , &InstrumentBaseProperty::priceTick )
-	//	.def ( "createDate" , &InstrumentBaseProperty::createDate )
-	//	;
 	class_<PyInstrumentProperty /*, bases<InstrumentBaseProperty>*/ >("InstrumentProperty", no_init)
 		.add_property("name", &PyInstrumentProperty::pyName)
 		.add_property("symbol", &PyInstrumentProperty::pySymbol)
@@ -394,10 +374,7 @@ void initializePythonModule() {
 		.add_property("endTicksSinceEpoch", &PyBar::endTicksSinceEpoch)
 		.add_property("beginDateTime", &PyBar::pyBeginDateTime)
 		.add_property("endDateTime", &PyBar::pyEndDateTime)
-		//.add_property("tradingDay", &PyBar::tradingDay)
 		.add_property("interval", &PyBar::interval)
-		//.add_property("tickOffsetMsec", &PyBar::tickOffsetMsec)
-		//.add_property("preClosePrice", &PyBar::preClosePrice)
 		.add_property("openPrice", &PyBar::openPrice)
 		.add_property("highPrice", &PyBar::highPrice)
 		.add_property("lowPrice", &PyBar::lowPrice)
@@ -410,10 +387,7 @@ void initializePythonModule() {
 		.add_property("spread", &PyBar::spread)
 		.add_property("quoteSize", &PyBar::bidAskDepth)
 		.add_property("bidAskDepth", &PyBar::bidAskDepth)
-		//.add_property("totalValue", &PyBar::totalValue)
-		//.add_property("changeVolume", &PyBar::changeVolume)
 		.def("toString", &PyBar::toString)
-		//.def("toCsvString", &PyBar::toCsvString)
 		.def("__str__", &PyBar::toString)
 		;
 
@@ -569,7 +543,6 @@ void initializePythonModule() {
 		.add_property("priceType", &PyOrderFill::priceType)
 		.add_property("directionSide", &PyOrderFill::directionSide)
 		.add_property("offsetFlag", &PyOrderFill::offsetFlag)
-		//.add_property ( "orderType" , &PyOrderFill::orderType )
 		.add_property("createSrc", &PyOrderFill::pyCreateSrc)
 		.add_property("instanceId", &PyOrderNewDone::instanceId)
 		.add_property("strategyId", &PyOrderNewDone::strategyId)

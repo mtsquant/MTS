@@ -62,7 +62,6 @@ namespace mts
 		QString toJsonString() const;
 
 		bool fromCsvString(const QString& line, QChar sep = ',');
-		//std::string toCsvString() const;
 
 		BarPtr coreBar() const;
 
@@ -70,17 +69,10 @@ namespace mts
 		void mergeFrom ( const CalcBar& );
 	public:
 		CalcBar* clone() const;
-		//bool isUpdating() const {
-		//	return _isUpdating;
-		//}
-		//void setUpdating(bool u) {
-		//	_isUpdating = u;
-		//}
 
 		static void registerMetaType();
 	private:
 		BarPtr  _bar;
-		//bool _isUpdating;
 	};
 
 	typedef QSharedPointer<CalcBar> CalcBarPtr;

@@ -53,11 +53,7 @@ namespace mts {
 	{
 	}
 
-	//bar时间跨度，60秒，300秒等
 
-	//qint64 Bar::beginTicksSinceEpoch () const{ //开始时间
-	//	return _coreBar->endTicksSinceEpoch - _intervalSec * 1000;
-	//}
 
 	MemberBarCopyMethodImpl(qint64, endTicksSinceEpoch, setEndTicksSinceEpoch); //结束时间
 	MemberBarCopyMethodImpl(double, openPrice, setOpenPrice);//开盘价
@@ -65,7 +61,6 @@ namespace mts {
 	MemberBarCopyMethodImpl(double, lowPrice, setLowPrice);//最低价格
 	MemberBarCopyMethodImpl(double, closePrice, setClosePrice);//收盘价
 
-	//MemberBarCopyMethodImpl(double, volume, setVolume);//成交总量 //TODO check double
 	double Bar::volume() const {
 		return *((double*)(&_coreBar->volume));
 	};
@@ -93,22 +88,7 @@ namespace mts {
 		return this->turnover() / this->volume() / volumeMultiple;
 	}
 
-	//double Bar::spread() const {
-	//	int count = quoteUpdateCount();
-	//	if (count == 0) {
-	//		return 0;
-	//	}
-	//	return spreadSum() / count;
-	//}
 
-	//int Bar::quoteSize() const {
-	//	int volumeSum = quoteVolumeSum();
-	//	int updateCount = quoteUpdateCount();
-	//	if (volumeSum < 2 || updateCount == 0) {
-	//		return 0;
-	//	}
-	//	return volumeSum / 2 / updateCount;
-	//}
 
 	void Bar::mergeFrom(const Bar & bar) {
 		if (this->isEmpty()) {
@@ -128,9 +108,6 @@ namespace mts {
 			setMidPrice(bar.midPrice());
 			setBidAskDepth(bar.bidAskDepth());
 
-			//setSpreadSum(this->spreadSum() + bar.spreadSum());
-			//setQuoteVolumeSum(this->quoteVolumeSum() + bar.quoteVolumeSum());
-			//setQuoteUpdateCount(this->quoteUpdateCount() + bar.quoteUpdateCount());
 
 			_currentTotalVolume = bar._currentTotalVolume;
 		}
@@ -173,9 +150,6 @@ namespace mts {
 
 	QJsonObject  Bar::toJson() const {
 		QJsonObject barObj;
-		//barObj.insert("symbol", this->instrumentId().symbol);
-		//barObj.insert("instrumentType", instrumentTypeName(this->instrumentId().typeId));
-		//barObj.insert("exchId", exchIdName(this->instrumentId().exchId));
 		DateTime dt = DateTime(this->endTicksSinceEpoch()).toLocal();
 		barObj.insert("date", dt.date());
 		barObj.insert("time", QString::number(dt.time()));
@@ -190,9 +164,6 @@ namespace mts {
 		this->spreadToJson(barObj);
 		this->midPriceToJson(barObj);
 		this->bidAskDepthToJson(barObj);
-		//barObj.insert ( "vwap" ,  this->vwap()); 
-		//barObj.insert("spread", this->spread());
-		//barObj.insert("quoteSize", this->quoteSize());
 		return barObj;
 	}
 
@@ -278,7 +249,6 @@ namespace mts {
 	}
 
 	bool Bar::fromCsvString(const QString & line, QChar sep) {
-      //date,time,open,high,low,close,vol,turnover,openInt,fairPrice,midPrice,spread,bidAskDepth
 		QStringList secs = line.split(sep);
 		if (secs.size() < 13) {
 			MTS_ERROR("Invalid bar field size '%d'\n", secs.size());
@@ -373,7 +343,6 @@ namespace mts {
 
 	QString Bar::toCsvString() const
 	{
-		//date, time, openPrice, highPrice, lowPrice, closePrice, volume, turnover, openInterest, fairPrice, midPrice, spread, bidAskDepth
 		DateTime dt = DateTime(this->endTicksSinceEpoch()).toLocal();
 		QString str;
 		str.sprintf("%d,%d,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%lf,%d", dt.date(), dt.time(), openPrice(), highPrice(), lowPrice(), closePrice(),

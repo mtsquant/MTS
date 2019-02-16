@@ -57,8 +57,6 @@ namespace mts
 			&& priceTick.isDouble() && minOrderSize.isDouble() && orderSizeIncrement.isDouble() && createDate.isDouble())
 		{
 			auto instrumentId = mts::InstrumentId(id.toString(), mts::instrumentType(qPrintable(instrumentType.toString())), mts::exchId(qPrintable(exchangeID.toString())));
-			//QString exchShortName = mts::exchIdShortName(instrumentId.exchId);
-			//instrumentId.symbol += ("." + exchShortName);
 			this->setInstrumentId(instrumentId);
 			this->setName(name.toString());
 			this->setMtsSymbol(mtsSymbol.toString());
@@ -167,7 +165,6 @@ namespace mts
 	}
 
 
-	//================================
 	InstrumentProperty::InstrumentProperty() {
 
 	}

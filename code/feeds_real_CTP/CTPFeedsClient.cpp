@@ -45,7 +45,6 @@ void freeStringArray(char** strArray, int sz) {
 
 
 
-//
 
 CTPFeedsClient::CTPFeedsClient(const QString& address, const QString& brokerId, const QString& userId, const QString& password)
 	: CTPClientCommon<CThostFtdcMdApi, CThostFtdcMdSpi>(address, brokerId, userId, password)
@@ -85,7 +84,6 @@ void CTPFeedsClient::onDepthMarketData(CThostFtdcDepthMarketDataField * md) {
 		delete qt;
 		return;
 	}
-	//emit quoteUpdate(mts::QuotePtr(qt));
 	EventQueue::defaultQueue()->push(EventPtr(new QuoteEvent(mts::QuotePtr(qt))));
 }
 
@@ -110,7 +108,6 @@ void CTPFeedsClient::OnRspSubMarketData(CThostFtdcSpecificInstrumentField * pSpe
 }
 
 void CTPFeedsClient::OnRtnDepthMarketData(CThostFtdcDepthMarketDataField * pDepthMarketData) {
-	//std::cout << "OnRtnDepthMarketData" << std::endl;
 	onDepthMarketData(pDepthMarketData);
 }
 

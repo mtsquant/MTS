@@ -22,7 +22,6 @@
 
 namespace mts
 {
-	//All Timers generator
 	class MTS_CORE_API Clock:public Component
 	{
 	public:
@@ -46,7 +45,6 @@ namespace mts
 #ifdef MTS_UNIT_TEST
 	public:
 #endif
-		//DateTime todayTime(int tm/*hhmmzz000*/) const;
 		qint64 calcBeginUTCTicks(int beginTime, int interval) const;
 	};
 

@@ -189,12 +189,6 @@ QString CTPUtils::toJsonString(const CThostFtdcOrderField * order) {
 		<< "RelativeOrderSysID"
 		<< "ZCETotalTradedVolume"
 		<< "IsSwapOrder"
-		//<< "BranchID"
-		//<< "InvestUnitID"
-		//<< "AccountID"
-		//<< "CurrencyID"
-		//<< "IPAddress"
-		//<< "MacAddress"
 		;
 	return 	getFormatString(fieldsNames)
 		.arg(order->BrokerID)
@@ -354,9 +348,6 @@ QString CTPUtils::toJsonString(const CThostFtdcInputOrderActionField * orderActi
 		<< "VolumeChange"
 		<< "UserID"
 		<< "InstrumentID"
-		//<< "InvestUnitID"
-		//<< "IPAddress"
-		//<< "MacAddress"
 		;
 	return 	getFormatString(fieldsNames)
 		.arg(orderActionInput->BrokerID)
@@ -373,9 +364,6 @@ QString CTPUtils::toJsonString(const CThostFtdcInputOrderActionField * orderActi
 		.arg(orderActionInput->VolumeChange)
 		.arg(orderActionInput->UserID)
 		.arg(orderActionInput->InstrumentID)
-		//.arg(orderActionInput->InvestUnitID)
-		//.arg(orderActionInput->IPAddress)
-		//.arg(orderActionInput->MacAddress)
 		;
 }
 
@@ -409,10 +397,6 @@ QString CTPUtils::toJsonString(const CThostFtdcOrderActionField * orderAction) {
 		<< "UserID"
 		<< "StatusMsg"
 		<< "InstrumentID"
-		//<< "BranchID"
-		//<< "InvestUnitID"
-		//<< "IPAddress"
-		//<< "MacAddress"
 		;
 	return 	getFormatString(fieldsNames)
 		.arg(orderAction->BrokerID)
@@ -440,10 +424,6 @@ QString CTPUtils::toJsonString(const CThostFtdcOrderActionField * orderAction) {
 		.arg(orderAction->UserID)
 		.arg(MtsUtils::toUtf8(orderAction->StatusMsg).constData())
 		.arg(orderAction->InstrumentID)
-		//.arg(orderAction->BranchID)
-		//.arg(orderAction->InvestUnitID)
-		//.arg(orderAction->IPAddress)
-		//.arg(orderAction->MacAddress)
 		;
 }
 
@@ -520,46 +500,6 @@ QString CTPUtils::toJsonString(const CThostFtdcInstrumentField * instrumentField
 
 }
 
-//#include <assert.h>
-//#include "../mts_core/const.h"
-//
-//QString CTPUtils::getFeedsFrontAddress(const QVariantMap & params, QString* feedsFrontAddress) {
-//	assert(feedsFrontAddress);
-//	*feedsFrontAddress = params[REAL_FEEDS_FRONT].toString();
-//	if (feedsFrontAddress->isNull()) {
-//		return QString("Missing params '%1'").arg(REAL_FEEDS_FRONT);
-//	}
-//	return QString::null;
-//}
-//
-//QString CTPUtils::getBrokerId(const QVariantMap & params, QString * borkerId) {
-//	assert(borkerId);
-//	*borkerId = params[REAL_FEEDS_BROKER].toString();
-//	if (borkerId->isNull()) {
-//		return QString("Missing params '%1'").arg(REAL_FEEDS_BROKER);
-//	}
-//	return QString::null;
-//}
-//
-//
-//QString CTPUtils::getUserName(const QVariantMap & params, QString * userName) {
-//	assert(userName);
-//	*userName = params[REAL_FEEDS_USER].toString();
-//	if (userName->isNull()) {
-//		return QString("Missing params '%1'").arg(REAL_FEEDS_USER);
-//	}
-//	return QString::null;
-//}
-//
-//
-//QString CTPUtils::getPassword(const QVariantMap & params, QString * password) {
-//	assert(password);
-//	*password = params[REAL_FEEDS_PASSWORD].toString();
-//	if (password->isNull()) {
-//		return QString("Missing params '%1'").arg(REAL_FEEDS_PASSWORD);
-//	}
-//	return QString::null;
-//}
 
 
 
@@ -764,12 +704,6 @@ void CTPUtils::toJson(const CThostFtdcOrderField& order, QJsonObject& json)
 	json.insert("RelativeOrderSysID", order.RelativeOrderSysID);
 	json.insert("ZCETotalTradedVolume", order.ZCETotalTradedVolume);
 	json.insert("IsSwapOrder", order.IsSwapOrder);
-	//json.insert("BranchID", order.BranchID);
-	//json.insert("InvestUnitID", order.InvestUnitID);
-	//json.insert("AccountID", order.AccountID);
-	//json.insert("CurrencyID", order.CurrencyID);
-	//json.insert("IPAddress", order.IPAddress);
-	//json.insert("MacAddress", order.MacAddress);
 }
 
 void CTPUtils::toJson(const CThostFtdcTradeField& fill, QJsonObject& json)
@@ -1083,6 +1017,5 @@ bool CTPUtils::convertMarketData2Quote(CThostFtdcDepthMarketDataField * md, mts:
 	qt->setOpenInterest(md->OpenInterest);
 	qt->setTurnover(md->Turnover);
 	qt->setRevMicrosecond(DateTime::nowToUTCMicrosecsSinceEpoch());
-	//qt->setStatus(md->)
 	return true;
 }

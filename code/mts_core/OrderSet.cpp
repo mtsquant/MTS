@@ -27,8 +27,6 @@ namespace mts
 	OrderSet* OrderSet::_instance = nullptr;
 	OrderSet::OrderSet()
 	{
-		//MTS_LOG("%p\n", this);
-		//MTS_FILE("%p\n", this);
 	}
 
 	OrderSet::~OrderSet() {

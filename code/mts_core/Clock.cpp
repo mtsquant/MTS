@@ -36,15 +36,10 @@ namespace mts
 	}
 
 
-	//tm is the future time, so get the date time from the tm by now.
-	//DateTime Clock::todayTime(int tm) const{
-	//	return TradingDateMgr::instance()->nextTime(tm, this->now());
-	//}
 
 	qint64 Clock::calcBeginUTCTicks(int beginTime, int interval) const {
 		auto nowDt= this->now();
 		auto dt = TradingDateMgr::instance()->nextTime(beginTime, nowDt);
-		//auto dt = todayTime(beginTime);
 
 		auto beginUTCTicks = dt.toUTCMillisecsSinceEpoch();
 		auto nowUTCTicks = nowDt.toUTCMillisecsSinceEpoch();
@@ -99,7 +94,6 @@ namespace mts
 	}
 
 	void Clock::notifyBusinessDateChanged(int newBuseinssDate) {
-		//clear (); //TODO
 		for (int i = 0, size = _dateCallbacks.size(); i < size; ++i) {
 			_dateCallbacks[i]->onBusinessDateChanged(newBuseinssDate);
 		}

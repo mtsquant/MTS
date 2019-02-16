@@ -14,7 +14,6 @@
 *  limitations under the License.
 *****************************************************************************/
 #include "AbstractConfigParams.h"
-//#include "MtsMode.h"
 #include <QtCore/QProcessEnvironment>
 #include "base/MtsUtils.h"
 
@@ -30,7 +29,6 @@ namespace mts
 	}
 
 	bool AbstractConfigParams::load(const QVariantMap & params) {
-		//merge system environment
 		QVariantMap allParams;
 		auto envirs=QProcessEnvironment::systemEnvironment();
 		QStringList envirkeys = envirs.keys();
@@ -67,8 +65,6 @@ namespace mts
 		}
 		_strategyPosCheck = params.value(STRATEGY_POS_CHECK, 0).toInt();
 		_instanceId = params.value(INSTANCE_ID, (_mode == ENVIR_SIMU) ? 888 : -1).toInt();
-		//const int defaultInstanceId=MtsMode::getInstance(_mode)->defaultInstanceId();
-		//_instanceId = params.value(INSTANCE_ID, defaultInstanceId).toInt();
 		if (_instanceId > 0 && _instanceId <= 999) {
 			return true;
 		} else {

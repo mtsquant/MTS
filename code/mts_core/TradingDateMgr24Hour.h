@@ -24,7 +24,6 @@ namespace mts {
 		TradingDateMgr24Hour();
 		virtual ~TradingDateMgr24Hour();
 
-		// 通过 TradingDateMgr 继承
 		virtual int nextDate(int dt) const override;
 		virtual int prevDate(int dt) const override;
 		virtual int forceToDate(int dt) const override;

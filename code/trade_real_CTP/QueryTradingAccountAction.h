@@ -31,7 +31,6 @@ Q_SIGNALS:
 	void responseQueryTradingAccount(const QList<CThostFtdcTradingAccountField>& settlementInfos);
 
 public:
-	///请求查询投资者结算结果响应
 	virtual void OnRspQryTradingAccount(CThostFtdcTradingAccountField *pTradingAccount, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) override {
 		this->onResponse(pTradingAccount, pRspInfo, bIsLast);
 	}

@@ -90,7 +90,6 @@ namespace mts
 		}
 	};
 
-	//必须顺序query pos,order 
 	class MTS_CORE_API Position :public InstrumentObject {
 	public:
 		Position(const InstrumentId& id = InstrumentId());
@@ -98,9 +97,6 @@ namespace mts
 
 		bool isNull() const;
 
-		//const InstrumentId& instrumentId() const;		//合约代码
-		//const QString& symbol()const;						//合约
-		//void setInstrument(const InstrumentId& id);	//
 		double longOpenVolume() const;							//多头开盘仓位 //TODO check double
 		double shortOpenVolume() const;						//空头开盘仓位 //TODO check double
 		double longCurrentVolume() const;						//多头持仓 //TODO check double
@@ -162,7 +158,6 @@ namespace mts
 		void processOrder(Order * order, Order* lastOrder);
 		void processQuote(QuoteSnapshotPtr);
 		const InstrumentBaseProperty* attribute()const;
-		//QString toString() const;
 
 		Position* clone() const;
 		void businessDateChanged(int businessDate);
@@ -174,7 +169,6 @@ namespace mts
 		static Position* fromJsonString(const QJsonObject&);
 		static void registerMetaType();
 	private:
-		//InstrumentId _id;;
 		double _lastPrice;
 		double _prePrice;
 		double _preSettlementPrice;

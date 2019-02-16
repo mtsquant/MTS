@@ -18,7 +18,6 @@
 
 namespace mts {
 
-	//ths class is readonly class , so it does not need mutex and can be called by mts thread and main thread
 	class MTS_CORE_API TradingDateMgrFromFile :public TradingDateMgr
 	{
 	public:

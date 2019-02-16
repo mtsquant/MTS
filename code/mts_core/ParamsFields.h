@@ -15,16 +15,13 @@
 *****************************************************************************/
 #pragma once
 
-//The file defines all config params fields names 
 
-//base
 #define MODE_PARAM_NAME "mode"
 #define INSTANCE_ID "instance_id"
 #define STRATEGY_POS_CHECK "strategy_pos_check"
 #define MTS_VERSION "mts_version"
 #define MTS_OS "mts_os"
 
-//sys
 #define LIB_DIR "library_path"
 #define CONFIG_DIR "config_dir"
 #define DOC_DIR "doc_dir"
@@ -32,7 +29,6 @@
 #define CONTINUOUS_CONTRACT "continuous_contract"
 #define RISK_SETTING "risk_setting"
 
-//common
 #define FEEDS_FRONT "feeds_front"
 #define TRADE_FRONT "trade_front"
 #define FEEDS_GRADE "feeds_grade"
@@ -43,7 +39,6 @@
 
 #define MARKET_TRADING_TIME_TYPE "trading_time"  /*'24H' or other for CN fut*/
 
-//real/beta
 #define BROKER "broker"
 #define FEEDS_SERVER_NAME "feeds_name"
 #define FEEDS_SERVER_TYPE "feeds_type"
@@ -57,7 +52,6 @@
 
 
 
-//simu
 #define SIMU_MATCH_MODEL "match_model"
 #define SIMU_BEING_DATE "clock_begin_date"
 #define SIMU_END_DATE "clock_end_date"

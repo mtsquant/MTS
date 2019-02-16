@@ -28,7 +28,6 @@ namespace mts
 		TradeReal();
 		virtual ~TradeReal();
 
-		// 通过 Trade 继承
 		virtual bool initialize(const QVariantMap & params) override;
 
 		virtual bool sendOrderNewAction(OrderActionNew*) override;
@@ -41,7 +40,6 @@ namespace mts
 
 	private:
 		CTPOrderMgr* _tradeOrderClient;
-		//virtual void onEvent(const EventPtr&) override;
 
 	};
 

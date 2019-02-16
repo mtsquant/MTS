@@ -32,7 +32,6 @@ boost::function<DateTime()> DateTime::setNowFunctor ( boost::function<DateTime (
 	return oldFunctor;
 }
 
-//=======================
 DateTime::DateTime()
     :_localTicks(TIMEZONE_UNKNOWN), _utcTicks()
 #ifndef NDEBUG
@@ -48,7 +47,6 @@ DateTime::DateTime( int time/*210101000*/,int date ,TimezoneCode timezoneCode)
 	, _date(date), _time(time)
 #endif
 {
-	//FE_DEBUG(9,FeLog::STDOUT,NULL,FE_FMT("\n"));
 	int localTicksFromMidnight = DateTime::time2LocalTicksFromMidnight(time);
 	if (isNan(localTicksFromMidnight)){
 		MTS_ERROR("localTicksFromMidnight is NAN, ignore the date of %d, reset to Null\n", date);
@@ -89,13 +87,6 @@ DateTime::DateTime( qint64 utcMillisecsSinceEpoch,TimezoneCode timezoneCode)
 	_time = time();
 #endif
 }
-//
-//DateTime::DateTime(const tm& t,int millSec,TimezoneCode timezoneCode)
-//	:_localTicks(),_utcTicks(), _timezoneCode(timezoneCode)
-//{
-//	_localTicks.set(t.tm_hour*TICS_PER_HOUR+t.tm_min*TICS_PER_MINUTE+t.tm_sec*TICS_PER_SECOND+millSec,nullptr);
-//	setDate((t.tm_year+1900)*10000+(t.tm_mon+1)*100+t.tm_mday);
-//}
 
 DateTime::DateTime( const DateTime& other)
     :_localTicks(other._localTicks), _utcTicks(other._utcTicks)
@@ -132,8 +123,6 @@ DateTime DateTime::localMillisecsSinceEpoch(qint64 millsecs,TimezoneCode timezon
 	int time = Ticks::getTimeFrom(millsecs);
 	int date = Ticks::getDateFrom(millsecs);
 	DateTime ts(time,date, timezoneCode);
-	//ts._localTicks.setTimezone(timezoneCode);
-	//ts._localTicks.set(millsecs,nullptr);
 	if (timezoneCode != TIMEZONE_UTC) {
 		assert(ts._localTicks.timezone()== timezoneCode);
 		assert(ts._localTicks.ticks() == millsecs);
@@ -355,10 +344,6 @@ DateTime DateTime::toLocal(TimezoneCode targetTimezone ) const
 
 	return this->localMillisecsSinceEpoch(Ticks::UTC2Local(this->toUTCMillisecsSinceEpoch(), targetTimezone), targetTimezone);
 
-	//DateTime localTs;
-	//localTs._localTicks.set(Ticks::UTC2Local(this->toUTCMillisecsSinceEpoch(),targetTimezone),nullptr);
-	//localTs._timezoneCode =targetTimezone;
-	//return localTs;
 }
 
 

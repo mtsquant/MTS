@@ -52,14 +52,6 @@ namespace mts
 			return false;
 		}
 		doInsert(prop);
-		//InstrumentId mainSeridesId = FutrProperty::convertMainInstument(prop->instrumentId());
-		//if (!_seriesInstruments.contains(mainSeridesId)) {
-		//	InstrumentBaseProperty* seriesProp = new InstrumentBaseProperty(*prop);
-		//	seriesProp->setInstrumentId(mainSeridesId);
-		//	seriesProp->setKind(InstrumentKind::KIND_SERIES);
-		//	_seriesInstruments.insert(mainSeridesId);
-		//	doInsert(seriesProp);
-		//}
 		return true;
 	}
 
@@ -88,7 +80,6 @@ namespace mts
 		QMutexLocker l(&_locker);
 		QJsonArray jsonArr;
 		for (auto it = _instrumentProperties.constBegin(), itEnd = _instrumentProperties.constEnd(); it != itEnd; ++it) {
-            //const InstrumentId& id = it.key();
 			InstrumentBaseProperty* prop = it.value();
 			QJsonObject obj;
 			prop->dumpTo(&obj);
@@ -184,12 +175,10 @@ namespace mts
 	InstrumentId InstrumentPropertyDb::findInstrumentIdFromMtsSymbol(const QString & mtsSymbol,bool continuousSymbolRpl) const
 	{
         QString realSymbol = mtsSymbol;
-		//bool needCheck = false;
 		bool isContinuous = InstrumentId::isContinuousSymbol(mtsSymbol);
         if (isContinuous) {
             assert(!ContinuousSymbolMgr::instance()->allContinuousSymbols().isEmpty());
             realSymbol=ContinuousSymbolMgr::instance()->getSymbolFromContinuous(mtsSymbol,DateTime::now().date());
-			//needCheck = true;
         }
         QMutexLocker l(&_locker);
         auto it = _mtsSymbolProperties.constFind(realSymbol.toUpper());
@@ -200,17 +189,8 @@ namespace mts
 			}
 			return id;
 		}
-		//InstrumentId id;
-		//if (needCheck) {
-		//	id = findInstrumentIdFromMtsSymbol(realSymbol);
-		//}
-  //      if (InstrumentId::isContinuousSymbol(mtsSymbol)) {
-  //          id.symbol = mtsSymbol;
-  //          return id;
-  //      }else{
             MTS_ERROR("can not find instrument id for mts symbol: %s\n", qPrintable(mtsSymbol.toUpper()));
             return InstrumentId();
- //       }
 	}
 
 	QList<mts::InstrumentId> InstrumentPropertyDb::instrumentIds() const

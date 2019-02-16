@@ -24,7 +24,6 @@ namespace mts
 		:InstrumentObject(id), _lastPrice(0), _prePrice(0),_preSettlementPrice(0),
 		_cachedInstrumentProperty(nullptr) 
 	{
-		//setInstrument(id);
 		memset(&_longInfo, 0, sizeof(_longInfo));
 		memset(&_shortInfo, 0, sizeof(_shortInfo));
 	}
@@ -45,17 +44,8 @@ namespace mts
 		return true;
 	}
 
-	//const InstrumentId& Position::instrumentId() const {
-	//	return _id;
-	//}
 
-	//const QString& Position::symbol()const {
-	//	return _id.symbol;
-	//}
 
-	//void Position::setInstrument(const InstrumentId& id) {
-	//	_id = id;
-	//}
 
 	double Position::longOpenVolume() const { //TODO check double
 		return _longInfo.open;
@@ -288,7 +278,6 @@ namespace mts
 			setShortCurrentVolume(-yesterdayVolume);
 		}
 		MTS_FILE("Position:%s\n" , qUtf8Printable(this->toJsonString()));
-		//MTS_DEBUG("%s,direct=%c,YdPos=%d\t%s\n", qPrintable(symbol()), isLong ? 'L' : 'S', yesterdayVolume, qPrintable(toString()));
 	}
 
 	void Position::processOrder(Order * order, Order* lastOrder) {
@@ -402,7 +391,6 @@ namespace mts
 		default:
 			break;
 		}
-		//MTS_DEBUG("%s\n", qPrintable(toString()));
 	}
 
 	void Position::processQuote(QuoteSnapshotPtr qt) {
@@ -418,7 +406,6 @@ namespace mts
 		setShortOpenPnl(volumeMultiple*shortOpenVolume()*(_lastPrice - _prePrice));
 		setLongFillPnl(volumeMultiple*longFillVolume()*_lastPrice - longFillAmount());
 		setShortFillPnl(volumeMultiple*shortFillVolume()*_lastPrice - shortFillAmount());
-		//MTS_DEBUG("%s\n", qPrintable(toString()));
 	}
 
 	
@@ -429,12 +416,6 @@ namespace mts
 		return _cachedInstrumentProperty;
 	}
 
-	//QString Position::toString() const {
-	//	return QString("%1,long:%2,short:%3")
-	//		.arg(symbol())
-	//		.arg(_longInfo.toString())
-	//		.arg(_shortInfo.toString());
-	//}
 
 	Position * Position::clone() const {
 		return new Position(*this);

@@ -38,9 +38,6 @@ namespace mts {
 		virtual void processOrderReportCancelDone(OrderReportCancelDone*);
 		virtual void processOrderReportCancelReject(OrderReportCancelReject*);
 
-		//void processOrderActionReplace(const OrderActionReplace&);
-		//void processOrderReportReplaceDone(const OrderReportReplaceDone&);
-		//void processOrderReportReplaceReject(const OrderReportReplaceReject&);
 
 		virtual void processOrderReportFill(OrderReportFill* fillrpt,OrderReportFill* lastFillrpt);
 		virtual Order* clone() const override;
@@ -56,7 +53,6 @@ namespace mts {
 	private:
 		int _status;
 		qint64 _lastCxlTimestamp;
-		//QHash<QString, OrderReportFill*> _fillrpts;
 	};
 
 	typedef QSharedPointer<Order> OrderPtr;

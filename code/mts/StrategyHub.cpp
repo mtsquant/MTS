@@ -126,7 +126,6 @@ namespace mts
 		return true;
 	}
 
-	//query - 姝ょ被鏂规硶锛屽紓姝ュ彂閫佸埌MTS 绾跨▼锛� 鐒跺悗绛夊緟缁撴灉鍚庯紝鐩存帴杩斿洖缁撴灉
 
 	void StrategyHub::unsubscribeAllQuotes(StrategyInterface * strategy) {
 		auto ids = _quoteStrategies.keys();
@@ -273,7 +272,6 @@ namespace mts
 			StrategyInterface* strategy = it.value();
 			strategy->onBusinessDateChanged(businessDate);
 		}
-		//MTS_LOG_FILE("action", "NewDate:{\"date\":%d}\n", businessDate);
 	}
 
 	QList<StrategyInterface*> StrategyHub::getCallbacks(int strategyId) const
@@ -283,7 +281,6 @@ namespace mts
 		{
 			ins.push_back(strategy);
 		}
-		//鐩戞帶绛栫暐
 		if (StrategyInterface* strategy = _idStrategies.value(MONTOR_STRATEGYID_DEFAULT))
 		{
 			ins.push_back(strategy);
@@ -303,7 +300,6 @@ namespace mts
 		{
 			strategy->onOrderNewReject(orderNewReject);
 		}
-		//MTS_LOG_FILE("action", "OrderNewReject:%s\n", qPrintable(orderNewReject->toJsonString()));
 	}
 
 	void StrategyHub::onOrderFill(OrderReportFill * orderFill) {
@@ -311,7 +307,6 @@ namespace mts
 		{
 			strategy->onOrderFill(orderFill);
 		}
-		//MTS_LOG_FILE("action", "OrderFill:%s\n", qPrintable(orderFill->toJsonString()));
 	}
 
 	void StrategyHub::onOrderCancelDone(OrderReportCancelDone * orderCancelDone) {
@@ -319,7 +314,6 @@ namespace mts
 		{
 			strategy->onOrderCancelDone(orderCancelDone);
 		}
-		//MTS_LOG_FILE("action", "OrderCancelDone:%s\n", qPrintable(orderCancelDone->toJsonString()));
 	}
 
 	void StrategyHub::onOrderCancelReject(OrderReportCancelReject * orderCancelReject) {
@@ -327,7 +321,6 @@ namespace mts
 		{
 			strategy->onOrderCancelReject(orderCancelReject);
 		}
-		//MTS_LOG_FILE("action", "OrderCancelReject:%s\n", qPrintable(orderCancelReject->toJsonString()));
 	}
 
 	void StrategyHub::onOrderOtherReport(OrderReport * orderReport) {
@@ -342,7 +335,6 @@ namespace mts
 		{
 			strategy->onOrderUpdate(order);
 		}
-		//MTS_LOG_FILE("action", "Order:%s\n", qPrintable(order->toJsonString()));
 	}
 
 
@@ -362,7 +354,6 @@ namespace mts
 			StrategyInterface* strategy = (*it);
 			strategy->onPositionUpdate(pos);
 		}
-		//MTS_LOG_FILE("action", "Pos:%s\n", qPrintable(pos->toJsonString()));
 	}
 
 

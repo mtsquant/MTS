@@ -23,9 +23,7 @@
 #endif
 
 
-//simu params
 #define SIMU_FEEDS_FILE_EXTNAME ".fmd"
-//common params
 
 #define INSTRUMENT_DB_FILE "instrument_db.json"
 #define CONTINUOUS_CONTRACT_FILE "continuous_contract.json"
@@ -34,10 +32,8 @@
 #define STREGETY_NAME "stregety_name"
 #define STREGETY_LANGUAGE "stregety_language"
 
-//real params
 #define SYMBOL_FIELD "symbol"
 
-//Order
 #define ORDER_SYMBOL SYMBOL_FIELD
 #define ORDER_PRICE "price"
 #define ORDER_DIRECTION "direction"
@@ -53,38 +49,30 @@
 
 
 
-//Fill
 #define FILL_ID "fillId"
 
-//Error
 #define ERROR_ID "errorId"
 #define ERROR_MSG "errorMsg"
 #define ERROR_LEVEL "errorLevel"
 
-//Position
 #define POSITION_DIRECTION ORDER_DIRECTION
 #define POSITION_POSITION "position"
 #define POSITION_COMMISSION "commission"
 #define POSITION_MARGIN "margin"
 #define POSITION_DATE "date"
 
-//Instrument
 #define INSTRUMENT_SYMBOL SYMBOL_FIELD
 #define INSTRUMENT_PRICE_TICK "priceTick"
 #define INSTRUMENT_VOLUME_MULTIPLE  "volumeMultiple"
 
 
-//account
 #define ACCOUNT_POSITIONS "positions"
 #define ACCOUNT_ORDERS "orders"
 #define ACCOUNT_FILLS "fills"
 #define ACCOUNT_INSTRUMENTS "instruments"
 
-//algo
 #define ALGO_NAMES "algo_names"
-//HttpAndUDP监控所有策略的策略ID
 #define MONTOR_STRATEGYID_DEFAULT 9
-//算法交易策略ID
 #define ALGO_STRATEGYID_DEFAULT 8
 
 enum OwnerLevel

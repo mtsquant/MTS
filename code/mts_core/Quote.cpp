@@ -54,7 +54,6 @@ namespace mts
 	}
 	
 	void Quote::registerMetaType() {
-		//qRegisterMetaType<Quote>("Quote");
 		qRegisterMetaType<QuotePtr>("QuotePtr");
 	}
 
@@ -111,7 +110,6 @@ namespace mts
 	}
 
 
-	//////
 
 	enum QuoteFieldFlag {
 		QF_NULL = 0,
@@ -288,41 +286,13 @@ namespace mts
 		_fieldChg |= QF_TRADE;
 	}
 
-	//================================
-	//FutQuote::FutQuote()
-	//	:Quote()
-	//{
 
-	//}
 
-	//FutQuote::~FutQuote()
-	//{
 
-	//}
-	////void FutQuote::merge(Quote * otherQt) {
-	////	Quote::merge(otherQt);
-	////}
-	//FutQuote * FutQuote::clone() const {
-	//	return new FutQuote(*this);
-	//}
-	////=========================================
-	//StockQuote::StockQuote()
-	//	:Quote() 
-	//{
 
-	//}
 
-	//StockQuote::~StockQuote()
-	//{
 
-	//}
 
-	////void StockQuote::merge(Quote * otherQt) {
-	////	Quote::merge(otherQt);
-	////}
 
-	//StockQuote * StockQuote::clone() const {
-	//	return new StockQuote(*this);
-	//}
 
 }

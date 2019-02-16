@@ -17,7 +17,6 @@
 
 #include <QtCore/QString>
 #include <QtCore/QHash>
-//#include <QtCore/QObject>
 
 #ifdef _WIN32
 #include "../../api/win64/CTP/ThostFtdcTraderApi.h"
@@ -28,10 +27,7 @@
 
 #include "CTPTradeClientBase.h"
 
-//#include "NewOrderAction.h"
-//#include "CancelOrderAction.h"
 
-//#include "CTPOrderMgrBase.h"
 #include "mts_core/enums.h"
 #include "mts_core/OrderAction.h"
 #include "mts_core/OrderReport.h"
@@ -64,7 +60,6 @@ struct ExchOrderInfo {
 
 Q_DECLARE_METATYPE(ExchOrderInfo);
 
-//all functions will be called in the main thread, so the class does not need any mutex
 class CTPOrderMgr : public CTPTradeClientBase
 {
 	Q_OBJECT
@@ -72,19 +67,13 @@ public:
 	CTPOrderMgr(const QString& address, const QString& brokerId, const QString& userId, const QString& password/*,CThostFtdcTraderApi**/);
 	virtual ~CTPOrderMgr();
 
-	///报单状态通知 Exch （new order , cancel order ）
 	virtual void OnRtnOrder(CThostFtdcOrderField *pOrder) override;
 
-	///报单录入请求响应 Thost 
 	virtual void OnRspOrderInsert(CThostFtdcInputOrderField *pInputOrder, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) override;
-	///成交通知 Exch
 	virtual void OnRtnTrade(CThostFtdcTradeField *pTrade)  override;
-	///报单录入错误回报 Exch
 	virtual void OnErrRtnOrderInsert(CThostFtdcInputOrderField *pInputOrder, CThostFtdcRspInfoField *pRspInfo)  override;
 
-	///报单操作请求响应
 	virtual void OnRspOrderAction(CThostFtdcInputOrderActionField *pInputOrderAction, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);;
-	///报单操作错误回报 Exch
 	virtual void OnErrRtnOrderAction(CThostFtdcOrderActionField *pOrderAction, CThostFtdcRspInfoField *pRspInfo) override;
 
 	bool hasOrderClientId(const QString&) const;

@@ -22,12 +22,10 @@
 #include <boost/function.hpp>
 
 #include "ctp_ext/CTPClientCommon.h"
-//#include "CTPTraderSpiRecaller.h"
 
 #include "mts_core/const.h"
 #include "mts_core/Order.h"
 
-//class CTPOrderMgr;
 class QueryPositionAction;
 class QueryOrderAction;
 class QueryFillAction;
@@ -35,8 +33,6 @@ class QueryInstrumentAction;
 class QuerySettlementInfoAction;
 class QueryTradingAccountAction;
 
-//Use emit signals insteads of MtsCallback
-// query all trade related data step by step
 class CTPTradeClientBase:public QObject, public CTPClientCommon<CThostFtdcTraderApi, CThostFtdcTraderSpi>
 {
 	Q_OBJECT
@@ -84,18 +80,12 @@ Q_SIGNALS:
 protected:
 	virtual void beforeRegisterFront() override;
 
-	///请求查询投资者结算结果响应
 	virtual void OnRspSettlementInfoConfirm(CThostFtdcSettlementInfoConfirmField *pSettlementInfo, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) override;
 
-	///请求查询投资者持仓响应
 	virtual void OnRspQryInvestorPosition(CThostFtdcInvestorPositionField *pInvestorPosition, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) override;
-	///请求查询报单响应
 	virtual void OnRspQryOrder(CThostFtdcOrderField *pOrder, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) override;
-	///请求查询成交响应
 	virtual void OnRspQryTrade(CThostFtdcTradeField *pTrade, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) override;
-	///请求查询合约响应
 	virtual void OnRspQryInstrument(CThostFtdcInstrumentField *pInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) override;
-	//查询资金账户
 	virtual void OnRspQryTradingAccount(CThostFtdcTradingAccountField *pTradingAccount, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) override;
 protected Q_SLOTS:
 	void onResponseQuerySettlementInfo(const QList<CThostFtdcSettlementInfoConfirmField>& settlementInfos);

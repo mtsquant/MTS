@@ -20,8 +20,6 @@
 #include "mts_core/ConfigParams.h"
 #include "base/Library.h"
 
-//#include "EventLoopRunnerSimu.h"
-//#include "EventLoopRunnerReal.h"
 
 
 
@@ -56,11 +54,9 @@ namespace mts
 		const QString _libraryPath;
 		bool initEnvironmentForSimu(Environment*);
 		bool initEnvironmentForBeta(Environment*);
-		//bool initEnvironmentForPaper(Environment*);
 		bool initEnvironmentForReal(Environment*);
 
 	private:
-		//EventLoopRunner* createEventLoopRunner(const QString& modeName);
 		Clock* createClockComponent(const QString& modeName);
 		Feeds* createFeedsComponent(const QString& modeName);
 		Trade* createTradeComponent(const QString& modeName);
@@ -71,7 +67,6 @@ namespace mts
 	};
 
 
-	//==========================
 
 	Environment * Environment::instance() {
 		static Environment envir;
@@ -89,7 +84,6 @@ namespace mts
 		_clock = clock;
 		_feeds = feeds;
 		_trade = trade;
-		//_eventLoopRunner = evtLoopRunner;
 	}
 
 	bool Environment::load(EnvironmentMode mode,const QString& libraryPath) {
@@ -135,7 +129,6 @@ namespace mts
 			return false;
 		}
 
-		//NOTE: makesure that  the tader initialize shoule be after the feeds->initailze, the trade maybe need to use the feeds
 		if (!_trade->initialize(params)) {
 			return false;
 		}
@@ -151,8 +144,6 @@ namespace mts
 
 	void Environment::onInitialized() {
 		if (this->feeds()->isInitialized() && this->trade()->isInitialized()) {
-			//mts::Account account;
-			//the onInitialized() shoule be called only once,so disconnect the signals
 			disconnect(this->feeds(), SIGNAL(initializeDone()));
 			disconnect(this->trade(), SIGNAL(initializeDone()));
 			_accountCallback->onInitialized(nullptr);//&account);
@@ -163,9 +154,6 @@ namespace mts
 		return _mode;
 	}
 
-	//MtsMode* Environment::mode() const {
-	//	return MtsMode::getInstance(_mode);
-	//}
 
 	bool Environment::isCurrentMainThread() const{
 		return QThread::currentThread() == QCoreApplication::instance()->thread();
@@ -188,7 +176,6 @@ namespace mts
 
 	bool Environment::isCurrentInstanceInstanceId (int instanceId) const
 	{
-		//return mode()->isCurrentInstanceId(_instanceId,instanceId);
 		if (mode() == ENVIR_REAL) {
 			return instanceId == _instanceId;
 		} else {
@@ -225,14 +212,10 @@ namespace mts
 		return _trade;
 	}
 
-	//EventLoopRunner * Environment::eventLoopRunner() const {
-	//	return _eventLoopRunner;
-	//}
 
 
 
 		
-	//=====================
 
 	EnvironmentFactory::EnvironmentFactory(const QString& libraryPath)
 		:_libraryPath(libraryPath)
@@ -256,8 +239,6 @@ namespace mts
 			return initEnvironmentForSimu(envir);
 		} else if (mode == ENVIR_BETA) {
 			return initEnvironmentForBeta(envir);
-		//}else if (mode==ENVIR_PAPER){
-		//	return initEnvironmentForPaper(envir);
 		} else if (mode == ENVIR_REAL) {
 			return initEnvironmentForReal(envir);
 		} else {
@@ -271,7 +252,6 @@ namespace mts
 			createClockComponent("simu"),
 			createFeedsComponent("simu"),
 			createTradeComponent("simu")
-			//,createEventLoopRunner("simu")
 		);
 
 		if (!QObject::connect(envir->feeds(), SIGNAL(feedFileOpened(const QString&, const QJsonObject&, FeedsType)),
@@ -289,27 +269,16 @@ namespace mts
 			createClockComponent("real"),
 			createFeedsComponent("real"),
 			createTradeComponent("simu")
-			//,createEventLoopRunner("real")
 			);
 		return envir->isValid();
 	}
 
-	//bool EnvironmentFactory::initEnvironmentForPaper(Environment* envir) {
-	//	envir->init(
-	//		createClockComponent("real"),
-	//		createFeedsComponent("real"),
-	//		createTradeComponent("simu")
-	//		//,createEventLoopRunner("real")
-	//	);
-	//	return envir->isValid();
-	//}
 	
 	bool EnvironmentFactory::initEnvironmentForReal(Environment* envir) {
 		envir->init(
 			createClockComponent("real"),
 			createFeedsComponent("real"),
 			createTradeComponent("real")
-			//,createEventLoopRunner("real")
 		);
 		return envir->isValid();
 	}
@@ -335,17 +304,6 @@ namespace mts
 	}
 
 
-	//EventLoopRunner * EnvironmentFactory::createEventLoopRunner(const QString& modeName) {
-	//	//the EventLoopRunner is so simply  that does not need to split them to dlls
-	//	if (modeName == "simu") {
-	//		return new EventLoopRunnerSimu();
-	//	} else if (modeName == "real" || modeName == "beta") {
-	//		return new EventLoopRunnerReal();
-	//	} else {
-	//		MTS_ERROR("Unknown mode '%s'\n", qPrintable(modeName));
-	//		return nullptr;
-	//	}
-	//}
 
 	Feeds * EnvironmentFactory::createFeedsComponent(const QString& modeName) {
 		QString filePath;
@@ -388,7 +346,6 @@ namespace mts
 		} else {
 			filePath = QDir(_libraryPath).absoluteFilePath(Environment::getLibraryFileName("trade", modeName));
 		}
-		//QString filePath = QDir(_libraryPath).absoluteFilePath(getLibraryFileName("trade", modeName));
 		_tradeLib.setFileName(filePath);
 		if (!_tradeLib.load()) {
 			MTS_ERROR ( "Failed to load '%s':'%s'\n" , qPrintable ( _tradeLib.fileName () ) , _tradeLib.errorString ().toUtf8 ().constData () );

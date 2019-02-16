@@ -46,9 +46,6 @@ namespace mts
 		return Environment::instance ()->clock ()->currentTradingDay();
 	}
 
-	//bool ClockMgr::generateNextTick() {
-	//	return Environment::instance()->clock()->generateNextTick();
-	//}
 
 	int ClockMgr::createTimer(int beginTime, int interval, TimerCallback * callback) {
 		return Environment::instance()->clock()->createTimer(beginTime,interval,callback);

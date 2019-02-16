@@ -48,12 +48,6 @@ namespace mts
 	{
 	}
 
-	//InstrumentId::InstrumentId ( const InstrumentId & id)
-	//	: symbol ( id.symbol )
-	//	, typeId ( id.typeId )
-	//	, exchId ( id.exchId )
-	//{
-	//}
 
 	InstrumentId::~InstrumentId() {
 	}
@@ -117,7 +111,6 @@ namespace mts
     uint qHash(const InstrumentId &key, uint seed)
     {
         return qHash ( key.symbol ) ^ (key.exchId*1000+key.typeId); //for performance
-        //return qHash(QString("%1:%2:%3").arg(key.symbol).arg(key.exchId).arg(key.typeId), seed);
     }
 
 }

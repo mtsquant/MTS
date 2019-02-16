@@ -56,7 +56,6 @@ public:
 			return addObject(qPrintable(fn), boost::python::make_function(f));
 		}
 
-		//Class should be the instance of class_<>
 		template<typename Class>
 		boost::python::object addClass(const QString& fn, Class cls) {
 			return addObject(fn, cls);

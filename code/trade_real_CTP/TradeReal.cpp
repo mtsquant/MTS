@@ -105,71 +105,11 @@ namespace mts
 		return false;
 	}
 
-	//void TradeReal::onEvent(const EventPtr & event) {
-	//	int evtType = event->type();
-	//	if (evtType == EVT_QUOTE) {
-	//		return;
-	//	}
-
-	//	if (evtType == EVT_RPT_ORDER_NEW_REJECT) {
-	//		auto evt = qSharedPointerDynamicCast<OrderNewRejectEvent>(event);
-	//		this->notifyAll(evt->data());
-	//		delete evt->data();
-	//		return;
-	//	}
-	//	if (evtType == EVT_RPT_ORDER_FILL) {
-	//		auto evt = qSharedPointerDynamicCast<OrderFillEvent>(event);
-	//		this->notifyAll(evt->data());
-	//		delete evt->data();
-	//		return;
-	//	}
-
-	//	if (evtType == EVT_RPT_ORDER_NEW_DONE) {
-	//		auto evt = qSharedPointerDynamicCast<OrderNewDoneEvent>(event);
-	//		this->notifyAll(evt->data());
-	//		delete evt->data();
-	//		return;
-	//	}
-	//	if (evtType == EVT_RPT_ORDER_NEW_REJECT) {
-	//		auto evt = qSharedPointerDynamicCast<OrderNewRejectEvent>(event);
-	//		this->notifyAll(evt->data());
-	//		delete evt->data();
-	//		return;
-	//	}
-	//	if (evtType == EVT_RPT_ORDER_FILL) {
-	//		auto evt = qSharedPointerDynamicCast<OrderFillEvent>(event);
-	//		this->notifyAll(evt->data());
-	//		delete evt->data();
-	//		return;
-	//	}
-	//	if (evtType == EVT_RPT_ORDER_CANCEL_DONE) {
-	//		auto evt = qSharedPointerDynamicCast<OrderCancelDoneEvent>(event);
-	//		this->notifyAll(evt->data());
-	//		delete evt->data();
-	//		return;
-	//	}
-	//	if (evtType == EVT_RPT_ORDER_CANCEL_REJECT) {
-	//		auto evt = qSharedPointerDynamicCast<OrderCancelRejectEvent>(event);
-	//		this->notifyAll(evt->data());
-	//		delete evt->data();
-	//		return;
-	//	}
 
 
-	//	if (evtType == EVT_ORDER) {
-	//		auto evt = qSharedPointerDynamicCast<OrderEvent>(event);
-	//		this->notifyAll(evt->data());
-	//		delete evt->data();
-	//		return;
-	//	}
 
-	//	if (evtType == EVT_POSITION) {
-	//		auto evt = qSharedPointerDynamicCast<PositionEvent>(event);
-	//		this->notifyAll(evt->data());
-	//		delete evt->data();
-	//		return;
-	//	}
-	//}
+
+
 
 
 }

@@ -57,7 +57,6 @@ namespace mts {
 	}
 
 	void OrderReport::registerMetaType() {
-		//qRegisterMetaType<OrderReport>("OrderReport");
 		qRegisterMetaType<OrderReportPtr>("OrderReportPtr");
 	}
 
@@ -71,7 +70,6 @@ namespace mts {
 		_note = errorMsg;
 	}
 
-	//===============================
 	OrderReportNewDone::OrderReportNewDone()
 		:OrderReport(OrderReportType::ORT_NEW_DONE)
 	{
@@ -105,7 +103,6 @@ namespace mts {
 	}
 
 	
-	//===========================
 	OrderReportReject::OrderReportReject()
 		:OrderReport(OrderReportType::ORT_NEW_REJECT)
 	{
@@ -148,7 +145,6 @@ namespace mts {
 		setCreateSrc(action->createSrc());
 		setInstanceId(action->instanceId());
 	}
-	//==============================
 
 	OrderReportNewReject::OrderReportNewReject()
 		:OrderReportReject(OrderReportType::ORT_NEW_REJECT)
@@ -173,7 +169,6 @@ namespace mts {
 		qRegisterMetaType<OrderReportNewRejectPtr>("OrderReportNewRejectPtr");
 	}
 
-	//==============================
 
 	OrderReportFill::OrderReportFill()
 		:OrderReport(OrderReportType::ORT_FILL), _fillTicksSinceEpoch(DateTime::now().toUTCMillisecsSinceEpoch ())
@@ -237,7 +232,6 @@ namespace mts {
 		qRegisterMetaType<OrderReportFillPtr>("OrderReportFillPtr");
 	}
 
-	//============================
 
 	OrderReportCancelDone::OrderReportCancelDone()
 		:OrderReport(OrderReportType::ORT_CANCEL_DONE)
@@ -265,7 +259,6 @@ namespace mts {
 	}
 	
 	
-	//===================================
 	OrderReportCancelReject::OrderReportCancelReject()
 		:OrderReportReject(OrderReportType::ORT_CANCEL_REJECT)
 	{

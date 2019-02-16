@@ -28,7 +28,6 @@ namespace mts
 
 
 	QuoteMgr::~QuoteMgr() {
-		//Environment::instance()->feeds()->removeCallback(this);
 	}
 
 	QuoteMgr * QuoteMgr::instance() {
@@ -68,12 +67,6 @@ namespace mts
 		if (_notify) {
 			_notify->onBarUpdate(bar);
 		}
-		//TODO:?
-		//QList<Position*> poss = PositionMgr::instance()->getStrategyPositions(cacheQuote->instrumentId());
-		//for (auto&pos : poss)
-		//{
-		//	pos->processBar(bar);
-		//}
 	}
 
 	Quote* QuoteMgr::getQuote(const InstrumentId& instrumentId) {

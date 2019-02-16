@@ -39,7 +39,6 @@ namespace mts
 		}
 	}
 
-	//===========================
 
 	ClockReal::ClockReal(void)
 	{
@@ -58,11 +57,6 @@ namespace mts
 	int ClockReal::currentTradingDay () const{
 		auto now=this->now();
 		return TradingDateMgr::instance()->tradingDate(now);
-		//if ( now.time () >= TT_NIGHT_BEGIN_TIME ){
-		//	return TradingDateMgr::instance ()->nextDate ( now.date () );
-		//} else{
-		//	return TradingDateMgr::instance ()->forceToDate(now.date ());
-		//}
 	}
 
 	QObject* ClockReal::doCreateTimer(int id, qint64 beginTicks, int interval, TimerCallback* cb) {
@@ -90,7 +84,6 @@ namespace mts
 	}
 
 	bool ClockReal::initialize(const QVariantMap & params) {
-		//no config for ClockReal
 		return true;
 	}
 

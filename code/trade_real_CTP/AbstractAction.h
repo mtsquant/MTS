@@ -32,56 +32,14 @@
 #include "base/MtsLog.h"
 #include "mts_core/const.h"
 
-//#include "../uv8ext/AsyncActiveQueue.h"
 
-//template<typename _Ty>
-//class AsyncActiveQueue
-//{
-//public:
-//	AsyncActiveQueue() {
-        //uv_async_init(uv_default_loop(), &_async, asyncQueueCallback);
-        //_async.data = (void*)this;
-    //}
-    //virtual ~AsyncActiveQueue() {
-    //}
 
-    //call these functions on work thread
-    //void push(const _Ty& data) {
-    //	QMutexLocker l(&_queueLock);
-    //	_queue.push_back(data);
-    //}
-    //void notifyProcess() {
-    //	this->processAllData();
-        //uv_async_send(&_async);
-    //} //notify the thread that the AsyncQueue was created on it to process the data pushed
 
-//protected:
-//	virtual void doProcess(const _Ty&) = 0;//it will be called on the thread that the AsyncQueue was created
-//
-//private:
-    //uv_async_t _async;
     /*static void asyncQueueCallback(uv_async_t* handle) {
         AsyncActiveQueue* queue = (AsyncActiveQueue*)(handle->data);
         queue->processAllData();
-        //uv_close((uv_handle_t*)&handle, nullptr);	//脠莽鹿没async没脫泄乇眨卢脧没息露脫脕脨脢腔谩脳猫脠没碌脛
     }*/
-//	void processAllData() {
-//		QList<_Ty> dataList;
-//		{
-//			QMutexLocker l(&_queueLock);
-//			dataList.swap(_queue);
-//		}
-//		foreach(const _Ty& data, dataList) {
-//			this->doProcess(data);
-//		}
-//	}
-//
-//	QMutex _queueLock;
-//	QList<_Ty> _queue;
-//};
 
-//1. emit signals to main thread in callback on CTP thread
-//2. split all kinds of action callbacks into its classes
 class AbstractAction:public QObject, public CThostFtdcTraderSpi//,private AsyncActiveQueue<QPair<int/*result id*/, QByteArray/*result data*/> >
 {
     Q_OBJECT

@@ -23,7 +23,6 @@ namespace mts {
 		static AccountMgr* instance();
 		void setStrategy(StrategyInterface* notify);
 
-		// 通过 AccountCallback 继承
 		virtual void onEnvirInitialized() override;
 		virtual void onInitialized(Account *) override;
 

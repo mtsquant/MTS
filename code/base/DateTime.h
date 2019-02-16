@@ -39,12 +39,10 @@ public:
 	explicit DateTime(qint64 utcMillisecsSinceEpoch,TimezoneCode  =TIMEZONE_CST);
 	DateTime(int time/*210101000*/,int date,TimezoneCode=TIMEZONE_CST);
 	DateTime(int localHour,int localMinute,int localSecond,int localMillisec,int localDate,TimezoneCode=TIMEZONE_CST);
-	//DateTime(const tm& t,int millSec,TimezoneCode =TIMEZONE_CST);
 	DateTime(const DateTime&);
 	~DateTime();
 	qint64 toUTCMillisecsSinceEpoch ()const;
 
-	//DateTime& operator=(const DateTime& other);
 	qint64 operator- (const DateTime&) const;
 	DateTime operator+ (qint64) const;
 	DateTime operator- (qint64) const;
@@ -91,7 +89,6 @@ public:
 
 	static bool initTimezoneDatabase();
 
-	//static DateTime getLocalTimestamp( int ticksSinceMidnight );
 	static const DateTime Null;
 
 private:

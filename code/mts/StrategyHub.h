@@ -38,13 +38,11 @@ inline int qHash(const std::string& s) {
 
 namespace mts
 {
-	//策略管理器---代替原先的单个Strategy，接受回调并进行管理和分派
 	class MTS_API StrategyHub :public StrategyInterface
 	{
 	public:
 		int exec();
 		void exit(int);
-		//bool notifyStrategyEventsQueueEmpty();
 
 		bool initialize( const QVariantMap& params);
 
@@ -62,7 +60,6 @@ namespace mts
 		bool unsubscribeQuotes(StrategyInterface* strategy, const QList<InstrumentId>& instruments);
 		void unsubscribeAllQuotes ( StrategyInterface* strategy );
 
-		//query - 此类方法，异步发送到MTS 线程， 然后等待结果后，直接返回结果
 		QList<TradingAccount*> getAllTradingAccounts() const;
 		Position* getPosition(const InstrumentId& id) const;
 		Position* getPosition(const InstrumentId& id, int instanceId, int strategyId) const;
@@ -97,7 +94,6 @@ namespace mts
 		QSet<int/*once  timer id*/> _onceTimerIds;
 
 	protected:
-		// 通过 StrategyInterface 继承
 		virtual std::string name () const override{
 			return "StrategyMgr";
 		}

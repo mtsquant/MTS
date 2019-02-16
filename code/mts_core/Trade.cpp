@@ -42,8 +42,6 @@ namespace mts
 		return _callbacks.size();
 	}
 
-	//bool Trade::removeCallback(TradeCallback*) {
-	//}
 
 	void Trade::notifyAll(mts::OrderReportNewDone * rpt) {
 		for (int i = 0, size = _callbacks.size(); i < size; ++i) {

@@ -30,8 +30,6 @@ namespace mts
 		:_sessionId(sessionId),_frontId(frontId)
 	{
 		int pid = instanceId*REF_INDEX_MAX;
-		//<13  because the ctp reference id is 'typedef char TThostFtdcOrderRefType[13];'
-		//3 bytes instance id +5bytes inc count+2 byte millisecond (mm)+1 byte orderType +1 byte strategy id
 		if (index >= REF_INDEX_MAX - 1) {
 			MTS_ERROR("Too many orders , should be less than %d\n", REF_INDEX_MAX);
 			return ;//暂时不能超过99999个order （10万个）

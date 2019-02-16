@@ -18,20 +18,16 @@
 #include <QtCore/QObject>
 #include "mts_core/OrderSet.h"
 #include "mts_core/StrategyInterface.h"
-//#include "mts_api.h"
-//#include "../mts_core/DateCallback.h"
 
 namespace mts {
 	class Trade;
 	class Order;
 	class PositionPersistence;
 
-	//all functions will be called in the main thread, so the class does not need any mutex
 	class OrderMgrBase :public QObject, public TradeCallback
 	{
 		Q_OBJECT
 	public:
-		//void setTrade(Trade* trader);
 		void setStrategy(StrategyInterface* notify);
 	public Q_SLOTS:
 		QList<Order*> allOrders()const;
@@ -71,7 +67,6 @@ namespace mts {
 		virtual bool doCheckRisk(OrderActionNew* newaction, Position* pos);
 
 		StrategyInterface* _notify;
-		//Trade* _trader;
 		QMap<QString, PositionPersistence*> _persistence;
 
 

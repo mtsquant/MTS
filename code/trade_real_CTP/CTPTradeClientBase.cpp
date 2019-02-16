@@ -24,8 +24,6 @@
 #include "QueryTradingAccountAction.h"
 #include "mts_core/Environment.h"
 #include "ctp_ext/CTPUtils.h"
-//#include "PositionMgr.h"
-//#include "CTPOrderMgr.h"
 
 
 CTPTradeClientBase::CTPTradeClientBase(const QString& address, const QString& brokerId, const QString& userId, const QString& password/*,const MtsCallbacks& callbacks*/)
@@ -82,44 +80,26 @@ CTPTradeClientBase::~CTPTradeClientBase()
 }
 
 void CTPTradeClientBase::beforeRegisterFront() {
-	// 订阅私有流
-	///        THOST_TERT_RESTART:从本交易日开始重传
-	///        THOST_TERT_RESUME:从上次收到的续传
-	///        THOST_TERT_QUICK:只传送登录后私有流的内容
 	_userApi->SubscribePrivateTopic(THOST_TERT_QUICK);
-	// 订阅公共流
-	///        THOST_TERT_RESTART:从本交易日开始重传
-	///        THOST_TERT_RESUME:从上次收到的续传
-	///        THOST_TERT_QUICK:只传送登录后私有流的内容
 	_userApi->SubscribePublicTopic(THOST_TERT_QUICK);
 
 }
 
 void CTPTradeClientBase::startAsyncQueries() {
 	MTS_DEBUG("\n");
-	//1.query settlement
-	//2.query instrument
-	//3.query position
-	//4.query order
-	//5.query trade
 	{
 		QMutexLocker l(&_functionsListMutex);
-		//_queryFunctionList.append(qMakePair(boost::bind(&CTPTradeClientBase::querySettlement, this),&_querySettlementStatus));
 		_queryFunctionList.append({boost::bind(&CTPTradeClientBase::querySettlement, this), &_querySettlementStatus,1});
 		_queryFunctionList.append({boost::bind(&CTPTradeClientBase::queryInstruments, this),&_queryInstrumentStatus,1 });
 		_queryFunctionList.append({boost::bind(&CTPTradeClientBase::queryPositions, this),&_queryPosStatus,1 });
 		_queryFunctionList.append({boost::bind(&CTPTradeClientBase::queryOrders, this),&_queryOrderStatus,1 });
 		_queryFunctionList.append({boost::bind(&CTPTradeClientBase::queryFills, this),&_queryFillStatus,1 });
 		_queryFunctionList.append({boost::bind(&CTPTradeClientBase::queryTradingAccount, this), &_queryTradingAccountStatus,INT64_MAX });
-		//_querySettlementFinish = QS_DONE;
-		//_queryInstrumentFinish = QS_DONE;
-		//_queryFillFinish = QS_DONE;
 	}
 
 }
 
 bool CTPTradeClientBase::querySettlement() {
-    //MTS_DEBUG("\n");
 	CThostFtdcSettlementInfoConfirmField pSettlementInfoConfirm;
 	memset(&pSettlementInfoConfirm, 0, sizeof(CThostFtdcSettlementInfoConfirmField));
 	strcpy(pSettlementInfoConfirm.BrokerID, qPrintable(this->_BROKER_ID));
@@ -134,7 +114,6 @@ bool CTPTradeClientBase::querySettlement() {
 }
 
 bool CTPTradeClientBase::queryInstruments() {
-    //MTS_DEBUG("\n");
 	CThostFtdcQryInstrumentField qryInstrument;
 	memset(&qryInstrument, 0, sizeof(CThostFtdcQryInstrumentField));
 	_qryInstrumentAction = new QueryInstrumentAction(qryInstrument);
@@ -147,7 +126,6 @@ bool CTPTradeClientBase::queryInstruments() {
 
 bool CTPTradeClientBase::queryTradingAccount()
 {
-	//MTS_DEBUG("\n");
 	CThostFtdcQryTradingAccountField qryTradingAccount;
 	memset(&qryTradingAccount, 0, sizeof(CThostFtdcQryTradingAccountField));
 	_qryTradingAccountAction = new QueryTradingAccountAction(qryTradingAccount);
@@ -241,7 +219,6 @@ bool CTPTradeClientBase::queryFills() {
 
 
 void CTPTradeClientBase::onResponseQuerySettlementInfo(const QList<CThostFtdcSettlementInfoConfirmField>& settlementInfos) {
-	//MTS_DEBUG("\n");
 	_settlementInfos = settlementInfos;
 	_querySettlementStatus = QS_DONE;
 }
@@ -253,7 +230,6 @@ void CTPTradeClientBase::onErrorQuerySettlementInfo(int errorId, const QString &
 
 
 void CTPTradeClientBase::onResponseQueryInstruments(const QList<CThostFtdcInstrumentField>& instruments) {
-	//MTS_DEBUG("\n");
 	_instruments = instruments;
 	_queryInstrumentStatus = QS_DONE;
 }
@@ -265,7 +241,6 @@ void CTPTradeClientBase::onErrorQueryInstruments(int errorId, const QString & er
 
 
 void CTPTradeClientBase::onResponseQueryPositions(const QList<CThostFtdcInvestorPositionField>& positions) {
-	//MTS_DEBUG("\n");
 	_positions = positions;
 	_queryPosStatus = QS_DONE;
 }
@@ -276,15 +251,10 @@ void CTPTradeClientBase::onErrorQueryQueryPositions(int errorId, const QString &
 }
 
 void CTPTradeClientBase::onResponseQueryOrders(const QList<CThostFtdcOrderField>& orders) {
-	//MTS_DEBUG("\n");
 	_orders.clear();
 	for (int i = 0, size = orders.size(); i < size; ++i) {
 		const CThostFtdcOrderField& order = orders[i];
-		//if (mts::Environment::instance()->isCurrentInstanceReferenceId(order.OrderRef)) {
 			_orders.append(order);
-		//}else {
-		//	MTS_ERROR("Receive out order:%s\n", qUtf8Printable (CTPUtils::toJsonString(&order)));
-		//}
 	}
 	_queryOrderStatus = QS_DONE;
 }
@@ -300,7 +270,6 @@ void CTPTradeClientBase::onErrorQueryQueryOrders(int errorId, const QString & er
 }
 
 void CTPTradeClientBase::onResponseQueryFills(const QList<CThostFtdcTradeField>& fills) {
-	//MTS_DEBUG("\n");
 	_fills = fills;
 	_queryFillStatus = QS_DONE;
 }
@@ -318,12 +287,10 @@ void CTPTradeClientBase::onErrorQueryQueryTradingAccounts(int errorId, const QSt
 }
 
 void CTPTradeClientBase::OnRspSettlementInfoConfirm(CThostFtdcSettlementInfoConfirmField *pSettlementInfo, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-	//MTS_DEBUG("(%p,%p,%d,%d)\n", pSettlementInfo, pRspInfo, nRequestID, bIsLast);
 	_qrySettlementAction->OnRspSettlementInfoConfirm(pSettlementInfo, pRspInfo, nRequestID, bIsLast);
 }
 
 void CTPTradeClientBase::OnRspQryInvestorPosition(CThostFtdcInvestorPositionField *pInvestorPosition, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) {
-	//MTS_DEBUG("(%p,%p,%d,%d)\n", pInvestorPosition, pRspInfo, nRequestID, bIsLast);
 	_qryPosAction->OnRspQryInvestorPosition(pInvestorPosition, pRspInfo, nRequestID, bIsLast);
 }
 
@@ -342,7 +309,6 @@ void CTPTradeClientBase::OnRspQryTrade(CThostFtdcTradeField *pTrade, CThostFtdcR
 }
 
 void CTPTradeClientBase::OnRspQryInstrument(CThostFtdcInstrumentField * pInstrument, CThostFtdcRspInfoField * pRspInfo, int nRequestID, bool bIsLast) {
-	//MTS_DEBUG("(%p,%p,%d,%d)\n", pInstrument, pRspInfo, nRequestID, bIsLast);
 	_qryInstrumentAction->OnRspQryInstrument(pInstrument, pRspInfo, nRequestID, bIsLast);
 }
 
@@ -359,7 +325,6 @@ void CTPTradeClientBase::doNextQuery() {
 			return;
 		}
 
-		//MTS_DEBUG("\n");
 		QueryStatus* qryStatus = _queryFunctionList.first().status;
 		if (*qryStatus == QS_READY || *qryStatus == QS_ERROR) {
 			auto fun=_queryFunctionList.first().fun;
@@ -375,7 +340,6 @@ void CTPTradeClientBase::doNextQuery() {
 			_queryFunctionList.removeFirst();
 			doNextQuery(/*handle*/);
 		} else { //QS_SENT
-			//waitting 
 		}
 	}
 	checkQueryStatus();
@@ -389,7 +353,6 @@ void CTPTradeClientBase::checkQueryStatus() {
 		_queryOrderStatus == QS_DONE&&
 		_queryFillStatus == QS_DONE)
 	{
-		//assert(_queryFunctionList.isEmpty());
 		if (_queryFunctionList.isEmpty()) {
 			_queryTimer->stop();
 		}
@@ -413,6 +376,5 @@ int CTPTradeClientBase::subscribe() {
 
 void CTPTradeClientBase::onLoginSuccess() {
 	MTS_DEBUG("onLoginSuccess\n");
-	//PositionMgr::instance()->clear();
 	this->startAsyncQueries();
 }

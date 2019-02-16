@@ -27,15 +27,12 @@
 class QCoreApplication;
 namespace mts
 {
-	//此类作为MTS的代理，所有agent library 使用它和mts通信以及回调。
 	class  MtsProxyBase
 	{
 	public:
 		virtual int exec();
 		virtual void exit(int code);
 
-		//request - 此类方法调用后，异步发送到MTS 线程。其结果会由MTS线程直接通知回调（通过StrategyInterface）
-		//并由各自语言的agent 用其语言相关的线程间通知机制通知主线程（比如：C++ 中用Qt emit signal，nodejs 中用libuv t_async ...）
 		virtual bool initialize(StrategyInterface* callbacks, const QVariantMap& params);
 		QVariantMap params() const;
 
@@ -48,7 +45,6 @@ namespace mts
 		bool subscribeQuotes(const QList<InstrumentId>& instruments);
 		bool unsubscribeQuotes(const QList<InstrumentId>& instruments);
 
-		//query - 此类方法，异步发送到MTS 线程， 然后等待结果后，直接返回结果
 		Position* getPosition(const InstrumentId& id) const;
 		Position* getPosition(const InstrumentId& id, int instanceId, int strategyId) const;
 		QList<TradingAccount*> getAllTradingAccounts() const;

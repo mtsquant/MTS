@@ -72,7 +72,6 @@ boost::local_time::tz_database* initBoostTzDatabase() {
 	QTemporaryFile* dbf = QTemporaryFile::createNativeFile(":/date/date_time_zonespec.csv");
 	QString dbFileName(dbf->fileName());
 	boost::local_time::tz_database* db = new boost::local_time::tz_database();
-	//printf("Load date time zonespec database\n");
 	try {
 		db->load_from_file(qPrintable(dbFileName));
 		assert(!db->region_list().empty());
@@ -122,15 +121,12 @@ qint64 Ticks::local2UTC(int localDate, int localTicks, TimezoneCode cc) {
 	time_zone_ptr nyc_tz = boostTimezoneDB->time_zone_from_region(timezoneSessionName(cc));
 	boost::gregorian::date in_date(localDate / 10000, localDate % 10000 / 100, localDate % 100);
 	time_duration td = milliseconds(localTicks);
-	// 构造本地时间值
-	// 如果无效则创建 not-a-date-time (如：在夏时制转换中)
 	local_date_time nyc_time(in_date,
 		td,
 		nyc_tz,
 		local_date_time::NOT_DATE_TIME_ON_ERROR);
 
 	static const ptime time_t_epoch(boost::gregorian::date(1970, 1, 1));
-	// 通过 utc_time() 将 nyc_time 转换为 utc 并减去 ptime.
 	return (nyc_time.utc_time() - time_t_epoch).total_milliseconds();
 }
 
@@ -166,7 +162,6 @@ int Ticks::getTimeFrom(qint64 ticksSinceEpoch) {
 	return localTicksFromMidnight2Time((int)(ticksSinceEpoch %TICS_PER_DAY));
 }
 
-//=====================================
 
 qint64 UtcTicks::toLocal(TimezoneCode countryCode) const {
 	return UTC2Local(this->_ticks, countryCode);
@@ -182,7 +177,6 @@ qint64 UtcTicks::refreshAndGet(const LocalTicks& localTicks) const {
 	return _ticks;
 }
 
-//====================================
 
 
 LocalTicks::LocalTicks(TimezoneCode tc)

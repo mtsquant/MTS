@@ -41,9 +41,6 @@ public:
 
 
 
-//TODO: 
-//declare(TYPE_DC_SPOT,"DCS","加密数字货币") 
-//declare(TYPE_DC_FUTR,"DCF","加密数字货币期货") 
 #define INSTRUMENT_ID_ENUM(declare)	\
 	declare(TYPE_UNKNOWN,"UNKNOWN","无效标的类型")	\
 	declare(TYPE_STOCK,"STK","股票")	\

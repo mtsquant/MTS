@@ -25,11 +25,8 @@
 class BASE_API MtsPath
 {
 public:
-	//const dir path section
 	static QString appDirPath();   //return exe or script path if running on python
-	//static QString scriptDirPath(); //if python return python script path else return empty
 
-	//configable dir path section,so it is the default dir path
 	static QString mtsDirPath(bool hasColon = true);   //return mts.dll path. it is appDirPath() if the app start from exe else return scriptDirPath()/mts while start from script
 	static QString configDirPath();
 	static QString testDirPath();
@@ -44,13 +41,6 @@ public:
 	static QString bkdDirPath(mts::InstrumentType,int sec, const QString& dataDirPath = MtsPath::dataDirPath());
 	static QString bkdFilePath(mts::InstrumentType , int sec,int date, const QString& symbol, const QString& dataDirPath = MtsPath::dataDirPath());
 
-	//static QStringList dataFilePath(mts::InstrumentType type, int date, const QString& symbol, int sec = 0, const QString& dataDirPath = MtsPath::dataDirPath()) {
-	//	if (sec >= 0) {
-	//		return fmdFilePath(type, date, symbol, dataDirPath);
-	//	} else {
-	//		return QStringList()<<bkdFilePath(type, sec, date, symbol, dataDirPath);
-	//	}
-	//}
 
 	static QString mtsScriptsDirPath ();
 	static QString workspaceDirPath();

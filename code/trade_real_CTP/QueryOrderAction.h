@@ -31,7 +31,6 @@ Q_SIGNALS:
 	void responseQueryOrders(const QList<CThostFtdcOrderField>& orders);
 
 public:
-///请求查询报单响应
 	virtual void OnRspQryOrder(CThostFtdcOrderField *pOrder, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)  override {
 		this->onResponse(pOrder, pRspInfo, bIsLast);
 	}

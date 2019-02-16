@@ -23,7 +23,6 @@ using namespace mts;
 
 namespace mts
 {
-	//接收来自MTS线程的回调，signal 方式通知主线程(仅当主线程执行Qt event loop时工作)
 	class MTS_API CrossThreadNotifier :public QObject, public StrategyInterface
 	{
 		Q_OBJECT
@@ -31,7 +30,6 @@ namespace mts
 		CrossThreadNotifier(const std::string& name, int strategyId,const std::string& strategyPath=std::string());
 		virtual ~CrossThreadNotifier();
 
-		// 通过 StrategyInterface 继承
 		virtual std::string name () const override{
 			return _name;
 		}
@@ -85,7 +83,6 @@ namespace mts
 	public: // for Agent to call on onInitalized()
 		virtual void onBusinessDateChanged(int) override;
 	private:
-		// 通过 StrategyInterface 继承
 		virtual void onEnvirInitialized() override;
 		virtual void onInitialized(Account *) override;
 		virtual void onTimeout(int) override;

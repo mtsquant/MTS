@@ -35,10 +35,8 @@ namespace mts
 		Quote* getQuote(const InstrumentId&);
 
 		int subscribedInstrumentCount() const;
-		// 通过 FeedsCallback 继承
 		virtual void onQuoteUpdate(QuotePtr) override;
 		virtual void onBusinessDateChanged(int businessDate) override;
-		// 通过 FeedsCallback 继承
 		virtual void onBarUpdate(CalcBarPtr) override;
 	private:
 		QuoteSet  _quoteSet;

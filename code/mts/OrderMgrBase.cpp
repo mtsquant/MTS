@@ -38,8 +38,6 @@ namespace mts
 		:_notify(nullptr)
 	{
 		assert(Environment::instance()->isCurrentMtsThread());
-		//MTS_LOG("%p\n", this);
-		//MTS_FILE("%p\n", this);
 	}
 
 
@@ -187,87 +185,6 @@ namespace mts
 		newaction->setInstanceId(Environment::instance()->instanceId());
 		newaction->setReferenceId(Environment::instance()->genOrderReferenceId(newaction->strategyId(), orderType,newaction->instrumentId()));
 		Position* pos = getPosition(newaction->instrumentId());
-		//switch (newaction->orderType()) 
-		//{
-		//	case OT_SMARTER:
-		//	{
-		//		QList<SplitOrdInfo> sInfos = splitOrderInfo(newaction, pos);
-		//		if (sInfos.size() > 1) {
-		//			bool isOk = true;
-		//                  foreach (const SplitOrdInfo& info , sInfos)
-		//			{
-		//				OrderActionNew action(*newaction);
-		//				action.setOrderType(OT_DIRECT);
-		//				action.setReferenceId(Environment::instance()->genOrderReferenceId(newaction->strategyId()));
-		//				action.setVolume(info.volume);
-		//				action.setDirectonSide(info.side);
-		//				action.setOffsetFlag(info.offset);
-		//				isOk = doSendOrder(&action, pos) || isOk;
-		//			}
-		//			return isOk?0:-1;
-		//		}
-		//		else if (sInfos.size() == 1) {
-		//			newaction->setOffsetFlag(sInfos.first().offset);
-		//			newaction->setDirectonSide(sInfos.first().side);
-		//		}
-		//		else {
-		//			switch (newaction->directionSide())
-		//			{
-		//			case D_UNKNOWN:
-		//			{
-		//				if (newaction->volume() > 0) {
-		//					newaction->setDirectonSide(D_BUY);
-		//				}
-		//				else {
-		//					newaction->setDirectonSide(D_SHORT);
-		//				}
-		//				newaction->setOffsetFlag(CombOffsetFlag::OF_OPEN);
-		//			}
-		//			break;
-		//			case D_BUY:
-		//			case D_SHORT:
-		//				newaction->setOffsetFlag(CombOffsetFlag::OF_OPEN);
-		//				break;
-		//			default:
-		//				newaction->setOffsetFlag(CombOffsetFlag::OF_CLOSE);
-		//				break;
-		//			}
-		//		}
-		//	}
-		//	case OT_SMART:
-		//		{
-		//			//newaction->setOrderType(OT_DIRECT);
-		//			newaction->setOffsetFlag(CombOffsetFlag::OF_OPEN);
-		//			if (newaction->volume() < 0) {
-		//				if ((pos->longLeftVolume()+ newaction->volume()) >=0) {
-		//					newaction->setDirectonSide(DirectionSide::D_SELL);
-		//					if (pos->longLeftYesterdayVolume() > 0) {
-		//						newaction->setOffsetFlag(CombOffsetFlag::OF_CLOSEYESTERDAY);
-		//					}else {
-		//						newaction->setOffsetFlag(CombOffsetFlag::OF_CLOSETODAY);
-		//					}
-		//				}else {
-		//					newaction->setDirectonSide(DirectionSide::D_SHORT);
-		//					newaction->setOffsetFlag(CombOffsetFlag::OF_OPEN);
-		//				}
-		//			}else {
-		//				if ((pos->shortLeftVolume()+ newaction->volume()) <= 0) {
-		//					newaction->setDirectonSide(DirectionSide::D_COVER);
-		//					if (pos->shortLeftYesterdayVolume() < 0) {
-		//						newaction->setOffsetFlag(CombOffsetFlag::OF_CLOSEYESTERDAY);
-		//					}else {
-		//						newaction->setOffsetFlag(CombOffsetFlag::OF_CLOSETODAY);
-		//					}
-		//				}else {
-		//					newaction->setDirectonSide(DirectionSide::D_BUY);
-		//					newaction->setOffsetFlag(CombOffsetFlag::OF_OPEN);
-		//				}
-		//			}
-		//		}
-		//		break;
-		//	default:
-		//		break;
-		//}
 		if (newaction->tradingDay() <= 0) {
 			newaction->setTradingDay(TradingDateMgr::instance()->tradingDate(DateTime::now()));
 		}

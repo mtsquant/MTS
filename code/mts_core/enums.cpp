@@ -80,7 +80,6 @@ namespace mts
 		return map[QString(environmentModeName).toUpper()];
 	}
 
-	//===============================
 
 	const char * exchIdName(ExchId exch) {
 		static const char* names[] = {
@@ -137,7 +136,6 @@ namespace mts
 		return id == ExchId::EXCH_SHFE || id == ExchId::EXCH_INE;
 	}
 
-	//=========================
 
 	const char* priceTypeName(PriceType type)
 	{

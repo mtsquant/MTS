@@ -28,8 +28,6 @@
 #include "base/PerfTest.h"
 #include "base/MtsPath.h"
 
-//#include "TradeEvent.h"
-//#include "base/EventQueue.h"
 
 static const int exchOrderInfo = qRegisterMetaType<ExchOrderInfo>("ExchOrderInfo");
 int timesting2int(const QString& time/*hh:mm:ss*/) 
@@ -81,21 +79,12 @@ void CTPOrderMgr::OnRtnTrade(CThostFtdcTradeField * pTrade) {
 	orderReport->setVolume(pOrder->VolumeTotalOriginal);
 	orderReport->setPrice(pOrder->LimitPrice);
 	orderReport->setFillVolume(pOrder->VolumeTraded);
-	//orderReport->setFillAmount(pOrder->);
 	orderReport->setPriceType(pOrder->LimitPrice == 0 ? mts::PRICE_MKT : mts::PRICE_LIMIT);
-	//orderReport->setDirectonSide(pOrder->);
-	//orderReport->setOffsetFlag(pOrder->CombOffsetFlag);
-	//orderReport->setTimeCondition(pOrder->);
-	//orderReport->setCreateSrc(pOrder->);
 	orderReport->setReferenceId(QString(pOrder->OrderRef).toLongLong());
-	//orderReport->setTradingAccountId(pOrder->);
 	mts::InstrumentId iid;
 	iid.symbol = pOrder->InstrumentID;
 	iid.typeId = mts::TYPE_FUTR;
 	orderReport->setInstrumentId(iid);
-	//orderReport->setBook(pOrder->);
-	//orderReport->setTradingDay(pOrder->);
-	//orderReport->setCreateTicksSinceEpoch(pOrder->);
 }*/
 
 static void buildOrderReport(mts::Order *pOrder, mts::OrderReport* orderReport)
@@ -103,8 +92,6 @@ static void buildOrderReport(mts::Order *pOrder, mts::OrderReport* orderReport)
 	orderReport->setVolume(pOrder->volume());
 	orderReport->setPrice(pOrder->price());
 	orderReport->setFillVolume(pOrder->fillVolume());
-	//orderReport->setFillAmount(pOrder->fillAmount());
-	//orderReport->setOrderType ( pOrder->orderType () );
 	orderReport->setPriceType(pOrder->priceType());
 	orderReport->setDirectonSide(pOrder->directionSide());
 	orderReport->setOffsetFlag(pOrder->offsetFlag());
@@ -148,7 +135,6 @@ void CTPOrderMgr::OnRspOrderInsert(CThostFtdcInputOrderField * pInputOrder, CTho
 	MTS_LOG_FILE("ctp", TIMESTAMP("CTPOrderMgr::OnRspOrderInsert: %s, RspInfo:%s\n"), pInputOrder ? utf8Printable(CTPUtils::toJsonString(pInputOrder)) : "NULL", pRspInfo ? utf8Printable(CTPUtils::toJsonString(pRspInfo)) : "NULL");
 	if (pRspInfo && pRspInfo->ErrorID != 0 && pInputOrder) {
 		ExchOrderInfo info;
-		//info.tradingDay
 		info.sessionId = sessionId();
 		info.frontId = frontId();
 		info.side = getMtsOrderSide(pInputOrder->Direction, pInputOrder->CombOffsetFlag[0]);
@@ -158,8 +144,6 @@ void CTPOrderMgr::OnRspOrderInsert(CThostFtdcInputOrderField * pInputOrder, CTho
 		info.fillSz = 0;
 		info.price = pInputOrder->LimitPrice;
 		info.clientId = pInputOrder->OrderRef;
-		//info.exchOrderId
-		//info.exch
 		info.instrument = pInputOrder->InstrumentID;
 		info.errMsg = LS(pRspInfo->ErrorMsg);
 		Q_EMIT signalUpdateOrder(info);
@@ -170,7 +154,6 @@ void CTPOrderMgr::OnErrRtnOrderInsert(CThostFtdcInputOrderField * pInputOrder, C
 	MTS_LOG_FILE("ctp", TIMESTAMP("CTPOrderMgr::OnErrRtnOrderInsert :%s, RspInfo:%s\n"), pInputOrder ? utf8Printable(CTPUtils::toJsonString(pInputOrder)) : "NULL", pRspInfo ? utf8Printable(CTPUtils::toJsonString(pRspInfo)) : "NULL");
 	if (pRspInfo && pRspInfo->ErrorID != 0 && pInputOrder) {
 		ExchOrderInfo info;
-		//info.tradingDay
 		info.sessionId = sessionId();
 		info.frontId = frontId();
 		info.side = getMtsOrderSide(pInputOrder->Direction, pInputOrder->CombOffsetFlag[0]);
@@ -180,8 +163,6 @@ void CTPOrderMgr::OnErrRtnOrderInsert(CThostFtdcInputOrderField * pInputOrder, C
 		info.fillSz = 0;
 		info.price = pInputOrder->LimitPrice;
 		info.clientId = pInputOrder->OrderRef;
-		//info.exchOrderId
-		//info.exch
 		info.instrument = pInputOrder->InstrumentID;
 		info.errMsg = LS(pRspInfo->ErrorMsg);
 		Q_EMIT signalUpdateOrder(info);
@@ -193,18 +174,11 @@ void CTPOrderMgr::OnRspOrderAction(CThostFtdcInputOrderActionField * pInputOrder
 	MTS_LOG_FILE("ctp", TIMESTAMP("CTPOrderMgr::OnRspOrderAction: %s, RspInfo:%s\n"), pInputOrderAction ? utf8Printable(CTPUtils::toJsonString(pInputOrderAction)) : "NULL", pRspInfo ? utf8Printable(CTPUtils::toJsonString(pRspInfo)) : "NULL");
 	if (pRspInfo && pRspInfo->ErrorID != 0 && pInputOrderAction) {
 		ExchOrderInfo info;
-		//info.tradingDay
 		info.sessionId = pInputOrderAction->SessionID;
 		info.frontId = pInputOrderAction->FrontID;
-		//info.side
 		info.status = mts::OS_CANCEL_REJECT;
-		//info.sz
-		//info.leftSz
-		//info.fillSz
 		info.price = pInputOrderAction->LimitPrice;
 		info.clientId = pInputOrderAction->OrderRef;
-		//info.exchOrderId
-		//info.exch
 		info.instrument = pInputOrderAction->InstrumentID;
 		info.errMsg = LS(pRspInfo->ErrorMsg);
 		Q_EMIT signalUpdateOrder(info);
@@ -257,7 +231,6 @@ bool CTPOrderMgr::newOrder(mts::OrderActionNew* newAction)
 		removeOrder(req.orderRef());
 		return false;
 	}
-	//TODO: convert CTPInputOrderField to CTPOrderField and add it to active orders
 	return true;
 }
 
@@ -271,7 +244,6 @@ bool CTPOrderMgr::cancelOrder(mts::OrderActionCancel * cancelAction)
 	CThostFtdcOrderField order = _allOrders[clientId];
 
 	MTS_LOG_FILE("ctp", TIMESTAMP("OrderActionCancel: ClientId:%s,OrderRef:%s,OrderSysID:%s,InstrumentID%s\n"), qPrintable(clientId), order.OrderRef, order.OrderSysID,order.InstrumentID);
-	//assert(QString(order.OrderRef) == clientId);
 
 	CTPCancelOrderField req(this->_BROKER_ID, this->_USER_ID, this->_USER_ID);
 	req.initFromOrder(order);
@@ -312,13 +284,6 @@ CThostFtdcOrderField CTPOrderMgr::convertInputOrder2OrderField(const CThostFtdcI
 	ord.RequestID = inputOrder.RequestID;
 	ord.UserForceClose = inputOrder.UserForceClose;
 	ord.IsSwapOrder = inputOrder.IsSwapOrder;
-	//memcpy(ord.ExchangeID, inputOrder.ExchangeID, sizeof(inputOrder.ExchangeID));
-	//memcpy(ord.InvestUnitID, inputOrder.InvestUnitID, sizeof(inputOrder.InvestUnitID));
-	//memcpy(ord.AccountID, inputOrder.AccountID, sizeof(inputOrder.AccountID));
-	//memcpy(ord.CurrencyID, inputOrder.CurrencyID, sizeof(inputOrder.CurrencyID));
-	//memcpy(ord.ClientID, inputOrder.ClientID, sizeof(inputOrder.ClientID));
-	//memcpy(ord.IPAddress, inputOrder.IPAddress, sizeof(inputOrder.IPAddress));
-	//memcpy(ord.MacAddress, inputOrder.MacAddress, sizeof(inputOrder.MacAddress));
 	ord.OrderSubmitStatus=THOST_FTDC_OSS_InsertSubmitted;
 	ord.OrderStatus =THOST_FTDC_OST_Unknown;
 	return ord;
@@ -369,7 +334,6 @@ void CTPOrderMgr::updateOrder(ExchOrderInfo info)
 			rpt->setOrderExchId (exchOrderId);
 			rpt->setNote ( info.errMsg );
 			Q_EMIT signalOrderReport ( rpt );
-			//EventQueue::defaultQueue()->push(EventPtr(new OrderCancelRejectEvent(rpt)));
 
 		}
 		return;
@@ -383,7 +347,6 @@ void CTPOrderMgr::updateOrder(ExchOrderInfo info)
 		rpt->setNote(info.errMsg);
 		rpt->setPerfNote(QString("apinewrjt=%1").arg(info.perfUs));
 		Q_EMIT signalOrderReport(rpt);
-		//EventQueue::defaultQueue()->push(EventPtr(new OrderNewRejectEvent(rpt)));
 		return;
 	}
 	if (exchOrderId.isEmpty()) {
@@ -397,7 +360,6 @@ void CTPOrderMgr::updateOrder(ExchOrderInfo info)
 		rpt->setOrderExchId(exchOrderId);
 		rpt->setPerfNote(QString("apinewdone=%1").arg(info.perfUs));
 		Q_EMIT signalOrderReport(rpt);
-		//EventQueue::defaultQueue()->push(EventPtr(new OrderNewDoneEvent(rpt)));
 
 	}
 
@@ -411,7 +373,6 @@ void CTPOrderMgr::updateOrder(ExchOrderInfo info)
 		rpt->setNote(info.errMsg);
 		rpt->setPerfNote(QString("apicxlrjt=%1").arg(info.perfUs));
 		Q_EMIT signalOrderReport(rpt);
-		//EventQueue::defaultQueue()->push(EventPtr(new OrderCancelRejectEvent(rpt)));
 
 		break;
 	}
@@ -424,7 +385,6 @@ void CTPOrderMgr::updateOrder(ExchOrderInfo info)
 		rpt->setNote(info.errMsg);
 		rpt->setPerfNote(QString("apicxldone=%1").arg(info.perfUs));
 		Q_EMIT signalOrderReport(rpt);
-		//EventQueue::defaultQueue()->push(EventPtr(new OrderCancelDoneEvent(rpt)));
 
 		break;
 	}
@@ -463,7 +423,6 @@ void CTPOrderMgr::onResponseQueryInstruments(const QList<CThostFtdcInstrumentFie
 	const QString logFile = QString("instrument_%1").arg(ts);
 
 	CTPTradeClientBase::onResponseQueryInstruments(instruments);
-	//TODO: we should have /config/instrument_db.json insteads of querying it
 	for (int i = 0, size = instruments.size(); i < size;++i){
 		const CThostFtdcInstrumentField& instrument = instruments[i];
 		QString jsonStr = CTPUtils::toJsonString(&instrument);
@@ -482,18 +441,6 @@ void CTPOrderMgr::onResponseQueryInstruments(const QList<CThostFtdcInstrumentFie
 				instrumentProperty->setMtsSymbol(mtsSym);
 			}
 		} else {
-			///锟节伙拷
-			//#define THOST_FTDC_PC_Futures '1'
-			///锟节伙拷锟斤拷权
-			//#define THOST_FTDC_PC_Options '2'
-			///锟斤拷锟�
-			//#define THOST_FTDC_PC_Combination '3'
-			///锟斤拷锟斤拷
-			//#define THOST_FTDC_PC_Spot '4'
-			///锟斤拷转锟斤拷
-			//#define THOST_FTDC_PC_EFP '5'
-			///锟街伙拷锟斤拷权
-			//#define THOST_FTDC_PC_SpotOption '6'
 			instrumentProperty->setInstrumentId(mts::InstrumentId(instrument.InstrumentID, mts::TYPE_UNKNOWN, mts::exchId(instrument.ExchangeID)));
 		}
 		instrumentProperty->setVolumeMultiple(instrument.VolumeMultiple);
@@ -518,19 +465,7 @@ void CTPOrderMgr::onResponseQueryPositions(const QList<CThostFtdcInvestorPositio
 {
 	CTPTradeClientBase::onResponseQueryPositions(positions);
 
-	//PosiDirection:
-	///锟斤拷
-	//#define THOST_FTDC_PD_Net '1'
-	///锟斤拷头
-	//#define THOST_FTDC_PD_Long '2'
-	///锟斤拷头
-	//#define THOST_FTDC_PD_Short '3'
 
-	//PositionDate:
-	///锟斤拷锟秸持诧拷
-	//#define THOST_FTDC_PSD_Today '1'
-	///锟斤拷史锟街诧拷
-	//#define THOST_FTDC_PSD_History '2'
 	QMap<QString, PositionDetail> posDetailMap;
 	for (int i = 0, size = positions.size(); i < size; ++i) {
 		const CThostFtdcInvestorPositionField& p = positions[i];
@@ -553,14 +488,10 @@ void CTPOrderMgr::onResponseQueryPositions(const QList<CThostFtdcInvestorPositio
 		QString sym = i.key();
 		PositionDetail posDetail = i.value();
 		int longYPos = posDetail.longTodayPosition.yesterdayPosition + posDetail.longYesterdayPosition.yesterdayPosition;
-        //int longYLeftPos = posDetail.longTodayPosition.position + posDetail.longYesterdayPosition.position - posDetail.longTodayPosition.todayPosition - posDetail.longYesterdayPosition.todayPosition;
-        //int longTodayPos = posDetail.longTodayPosition.todayPosition + posDetail.longYesterdayPosition.todayPosition;
 		
 		int shortYPos = posDetail.shortTodayPosition.yesterdayPosition + posDetail.shortYesterdayPosition.yesterdayPosition;
-        //int shortYLeftPos = posDetail.shortTodayPosition.position + posDetail.shortYesterdayPosition.position - posDetail.shortTodayPosition.todayPosition - posDetail.shortYesterdayPosition.todayPosition;
 
 		assert(posDetail.shortYesterdayPosition.todayPosition == 0);
-        //int shortTodayPos = posDetail.shortTodayPosition.todayPosition;// + posDetail.shortYesterdayPosition.todayPosition;
 		auto id = mts::InstrumentPropertyDb::instance()->findInstrumentId(sym);
 		if (id.isNull()) {
 			MTS_ERROR("No such symbol '%s' in instrument property db\n", qPrintable(sym));
@@ -573,7 +504,6 @@ void CTPOrderMgr::onResponseQueryPositions(const QList<CThostFtdcInvestorPositio
 		pos->setShortOpenVolume(-shortYPos);
 		pos->setShortCurrentVolume(-shortYPos);
 		Q_EMIT signalRestorePosition(pos);
-		//EventQueue::defaultQueue()->push(EventPtr(new PositionEvent(pos)));
 
 	}
 }
@@ -644,7 +574,6 @@ static mts::Order* ctpOrderToMtsOrder(const CThostFtdcOrderField& ctpOrder)
 		volume *= -1;
 	}
 	order->setVolume(volume);
-	//order->setFillVolume(ctpOrder.VolumeTraded);
 	order->setOffsetFlag(ctpCombOffsetFlag2MtsOffSetFlag(ctpFlag));
 	order->setPriceType(ctpOrder.LimitPrice == 0 ? mts::PRICE_MKT : mts::PRICE_LIMIT);
 	order->setCreateTicksSinceEpoch(DateTime(timesting2int(ctpOrder.InsertTime),atoi(ctpOrder.InsertDate)).toUTCMillisecsSinceEpoch());
@@ -686,7 +615,6 @@ static void ctpFillToMtsFillReport(const CThostFtdcTradeField& ctpFill, mts::Ord
 		volume = -volume;
 	}
 	mts::InstrumentId iid(ctpFill.InstrumentID, mts::TYPE_FUTR, mts::exchId(ctpFill.ExchangeID));
-	//rpt->setPrice(ctpFill.Price);
 	rpt->setFillVolume(volume);
 	mts::InstrumentBaseProperty* instrumentProperty = mts::InstrumentPropertyDb::instance()->find(iid);
 	if (instrumentProperty) {
@@ -730,23 +658,9 @@ void CTPOrderMgr::restoreOrdersAndFills()
 		orderMap.insert(order->orderExchId(), order);
 	}
 
- //   foreach(auto ctpFill , _fills) {
-	//	if (orderMap.contains(ctpFill.OrderSysID)) {
-	//		mts::Order* order = orderMap[ctpFill.OrderSysID];
-	//		mts::OrderReportFill* rpt = ctpFillToMtsFillReport(ctpFill);
-	//		rpt->setStrategyId(order->strategyId());
-	//		rpt->setInstanceId(order->instanceId());
-	//		rpt->setReferenceId(order->referenceId());
-	//		order->processOrderReportFill(rpt);
-	//	}
-	//	else {
-	//		MTS_WARN("Unknown fill: 'ctp referenc id:%s,exch order id:%s '\n", ctpFill.OrderRef,ctpFill.OrderSysID);
-	//	}
-	//}
 	for (auto it = orderMap.constBegin(), itEnd = orderMap.constEnd(); it != itEnd; ++it) {
 		mts::Order* order = it.value();
 		Q_EMIT signalRestoreOrder(order);
-		//EventQueue::defaultQueue()->push(EventPtr(new OrderEvent(order)));
 	}
 
 	for (int i = 0, size = _fills.size(); i < size; ++i) {
@@ -757,7 +671,6 @@ void CTPOrderMgr::restoreOrdersAndFills()
 			buildOrderReport(order, rpt);
 			ctpFillToMtsFillReport(ctpFill,rpt);
 			Q_EMIT signalOrderReport(rpt);
-			//EventQueue::defaultQueue()->push(EventPtr(new OrderFillEvent(rpt)));
 
 		}
 		else {
@@ -769,7 +682,6 @@ void CTPOrderMgr::restoreOrdersAndFills()
 void CTPOrderMgr::onOrderFilled(QByteArray trade) {
 	MTS_DEBUG("onOrderFilled\n");
 	CThostFtdcTradeField* pTrade = (CThostFtdcTradeField *)trade.data();
-	//onResponseQueryFill(*pTrade);
 
 	mts::Order* order = mts::OrderSet::instance()->getOrder(pTrade->OrderSysID,mts::exchId(pTrade->ExchangeID));
 	if (!order) {
@@ -778,7 +690,6 @@ void CTPOrderMgr::onOrderFilled(QByteArray trade) {
 	}
 	mts::OrderReportFill* rpt = new mts::OrderReportFill();
 	buildOrderReport(order, rpt);
-	//rpt->setPrice(pTrade->Price);
 	int volume = pTrade->Volume;
 	if (order->directionSide() == mts::D_SELL || order->directionSide() == mts::D_SHORT) {
 		volume = -volume;
@@ -802,7 +713,6 @@ void CTPOrderMgr::onOrderFilled(QByteArray trade) {
 	}
 
 	Q_EMIT signalOrderReport(rpt);
-	//EventQueue::defaultQueue()->push(EventPtr(new OrderFillEvent(rpt)));
 
 }
 
@@ -818,7 +728,6 @@ void CTPOrderMgr::doRtnOrder(QByteArray order)
 	if (!mtsOrder) {
 		mtsOrder = ctpOrderToMtsOrder(*pOrder);
 		Q_EMIT signalRestoreOrder(mtsOrder);
-		//EventQueue::defaultQueue()->push(EventPtr(new OrderEvent(mtsOrder)));
 		return;
 	}
 	ExchOrderInfo info;

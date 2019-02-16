@@ -24,7 +24,6 @@
 #include "base/base_api.h"
 
 #ifdef NDEBUG
-//#define MTS_LOG_DISABLED
 #endif
 
 

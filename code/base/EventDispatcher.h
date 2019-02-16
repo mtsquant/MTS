@@ -25,7 +25,6 @@ public:
 };
 
 class EventQueue;
-//Dispatcher does not thread safe
 class BASE_API EventDispatcher :public NotifiableObserver<EventCallback, EventPtr>
 {
 public:

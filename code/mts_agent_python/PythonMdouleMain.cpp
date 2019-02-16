@@ -30,9 +30,6 @@ BOOST_PYTHON_MODULE(mts_agent_python)
 	initializePythonModule();
 
 	class_<PythonStrategyWrap, boost::noncopyable>("StrategyBase", init<std::string, int>())
-		//.def ( "initialize" , &PythonStrategyWrap::initialize )
-		//.def ( "execute", &PythonStrategyWrap::exec)
-		//.def ( "exit", &PythonStrategyWrap::exit)
 		.def("newTimer", &PythonStrategyWrap::newTimer)
 		.def("newOnceTimer", &PythonStrategyWrap::newOnceTimer)
 		.def("removeTimer", &PythonStrategyWrap::removeTimer)
@@ -50,7 +47,6 @@ BOOST_PYTHON_MODULE(mts_agent_python)
 		.def("getQuote", &PythonStrategyWrap::getQuote)
 		.def("getAllTradingCounts", &PythonStrategyWrap::getAllTradingCounts)
 
-		//.def ( "loadBars" , &PythonStrategyWrap::loadBars )
 		.add_property("allOrders", &PythonStrategyWrap::getAllOrders)
 		.def("getAllOrders", &PythonStrategyWrap::getAllOrders)
 		.add_property("allPositions", &PythonStrategyWrap::getAllPositions)

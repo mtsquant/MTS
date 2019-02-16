@@ -18,11 +18,9 @@
 
 #ifdef _WIN32
 #include "../../api/win64/CTP/ThostFtdcUserApiStruct.h"
-//#include "../../../api/win64/CTP/ThostFtdcTraderApi.h"
 #include "../../api/win64/CTP/ThostFtdcMdApi.h"
 #else
 #include "../../api/linux64/CTP/ThostFtdcUserApiStruct.h"
-//#include "../../api/linux64/CTP/ThostFtdcTraderApi.h"
 #include "../../api/linux64/CTP/ThostFtdcMdApi.h"
 #include <float.h>
 #endif

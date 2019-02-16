@@ -29,14 +29,12 @@ EventQueue * EventQueue::defaultQueue() {
 	return &queue;
 }
 
-//just push threads call the push()
 
 void EventQueue::push(const EventPtr & evt) {
 	QMutexLocker l(&_mutex);
 	_pushedQueue.append(evt);
 }
 
-//the following functions shoule be called by pop thread
 
 EventPtr EventQueue::pop() {
 	if (_popedQueue.isEmpty()) {

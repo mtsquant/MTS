@@ -29,7 +29,6 @@ namespace mts {
 		Quote();
 		virtual ~Quote();
 
-		//MemberMethodDefine(InstrumentId, instrumentId, setInstrumentId);
 		MemberCopyMethodDefine(int, tradingDay, setTradingDay);//交易日期
 
 		MemberCopyMethodDefine(qint64, ticksSinceEpoch, setTicksSinceEpoch);//当前日期时间
@@ -98,26 +97,6 @@ namespace mts {
 
 	typedef QSharedPointer<QuoteSnapshot> QuoteSnapshotPtr;
 
-//
-//	class MTS_CORE_API FutQuote:public Quote
-//	{
-//	public:
-//		FutQuote();
-//		virtual ~FutQuote();
-//
-//		//virtual void merge(Quote* otherQt) override;
-//		virtual FutQuote* clone() const override;
-//	};
-//
-//	class MTS_CORE_API StockQuote:public Quote
-//	{
-//	public:
-//		StockQuote();
-//		virtual ~StockQuote();
-//
-//		//virtual void merge(Quote* otherQt) override;
-//		virtual StockQuote* clone() const override;
-//	};
 }
 
 Q_DECLARE_METATYPE(mts::QuotePtr);

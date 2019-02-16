@@ -14,7 +14,6 @@
 *  limitations under the License.
 *****************************************************************************/
 #include "FeedsReal.h"
-//#include "../ctp_ext/CTPUtils.h"
 #include "mts_core/ConfigParams.h"
 #ifndef NDEBUG
 #include "mts_core/Environment.h"
@@ -51,7 +50,6 @@ namespace mts
 															);
 		connect(_feedsClient, SIGNAL(loginDone()), this, SLOT(emitInitializeDone()));
 		connect(_feedsClient, SIGNAL(loginError(const QString&)), this, SLOT(emitInitializeError(const QString&)));
-		//connect(_feedsClient, &CTPFeedsClient::quoteUpdate, this, &FeedsReal::onQuoteUpdate,Qt::QueuedConnection);
 		return _feedsClient->connectFront();
 	}
 
@@ -63,7 +61,6 @@ namespace mts
 	}
 
 	int FeedsReal::unsubscribe(const QList<InstrumentId> &) {
-		//TODO:
 		return 0;
 	}
 
@@ -76,10 +73,6 @@ namespace mts
 		}
 	}
 
-	//void FeedsReal::onQuoteUpdate(mts::QuotePtr qt) {
-	//	assert(Environment::instance()->isCurrentMtsThread());
-	//	this->notifyAll(qt);
-	//}
 
 	
 

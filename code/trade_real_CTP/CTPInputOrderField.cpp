@@ -14,7 +14,6 @@
 *  limitations under the License.
 *****************************************************************************/
 #include "CTPInputOrderField.h"
-//#include "../mts/PositionMgr.h"
 #include "mts_core/Position.h"
 #include "mts_core/const.h"
 #include "mts_core/InstrumentId.h"
@@ -24,7 +23,6 @@ using namespace mts;
 CTPInputOrderField::CTPInputOrderField(const QString& brokerId, const QString& investorId, const QString& userId)
 	:CTPCommonField<CThostFtdcInputOrderField>(brokerId, investorId,userId)
 {
-	//套保标志
 	this->CombHedgeFlag[0] = THOST_FTDC_HF_Speculation; //必填
 	this->VolumeCondition = THOST_FTDC_VC_AV; //成交量类型:任何数量
 	this->MinVolume = 1;	//最小成交量:1
@@ -33,10 +31,7 @@ CTPInputOrderField::CTPInputOrderField(const QString& brokerId, const QString& i
 	this->StopPrice = 0;  //止损价
 	this->ForceCloseReason = THOST_FTDC_FCC_NotForceClose;	//强平原因:非强平
 	this->IsAutoSuspend = 0;  //自动挂起标志:否
-	//req.BusinessUnit;
-	//this->RequestID = this->nextRequestId();
 	this->UserForceClose = 0;   //用户强评标志:否
-   //req.IsSwapOrder;
 
 }
 
@@ -56,19 +51,7 @@ void CTPInputOrderField::setLimitPrice(double price) {
 }
 
 void CTPInputOrderField::setDirection(mts::DirectionSide direction) {
-	//开平方向
-	//上期所区分昨仓和今仓。
-	//平昨仓时，开平标志类型设置为平仓 THOST_FTDC_OF_Close
-	//平今仓时，开平标志类型设置为平今仓 THOST_FTDC_OF_CloseToday
-	//其他交易所不区分昨仓和今仓。
-	//开平标志类型统一设置为平仓 THOST_FTDC_OF_Close
-	//InstrumentId iid(this->InstrumentID, TYPE_FUTR);
-	//InstrumentId iid;
-	//iid.symbol = this->InstrumentID;
-	//Position* pos = PositionMgr::instance()->getPosition(iid, GM_GET_OR_CREATE);
-	//bool isSHFE = (pos&&pos->attribute()->id().exchId== EXCH_SHFE);
 	/*if (pos) {
-		///this->ExchangeID[0] = pos->attribute().ExchangeID[0];
 	}*/
 	if (direction == D_BUY || direction == D_SHORT) {
 		if (direction == D_BUY) {
@@ -99,7 +82,6 @@ void CTPInputOrderField::setCombOffsetFlag(int offsetFlag)
 		this->CombOffsetFlag[0] = THOST_FTDC_OF_Close;
 		break;
 	case mts::OF_FORCECLOSE:
-		//this->CombOffsetFlag[0] = THOST_FTDC_OF_CloseToday;
 		break;
 	case mts::OF_CLOSETODAY:
 		this->CombOffsetFlag[0] = THOST_FTDC_OF_CloseToday;
@@ -159,13 +141,4 @@ QJsonObject CTPInputOrderField::toJson() const {
 	return json;
 }
 
-//QString CTPInputOrderField::toString() const {
-//	return QString("%1,\"Direction\":\"%2 %3\",\"LimitPrice\":%4,\"VolumeTotalOriginal\":%5")
-//		.arg(CTPCommonField::toString())
-//		.arg(this->Direction == THOST_FTDC_D_Buy?"BUY":"SELL")
-//		.arg(this->CombOffsetFlag[0]== THOST_FTDC_OF_Open?"OPEN":"CLOSE")
-//		.arg(this->LimitPrice)
-//		.arg(this->VolumeTotalOriginal)
-//		;
-//}
 

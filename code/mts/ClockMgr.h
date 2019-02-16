@@ -35,7 +35,6 @@ namespace mts
 		bool destoryTimer(int timerId);
 		DateTime now () const;
 		int currentTradingDay () const;
-		//bool generateNextTick();
 	};
 
 }

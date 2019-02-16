@@ -19,7 +19,6 @@
 #include "ctp_ext/CTPClientCommon.h"
 #include "mts_core/InstrumentId.h"
 #include "mts_core/Quote.h"
-//#include <future>
 
 class CTPFeedsClient:public QObject, public CTPClientCommon<CThostFtdcMdApi,CThostFtdcMdSpi>
 {
@@ -41,7 +40,6 @@ public:
 Q_SIGNALS:
 	void loginDone();
 	void loginError(const QString&);
-	//void quoteUpdate(mts::QuotePtr);
 
 protected:
 	void onDepthMarketData(CThostFtdcDepthMarketDataField*);
@@ -56,10 +54,8 @@ private:
 	virtual void OnRspSubForQuoteRsp(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)  override;
 	virtual void OnRspUnSubForQuoteRsp(CThostFtdcSpecificInstrumentField *pSpecificInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)  override;
 
-	///深度行情通知
 	virtual void OnRtnDepthMarketData(CThostFtdcDepthMarketDataField *pDepthMarketData)  override;
 
-	///询价通知
 	virtual void OnRtnForQuoteRsp(CThostFtdcForQuoteRspField *pForQuoteRsp) override;
 };
 

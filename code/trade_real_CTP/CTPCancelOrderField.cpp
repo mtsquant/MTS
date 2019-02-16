@@ -21,7 +21,6 @@ CTPCancelOrderField::CTPCancelOrderField(const QString& brokerId, const QString&
 	:CTPCommonField<CThostFtdcInputOrderActionField>(brokerId, investorId, userId)
 {
 	this->ActionFlag = THOST_FTDC_AF_Delete;
-	//req.OrderActionRef = this->nextRequestId();
 
 }
 
@@ -38,18 +37,6 @@ void CTPCancelOrderField::initFromOrder(const CThostFtdcOrderField & order) {
 }
 
 
-/// 交易序列号
-//FrontID 、SessionID、 OrderRef，
-//ExchangID、 OrderSysID。
-/// 其他参数
-//BrokerID，
-//UserID,
-//InvestorID，
-//InstrumentID，
-//上述 5 个交易关键字, 在撤单时都要使用。
-//如果报单还停留在 Thost，Thost 可以用 Front 、SessionID、OrderRef 来定位
-//如果报单还没到交易所， Thost ExchangeID + TraderID + OrderLocalID 来定位
-//如果报单停留在交易所，Thost 可以用 ExchangID、OrderSysID 来定位，然后向交易所转发撤单指令。
 
 
 void CTPCancelOrderField::setExchangeLevelId(const QString & exchangeId, const QString & orderSysId) {

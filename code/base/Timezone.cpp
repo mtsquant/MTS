@@ -70,39 +70,4 @@ TimezoneCode timezoneCodeFromSessiontName(const char * timezoneSessionName) {
 	return map[timezoneSessionName];
 }
 
-//case US:
-	//	return "America/New_York";
-	//case UK:
-	//	return "Europe/London";
-	//case HK:
-	//	return "Asia/Hong_Kong";
-	//case CN:
-	//	return "Asia/Shanghai";
-	//case SG:
-	//	return "Asia/Singapore";
-	//case JP:
-	//	return "Asia/Tokyo";
-	//case KR:
-	//	return "Asia/Seoul";
-	//case FT:
-	//	return "America/Chicago";
-	//case DE:
-	//	return "Europe/Berlin";
-	//case IT:
-	//	return "Europe/Rome";
-	//case FR:
-	//	return "Europe/Paris";
-	//case SP:
-	//	return "Europe/Madrid";
-	//case BE:
-	//	return "Europe/Brussels";
-	//	break;
-	//case NL:
-	//	return "Europe/Amsterdam";
-	//	break;
-	//case AU:
-	//	return "Australia/Sydney";
-	//	break;
-	//case IS:
-	//	return "Atlantic/Reykjavik";
 

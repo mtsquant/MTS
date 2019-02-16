@@ -20,9 +20,6 @@
 
 using namespace boost::python;
 
-///=====================================================================================
-///Boost.Python封装 for callback functions
-///=====================================================================================
 template <class StrategyClass>
 struct PythonStrategyWrapTemplate : StrategyClass, wrapper < StrategyClass >
 {

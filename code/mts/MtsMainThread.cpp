@@ -41,7 +41,6 @@ namespace mts
 		if (mtsThread == nullptr) {
 			auto func=threadCreatorMap()->value(mode);
 			if (!func) {
-				//for open source version, SIMU does not be support
 				MTS_ERROR("Not support mode '%s'\n", environmentModeName(mode));
 				return nullptr;
 			}
@@ -62,16 +61,10 @@ namespace mts
         ThreadNameRegister::instance()->registerCurrentThread("MtsThread");
 		Environment::instance();//should be initialize first
 
-		//auto configDir=ConfigParams::instance()->configDir();
-		//if (!TradingDateMgr::instance()->init(configDir)) {
-		//	MTS_ERROR("Failed to load trading date of '%s'\n", qPrintable(configDir));
-		//	return false;
-		//}
 
 		auto continuousContractFile = ConfigParams::instance()->continuousContractFile();
 		if (!ContinuousSymbolMgr::instance()->init(continuousContractFile)) {
 			MTS_WARN("Failed to init ContinuousSymbolMgr by reading '%s'\n",qPrintable(continuousContractFile));
-			//return false;
 		}
 
 		if (_initFunInThread) {

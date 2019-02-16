@@ -230,7 +230,6 @@ namespace mts
 		return _mktTradingTimeType;
 	}
 
-	//real & beta
 	QString CommonConfigParams::brokerId(const QString& exchSession) const {
 		if (isProxyMode()) {
 			return _fronts.value(exchSession)._brokerId;
@@ -239,7 +238,6 @@ namespace mts
 		}
 	}
 
-	//=====
 
 	bool ConfigParams::_isInitialized = false;
 
@@ -291,8 +289,6 @@ namespace mts
 
 
 			int beginTradingDate = TradingDateMgr::instance()->forceToDate(inputBeginDate);
-			//int beginDate = TradingDateMgr::instance()->prevDate(beginTradingDate);
-			//int beginTime = TT_NIGHT_BEGIN_TIME;  // use 20:00:00 as begin time for night trading
 			int beginTime = TradingDateMgr::instance() ->openTradingTime(beginTradingDate);
 			int beginDate = TradingDateMgr::instance()->realDate(beginTradingDate,beginTime);
 			DateTime beginDt(beginTime, beginDate);
@@ -305,7 +301,6 @@ namespace mts
 
 			int endTradingDate = TradingDateMgr::instance()->forceToDate(params[SIMU_END_DATE].toInt());
 			int endDate = endTradingDate;
-			//int endTime = 195959999;
 			int endTime = TradingDateMgr::instance()->closeTradingTime(endTradingDate);
 			DateTime endDt(endTime, endDate);
 			if (endDt.date() != endDate || endDt.time() != endTime) {
@@ -323,7 +318,6 @@ namespace mts
 		return true;
 	}
 
-	//simu
 	int ConfigParams::feedsBeginTime() const {
 		return _feedsBeginTime;
 	}
@@ -348,25 +342,9 @@ namespace mts
 
 
 
-	//=====
 
 
-	//QString ConfigParamsFeedsSimu::toLocalPath ( const UrlPath & url , bool checkExists ){
-	//	if ( url.scheme () != "file" ){
-	//		MTS_ERROR ( "'%s' should be 'file://' on 'simu' mode\n" ,qPrintable(url.toDisplayString()));
- //           return QString();
-	//	}
 
-	//	QString fullPath = url.localPath();
-	//	if ( checkExists ){
-	//		QDir dir(fullPath );
-	//		if ( !dir.exists () ){
-	//			MTS_ERROR ( "No such dir '%s'\n" , qPrintable ( fullPath ) );
- //               return QString();
-	//		}
-	//	}
-	//	return fullPath;
-	//}
 
 
 

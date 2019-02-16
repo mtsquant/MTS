@@ -18,9 +18,6 @@
 #include <QJsonDocument>
 
 namespace mts {
-	//QString fillidString(const QString& id, DirectionSide side, ExchId exch) {
-	//	return QString("%1@%2@%3").arg(id).arg(side).arg(exch);
-	//}
 
 	Order::Order()
 		:OrderReportNewDone(OrderReportType::ORT_ORDER),_status(OrderStatus::OS_NULL), _lastCxlTimestamp(0)
@@ -34,7 +31,6 @@ namespace mts {
 	}
 	Order::~Order()
 	{
-		//qDeleteAll(_fillrpts);
 	}
 
 	double Order::leftVolume() const //TODO check double
@@ -125,24 +121,8 @@ namespace mts {
 		setNote(cancelRjt->note());
 	}
 
-	//void Order::processOrderActionReplace(const OrderActionReplace& actionRpl)
-	//{
-	//	setReferenceId(actionRpl.referenceId());
-	//	setPrice(actionRpl.price());
-	//	setStatus(status() & ~OrderStatus::OS_REPLACE_ACK & ~OrderStatus::OS_REPLACE_REJECT | OrderStatus::OS_REPLACE_REQUEST);
-	//}
 
-	//void Order::processOrderReportReplaceAck(const OrderReportReplaceAck& rplAck)
-	//{
-	//	setStatus(status() |OrderStatus::OS_REPLACE_ACK & ~OrderStatus::OS_REPLACE_REJECT);
-	//}
 
-	//void Order::processOrderReportReplaceReject(const OrderReportReplaceReject& rplRjt)
-	//{
-	//	//TODO,recovery
-	//	setStatus(status() &~OrderStatus::OS_REPLACE_ACK |OrderStatus::OS_REPLACE_REJECT);
-	//	setNote(rplRjt.errorMsg());
-	//}
 
 	void Order::processOrderReportFill(OrderReportFill* newfill, OrderReportFill* lastFillrpt)
 	{
@@ -152,7 +132,6 @@ namespace mts {
 			lastFillVolume = lastFillrpt->fillVolume();
 			lastFillAmount = lastFillrpt->fillAmount();
 		}
-		//QString fillIdStr=fillidString(newfill->fillId(), newfill->directionSide(), newfill->instrumentId().exchId);
 		setFillVolume(fillVolume() + newfill->fillVolume() - lastFillVolume);
 		setFillAmount(fillAmount() + newfill->fillAmount() - lastFillAmount);
 		if (std::abs(fillVolume()) >= std::abs(volume())) {
@@ -196,10 +175,6 @@ namespace mts {
 		order->setLastCancelSinceEpoch(order->lastCancelSinceEpoch());
 		order->setStatus(status());
 		order->setCreateTicksSinceEpoch(createTicksSinceEpoch());
-		//for (auto it = _fillrpts.constBegin(); it != _fillrpts.constEnd();it++)
-		//{
-		//	order->_fillrpts.insert(it.key(), new OrderReportFill(*(it.value())));
-		//}
 	}
 
 	void Order::copyTo(OrderActionCancel* cxl) const

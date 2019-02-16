@@ -42,7 +42,6 @@ namespace p = boost::python;
 using namespace Poco::Net;
 
 bool remoteReportAndCheck() {
-	//report the runing when on real mode
 	assert(ConfigParams::isInitialized());
 	if (ConfigParams::instance()->mode() != mts::EnvironmentMode::ENVIR_REAL) {
 		return true;
@@ -51,7 +50,6 @@ bool remoteReportAndCheck() {
 	try
 	{
 		HTTPClientSession session("www.mtsquant.com", 3006);
-		//HTTPClientSession session("127.0.0.1", 3006);
 		session.setTimeout(Poco::Timespan(5,0));
 		HTTPRequest request(HTTPRequest::HTTP_POST, "/mts/check", HTTPRequest::HTTP_1_1);
 		HTMLForm form;
@@ -74,11 +72,9 @@ bool remoteReportAndCheck() {
 		form.write(session.sendRequest(request));
 		HTTPResponse response;
 		std::istream& rs = session.receiveResponse(response);
-		//Poco::StreamCopier::copyStream(rs, std::cout);
 		char* recvBuffer = new char[1024];
 		memset(recvBuffer, 0, sizeof(char)*1024);
 		rs.read(recvBuffer,1024);
-		//printf("recv:'%s'\n", recvBuffer);
 		QJsonObject retJson = MtsUtils::str2Json(recvBuffer);
 		int ok = retJson.value("ok").toInt(1);
 		delete []recvBuffer;
@@ -88,7 +84,6 @@ bool remoteReportAndCheck() {
 	}
 	catch (Poco::Exception & ex)
 	{
-		//std::cout << "Exception:"<<ex.displayText();
 	}
 	return true;
 }
@@ -145,7 +140,6 @@ bool PythonStrategy::initialize ( const std::string & paramsJsonFile , dict para
 	if ( paramMap.isEmpty () ){
 		return false;
 	}
-	//setLogLevel if exists
 	auto logLevelVar = paramMap.value("log_level");
 	if (!logLevelVar.isNull()) {
 		bool ok = false;
@@ -187,7 +181,6 @@ PythonStrategy::PythonStrategy(const std::string& name , int strategyId, const s
 	StrategyMgr::instance()->registerStrategy(&_notifier);
 
 	MTS_DEBUG("appPath() %s\n", qPrintable(MtsPath::appDirPath()));
-	//MTS_DEBUG("scriptPath() %s\n", qPrintable(MtsPath::scriptDirPath()));
 
 }
 
@@ -219,7 +212,6 @@ bool PythonStrategy::checkParamsNewOrder ( const dict& params ){
 }
 
 std::string PythonStrategy::newOrder ( dict params ){
-	//printDict ( params );
 	if ( !checkParamsNewOrder ( params ) ){
 		return "";
 	}
@@ -243,7 +235,6 @@ std::string PythonStrategy::newOrder ( dict params ){
 			return "";
 		}
 	}
-	//actNewOrder->setOrderType ( ot );
 	actNewOrder->setInstrumentId(id);
 	actNewOrder->setVolume(extract<double>(params["volume"])); //TODO check double
 	actNewOrder->setPrice(ordPrice);
@@ -295,7 +286,6 @@ bool PythonStrategy::subscribeQuotes(list symbols)
 	auto  symbolsSize = len(symbols);
 	for (int i = 0; i <symbolsSize; ++i) {
 		std::string sym= extract<std::string>(symbols[i]);
-		//std::string sym = call_method<std::string>(symbols.ptr(), "__getitem__", i);
 		auto id=InstrumentPropertyDb::instance()->findInstrumentId(sym.c_str());
 		ids << id;
 	}
@@ -402,14 +392,6 @@ list PythonStrategy::getAllInstrumentSymbols() const {
 	return l;
 }
 
-//list PythonStrategy::getAllInstrumentMtsSymbols() const {
-//	auto ids = StrategyMgr::instance()->instrumentIds();
-//	list l;
-//	foreach(const mts::InstrumentId& id, ids) {
-//		l.append(id.symbol);
-//	}
-//	return l;
-//}
 
 PyDateTime PythonStrategy::getNow() const {
 	return PyDateTime(StrategyMgr::instance()->getNow());
@@ -420,9 +402,6 @@ qint64 PythonStrategy::getNowMicrosecs() const
 	return DateTime::nowToUTCMicrosecsSinceEpoch();
 }
 
-//bool PythonStrategy::loadBars(const std::string & jsonFilePath) {
-//	return  StrategyMgr::instance()->loadBars(jsonFilePath.c_str());
-//}
 
 void PythonStrategy::doEnvirInitialized() {
 	onEnvirInitialized();
@@ -433,7 +412,6 @@ void PythonStrategy::doInitialized(AccountPtr account) {
 	_notifier.connectSignals ( this );
 	onInitialized(PyAccount(*account,this->getAllOrders(),this->getAllPositions()));
 	_notifier.onBusinessDateChanged ( StrategyMgr::instance ()->currentTradingDay () );
-	//Exit if no subscribed symbol in simu mode 
 	if (mts::ConfigParams::instance()->mode() == mts::ENVIR_SIMU && StrategyMgr::instance()->subscribedInstrumentCount() == 0) {
 		MTS_ERROR("please subscribe instrument\n");
 		QCoreApplication::instance()->exit(1);

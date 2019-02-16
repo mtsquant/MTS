@@ -99,7 +99,6 @@ void logToBlackHole(const QString&) {
 }
 
 
-//the index of the follows arrays is the enum QtMsgType { QtDebugMsg, QtWarningMsg, QtCriticalMsg, QtFatalMsg, QtInfoMsg, QtSystemMsg = QtCriticalMsg };
 static LogToFixtureFunc LOG_FIXTURE_FUNCS_LIST[3][5] = {
 	{ logToBlackHole		,	logToBlackHole			, logToStderrAndFile , logToStderrAndFile , logToBlackHole }, //log level 0
 	{ logToFileOnly			,	logToFileOnly			, logToStderrAndFile , logToStderrAndFile , logToFileOnly   }, //log level 1
@@ -125,8 +124,6 @@ void clearLogFixtureHook(QtMsgType type) {
 #ifndef NDEBUG
 inline
 QString genOutputText(QtMsgType type, const QMessageLogContext & context, const QString &msg) { //for debug version
-	//static QMutex mutex;
-	//QMutexLocker l(&mutex);
 	auto localMsg = msg.endsWith('\n') ? msg : (msg + '\n');
 
 	auto nowStr = DateTime::now().toLocalString();
