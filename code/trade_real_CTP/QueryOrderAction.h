@@ -1,3 +1,4 @@
+
 /*****************************************************************************
 * Copyright [2018-2019] [3fellows]
 *
@@ -30,7 +31,7 @@ Q_SIGNALS:
 	void responseQueryOrders(const QList<CThostFtdcOrderField>& orders);
 
 public:
-///�����ѯ������Ӧ
+///请求查询报单响应
 	virtual void OnRspQryOrder(CThostFtdcOrderField *pOrder, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast)  override {
 		this->onResponse(pOrder, pRspInfo, bIsLast);
 	}

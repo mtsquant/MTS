@@ -1,3 +1,4 @@
+
 /*****************************************************************************
 * Copyright [2018-2019] [3fellows]
 *
@@ -81,9 +82,9 @@
 
 //algo
 #define ALGO_NAMES "algo_names"
-//HttpAndUDP������в��ԵĲ���ID
+//HttpAndUDP监控所有策略的策略ID
 #define MONTOR_STRATEGYID_DEFAULT 9
-//�㷨���ײ���ID
+//算法交易策略ID
 #define ALGO_STRATEGYID_DEFAULT 8
 
 enum OwnerLevel

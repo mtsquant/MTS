@@ -1,3 +1,4 @@
+
 /*****************************************************************************
 * Copyright [2018-2019] [3fellows]
 *
@@ -40,16 +41,16 @@ namespace mts {
 		Bar();
 		~Bar();
 
-		MemberBarCopyMethodDefine ( qint64 , endTicksSinceEpoch , setEndTicksSinceEpoch ); //����ʱ��
-		MemberBarCopyMethodDefine (double, openPrice, setOpenPrice);//���̼�
-		MemberBarCopyMethodDefine (double, highPrice, setHighPrice);//��߼۸�
-		MemberBarCopyMethodDefine (double, lowPrice, setLowPrice);//��ͼ۸�
-		MemberBarCopyMethodDefine (double, closePrice, setClosePrice);//���̼�
+		MemberBarCopyMethodDefine ( qint64 , endTicksSinceEpoch , setEndTicksSinceEpoch ); //结束时间
+		MemberBarCopyMethodDefine (double, openPrice, setOpenPrice);//开盘价
+		MemberBarCopyMethodDefine (double, highPrice, setHighPrice);//最高价格
+		MemberBarCopyMethodDefine (double, lowPrice, setLowPrice);//最低价格
+		MemberBarCopyMethodDefine (double, closePrice, setClosePrice);//收盘价
 
-		MemberBarCopyMethodDefine (double, volume, setVolume);//�ɽ����� //TODO check double
-		MemberBarCopyMethodDefine(double, turnover, setTurnover);//�ɽ����
+		MemberBarCopyMethodDefine (double, volume, setVolume);//成交总量 //TODO check double
+		MemberBarCopyMethodDefine(double, turnover, setTurnover);//成交金额
 
-		MemberBarCopyMethodDefine(double, openInterest, setOpenInterest);//�ֲ���
+		MemberBarCopyMethodDefine(double, openInterest, setOpenInterest);//持仓量
 		MemberBarCopyMethodDefine ( double , fairPrice , setFairPrice );
 
 		MemberBarCopyMethodDefine(double, midPrice, setMidPrice);

@@ -1,3 +1,4 @@
+
 /*****************************************************************************
 * Copyright [2018-2019] [3fellows]
 *
@@ -33,7 +34,7 @@ namespace mts
 		//3 bytes instance id +5bytes inc count+2 byte millisecond (mm)+1 byte orderType +1 byte strategy id
 		if (index >= REF_INDEX_MAX - 1) {
 			MTS_ERROR("Too many orders , should be less than %d\n", REF_INDEX_MAX);
-			return ;//��ʱ���ܳ���99999��order ��10�����
+			return ;//暂时不能超过99999个order （10万个）
 		}
 		int msec = QTime::currentTime().msec() % 100;
 		_refId = ((qint64(pid + index)) * 1000 + msec * 10 + orderType) * 10 + strategyId;

@@ -1,3 +1,4 @@
+
 /*****************************************************************************
 * Copyright [2018-2019] [3fellows]
 *
@@ -31,7 +32,7 @@ Q_SIGNALS:
 	void responseQueryPositions(const QList<CThostFtdcInvestorPositionField>& positions);
 
 public:
-	///�����ѯͶ���ֲ߳�
+	///请求查询投资者持仓
 	virtual void OnRspQryInvestorPosition(CThostFtdcInvestorPositionField *pInvestorPosition, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) override {
 		this->onResponse(pInvestorPosition, pRspInfo, bIsLast);
 	}

@@ -1,3 +1,4 @@
+
 /*****************************************************************************
 * Copyright [2018-2019] [3fellows]
 *
@@ -16,7 +17,7 @@
 #include "ctp_ext/CTPCommonField.h"
 #include "mts_core/const.h"
 
-// ��װ CTP �� struct���ѳ�����Ҫ�õĵ��ֶΰ�װ�ɷ�������
+// 包装 CTP 的 struct，把撤单需要用的的字段包装成方法调用
 class CTPCancelOrderField:public CTPCommonField<CThostFtdcInputOrderActionField>
 {
 public:

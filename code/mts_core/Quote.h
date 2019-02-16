@@ -1,4 +1,5 @@
-﻿/*****************************************************************************
+
+/*****************************************************************************
 * Copyright [2018-2019] [3fellows]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
@@ -21,9 +22,9 @@
 
 
 #define PRICE_TINY 0.00000001
-namespace mts
-{
-	class MTS_CORE_API Quote :public InstrumentObject {
+namespace mts {
+	class MTS_CORE_API Quote:public InstrumentObject
+	{
 	public:
 		Quote();
 		virtual ~Quote();
@@ -49,18 +50,18 @@ namespace mts
 		MemberCopyMethodDefine(double, lowerLimitPrice, setLowerLimitPrice);//最低限价
 		MemberCopyMethodDefine(double, preSettlementPrice, setPreSettlementPrice);//上次结算价
 		MemberCopyMethodDefine(double, settlementPrice, setSettlementPrice);//本次结算价
-		MemberCopyMethodDefine(double, turnover, setTurnover);//成交金额
+        MemberCopyMethodDefine(double, turnover, setTurnover);//成交金额
 		MemberCopyMethodDefine(double, openInterest, setOpenInterest);//持仓量
 
-		MemberCopyMethodDefine(int, status, setStatus);//行情状态
+        MemberCopyMethodDefine(int, status, setStatus);//行情状态
 		MemberCopyMethodDefine(qint64, revMicrosecond, setRevMicrosecond);//
 
 	public:
 		QString toJsonString() const;
 		virtual QJsonObject toJson() const;
-		QJsonObject toSimpleJson() const;
+		QJsonObject toSimpleJson () const;
 		bool isNull() const;
-		virtual Quote* clone() const;
+		virtual Quote* clone() const ;
 
 		static void registerMetaType();
 	};
@@ -68,7 +69,8 @@ namespace mts
 	typedef QSharedPointer<Quote> QuotePtr;
 
 
-	class MTS_CORE_API QuoteSnapshot :public Quote {
+	class MTS_CORE_API QuoteSnapshot :public Quote
+	{
 	public:
 		QuoteSnapshot();
 		QuoteSnapshot(const Quote&);
@@ -96,26 +98,26 @@ namespace mts
 
 	typedef QSharedPointer<QuoteSnapshot> QuoteSnapshotPtr;
 
-	//
-	//	class MTS_CORE_API FutQuote:public Quote
-	//	{
-	//	public:
-	//		FutQuote();
-	//		virtual ~FutQuote();
-	//
-	//		//virtual void merge(Quote* otherQt) override;
-	//		virtual FutQuote* clone() const override;
-	//	};
-	//
-	//	class MTS_CORE_API StockQuote:public Quote
-	//	{
-	//	public:
-	//		StockQuote();
-	//		virtual ~StockQuote();
-	//
-	//		//virtual void merge(Quote* otherQt) override;
-	//		virtual StockQuote* clone() const override;
-	//	};
+//
+//	class MTS_CORE_API FutQuote:public Quote
+//	{
+//	public:
+//		FutQuote();
+//		virtual ~FutQuote();
+//
+//		//virtual void merge(Quote* otherQt) override;
+//		virtual FutQuote* clone() const override;
+//	};
+//
+//	class MTS_CORE_API StockQuote:public Quote
+//	{
+//	public:
+//		StockQuote();
+//		virtual ~StockQuote();
+//
+//		//virtual void merge(Quote* otherQt) override;
+//		virtual StockQuote* clone() const override;
+//	};
 }
 
 Q_DECLARE_METATYPE(mts::QuotePtr);

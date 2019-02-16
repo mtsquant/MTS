@@ -1,3 +1,4 @@
+
 /*****************************************************************************
 * Copyright [2018-2019] [3fellows]
 *
@@ -31,7 +32,7 @@ namespace mts
 	class MTS_CORE_API CalcBar:public InstrumentObject
 	{
 	public:
-		CalcBar(const InstrumentId&,int interval,qint64 endTicks); // ǰ�պ�
+		CalcBar(const InstrumentId&,int interval,qint64 endTicks); // 前闭后开
 		CalcBar(BarPtr,const InstrumentId&,int interval);
 		CalcBar(int intervalSec=0);
 		~CalcBar();
@@ -41,16 +42,16 @@ namespace mts
 		bool updateQuote(QuoteSnapshot*);  //return true, if the bar finished
 		bool updateTime(qint64);  
 
-		MemberCalcBarCopyMethodDefine(qint64, endTicksSinceEpoch, setEndTicksSinceEpoch); //����ʱ��
-		MemberCalcBarCopyMethodDefine(double, openPrice, setOpenPrice);//���̼�
-		MemberCalcBarCopyMethodDefine(double, highPrice, setHighPrice);//��߼۸�
-		MemberCalcBarCopyMethodDefine(double, lowPrice, setLowPrice);//��ͼ۸�
-		MemberCalcBarCopyMethodDefine(double, closePrice, setClosePrice);//���̼�
+		MemberCalcBarCopyMethodDefine(qint64, endTicksSinceEpoch, setEndTicksSinceEpoch); //结束时间
+		MemberCalcBarCopyMethodDefine(double, openPrice, setOpenPrice);//开盘价
+		MemberCalcBarCopyMethodDefine(double, highPrice, setHighPrice);//最高价格
+		MemberCalcBarCopyMethodDefine(double, lowPrice, setLowPrice);//最低价格
+		MemberCalcBarCopyMethodDefine(double, closePrice, setClosePrice);//收盘价
 
-		MemberCalcBarCopyMethodDefine(double, volume, setVolume);//�ɽ����� //TODO check double
+		MemberCalcBarCopyMethodDefine(double, volume, setVolume);//成交总量 //TODO check double
 		MemberCalcBarCopyMethodDefine(double, turnover, setTurnover);
 		double  vwap() const;
-		MemberCalcBarCopyMethodDefine(double, openInterest, setOpenInterest);//�ֲ���
+		MemberCalcBarCopyMethodDefine(double, openInterest, setOpenInterest);//持仓量
 		MemberCalcBarCopyMethodDefine(double, fairPrice, setFairPrice);
 		MemberCalcBarCopyMethodDefine(double, midPrice, setMidPrice);
 		MemberCalcBarCopyMethodDefine(double, spread,setSpread);
@@ -65,7 +66,7 @@ namespace mts
 
 		BarPtr coreBar() const;
 
-		MemberCopyMethodDefine(int, interval, setInterval);//barʱ���ȣ�60�룬300���
+		MemberCopyMethodDefine(int, interval, setInterval);//bar时间跨度，60秒，300秒等
 		void mergeFrom ( const CalcBar& );
 	public:
 		CalcBar* clone() const;

@@ -1,3 +1,4 @@
+
 /*****************************************************************************
 * Copyright [2018-2019] [3fellows]
 *
@@ -53,8 +54,8 @@ struct ExchOrderInfo {
 	int leftSz;
 	int fillSz;
 	double price;
-	std::string clientId;//��������
-	std::string exchOrderId;//�������
+	std::string clientId;//报单引用
+	std::string exchOrderId;//报单编号
 	std::string exch;
 	std::string instrument;
 	QString errMsg;
@@ -71,19 +72,19 @@ public:
 	CTPOrderMgr(const QString& address, const QString& brokerId, const QString& userId, const QString& password/*,CThostFtdcTraderApi**/);
 	virtual ~CTPOrderMgr();
 
-	///����״̬֪ͨ Exch ��new order , cancel order ��
+	///报单状态通知 Exch （new order , cancel order ）
 	virtual void OnRtnOrder(CThostFtdcOrderField *pOrder) override;
 
-	///����¼��������Ӧ Thost 
+	///报单录入请求响应 Thost 
 	virtual void OnRspOrderInsert(CThostFtdcInputOrderField *pInputOrder, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) override;
-	///�ɽ�֪ͨ Exch
+	///成交通知 Exch
 	virtual void OnRtnTrade(CThostFtdcTradeField *pTrade)  override;
-	///����¼�����ر� Exch
+	///报单录入错误回报 Exch
 	virtual void OnErrRtnOrderInsert(CThostFtdcInputOrderField *pInputOrder, CThostFtdcRspInfoField *pRspInfo)  override;
 
-	///��������������Ӧ
+	///报单操作请求响应
 	virtual void OnRspOrderAction(CThostFtdcInputOrderActionField *pInputOrderAction, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast);;
-	///������������ر� Exch
+	///报单操作错误回报 Exch
 	virtual void OnErrRtnOrderAction(CThostFtdcOrderActionField *pOrderAction, CThostFtdcRspInfoField *pRspInfo) override;
 
 	bool hasOrderClientId(const QString&) const;

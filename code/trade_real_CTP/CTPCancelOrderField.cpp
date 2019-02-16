@@ -1,3 +1,4 @@
+
 /*****************************************************************************
 * Copyright [2018-2019] [3fellows]
 *
@@ -29,7 +30,7 @@ CTPCancelOrderField::~CTPCancelOrderField() {
 }
 
 void CTPCancelOrderField::initFromOrder(const CThostFtdcOrderField & order) {
-	this->setInstrumentID(order.InstrumentID); //����
+	this->setInstrumentID(order.InstrumentID); //必填
 	this->setThostLevelId(order.FrontID, order.SessionID, order.OrderRef);
 	if (strlen(order.OrderSysID) > 0) {
 		this->setExchangeLevelId(order.ExchangeID, order.OrderSysID);
@@ -37,18 +38,18 @@ void CTPCancelOrderField::initFromOrder(const CThostFtdcOrderField & order) {
 }
 
 
-/// �������к�
-//FrontID ��SessionID�� OrderRef��
-//ExchangID�� OrderSysID��
-/// ��������
-//BrokerID��
+/// 交易序列号
+//FrontID 、SessionID、 OrderRef，
+//ExchangID、 OrderSysID。
+/// 其他参数
+//BrokerID，
 //UserID,
-//InvestorID��
-//InstrumentID��
-//���� 5 �����׹ؼ���, �ڳ���ʱ��Ҫʹ�á�
-//���������ͣ���� Thost��Thost ������ Front ��SessionID��OrderRef ����λ
-//���������û���������� Thost ExchangeID + TraderID + OrderLocalID ����λ
-//�������ͣ���ڽ�������Thost ������ ExchangID��OrderSysID ����λ��Ȼ��������ת������ָ�
+//InvestorID，
+//InstrumentID，
+//上述 5 个交易关键字, 在撤单时都要使用。
+//如果报单还停留在 Thost，Thost 可以用 Front 、SessionID、OrderRef 来定位
+//如果报单还没到交易所， Thost ExchangeID + TraderID + OrderLocalID 来定位
+//如果报单停留在交易所，Thost 可以用 ExchangID、OrderSysID 来定位，然后向交易所转发撤单指令。
 
 
 void CTPCancelOrderField::setExchangeLevelId(const QString & exchangeId, const QString & orderSysId) {
@@ -58,7 +59,7 @@ void CTPCancelOrderField::setExchangeLevelId(const QString & exchangeId, const Q
 }
 
 void CTPCancelOrderField::setThostLevelId(int frontId, int sessionId, const QString & orderRef) {
-	this->FrontID = frontId; // ָ��ί�е���FrontID;
-	this->SessionID = sessionId; // ָ��ί�е���SessionID;
-	this->setOrderRef(orderRef); //����  
+	this->FrontID = frontId; // 指向委托单的FrontID;
+	this->SessionID = sessionId; // 指向委托单的SessionID;
+	this->setOrderRef(orderRef); //必填  
 }

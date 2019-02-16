@@ -1,3 +1,4 @@
+
 /*****************************************************************************
 * Copyright [2018-2019] [3fellows]
 *
@@ -23,18 +24,18 @@ using namespace mts;
 CTPInputOrderField::CTPInputOrderField(const QString& brokerId, const QString& investorId, const QString& userId)
 	:CTPCommonField<CThostFtdcInputOrderField>(brokerId, investorId,userId)
 {
-	//�ױ���־
-	this->CombHedgeFlag[0] = THOST_FTDC_HF_Speculation; //����
-	this->VolumeCondition = THOST_FTDC_VC_AV; //�ɽ�������:�κ�����
-	this->MinVolume = 1;	//��С�ɽ���:1
+	//套保标志
+	this->CombHedgeFlag[0] = THOST_FTDC_HF_Speculation; //必填
+	this->VolumeCondition = THOST_FTDC_VC_AV; //成交量类型:任何数量
+	this->MinVolume = 1;	//最小成交量:1
 
-	this->ContingentCondition = THOST_FTDC_CC_Immediately;  //��������:����
-	this->StopPrice = 0;  //ֹ���
-	this->ForceCloseReason = THOST_FTDC_FCC_NotForceClose;	//ǿƽԭ��:��ǿƽ
-	this->IsAutoSuspend = 0;  //�Զ������־:��
+	this->ContingentCondition = THOST_FTDC_CC_Immediately;  //触发条件:立即
+	this->StopPrice = 0;  //止损价
+	this->ForceCloseReason = THOST_FTDC_FCC_NotForceClose;	//强平原因:非强平
+	this->IsAutoSuspend = 0;  //自动挂起标志:否
 	//req.BusinessUnit;
 	//this->RequestID = this->nextRequestId();
-	this->UserForceClose = 0;   //�û�ǿ����־:��
+	this->UserForceClose = 0;   //用户强评标志:否
    //req.IsSwapOrder;
 
 }
@@ -44,23 +45,23 @@ CTPInputOrderField::~CTPInputOrderField() {
 
 void CTPInputOrderField::setLimitPrice(double price) {
 	if (price == 0) {//market order
-		this->OrderPriceType = THOST_FTDC_OPT_AnyPrice;//����
-		this->LimitPrice = 0; //����
-		this->TimeCondition = THOST_FTDC_TC_IOC;  //��Ч������:������ɣ�������
+		this->OrderPriceType = THOST_FTDC_OPT_AnyPrice;//必填
+		this->LimitPrice = 0; //必填
+		this->TimeCondition = THOST_FTDC_TC_IOC;  //有效期类型:立即完成，否则撤销
 	} else {//limit order
-		this->OrderPriceType = THOST_FTDC_OPT_LimitPrice;//����
-		this->LimitPrice = price; //����
-		this->TimeCondition = THOST_FTDC_TC_GFD;  //��Ч������:������Ч
+		this->OrderPriceType = THOST_FTDC_OPT_LimitPrice;//必填
+		this->LimitPrice = price; //必填
+		this->TimeCondition = THOST_FTDC_TC_GFD;  //有效期类型:当日有效
 	}
 }
 
 void CTPInputOrderField::setDirection(mts::DirectionSide direction) {
-	//��ƽ����
-	//������������ֺͽ�֡�
-	//ƽ���ʱ����ƽ��־��������Ϊƽ�� THOST_FTDC_OF_Close
-	//ƽ���ʱ����ƽ��־��������Ϊƽ��� THOST_FTDC_OF_CloseToday
-	//������������������ֺͽ�֡�
-	//��ƽ��־����ͳһ����Ϊƽ�� THOST_FTDC_OF_Close
+	//开平方向
+	//上期所区分昨仓和今仓。
+	//平昨仓时，开平标志类型设置为平仓 THOST_FTDC_OF_Close
+	//平今仓时，开平标志类型设置为平今仓 THOST_FTDC_OF_CloseToday
+	//其他交易所不区分昨仓和今仓。
+	//开平标志类型统一设置为平仓 THOST_FTDC_OF_Close
 	//InstrumentId iid(this->InstrumentID, TYPE_FUTR);
 	//InstrumentId iid;
 	//iid.symbol = this->InstrumentID;
@@ -71,16 +72,16 @@ void CTPInputOrderField::setDirection(mts::DirectionSide direction) {
 	}*/
 	if (direction == D_BUY || direction == D_SHORT) {
 		if (direction == D_BUY) {
-			this->Direction = THOST_FTDC_D_Buy; //����
+			this->Direction = THOST_FTDC_D_Buy; //必填
 		} else {
-			this->Direction = THOST_FTDC_D_Sell; //����
+			this->Direction = THOST_FTDC_D_Sell; //必填
 		}
 		this->CombOffsetFlag[0] = THOST_FTDC_OF_Open;
 	} else if (direction == D_SELL || direction == D_COVER) {
 		if (direction == D_SELL) {
-			this->Direction = THOST_FTDC_D_Sell; //����
+			this->Direction = THOST_FTDC_D_Sell; //必填
 		} else {
-			this->Direction = THOST_FTDC_D_Buy; //����
+			this->Direction = THOST_FTDC_D_Buy; //必填
 		}
 		this->CombOffsetFlag[0] = THOST_FTDC_OF_CloseToday;
 	};

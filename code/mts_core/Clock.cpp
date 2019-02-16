@@ -1,3 +1,4 @@
+
 /*****************************************************************************
 * Copyright [2018-2019] [3fellows]
 *
@@ -55,7 +56,7 @@ namespace mts
 				beginUTCTicks += (ceil((nowUTCTicks - beginUTCTicks) / (interval*1.0))*interval);
 			}
 		}
-		if (beginUTCTicks - nowUTCTicks < 1000) { //�ճ�1 second (timer ��ȷ�����㹻)����ֹ�´μ���begin �����˵�ʱ��now
+		if (beginUTCTicks - nowUTCTicks < 1000) { //空出1 second (timer 精确到秒足够)，防止下次计算begin 超过了当时的now
 			beginUTCTicks += interval;
 		}
 		assert(beginUTCTicks >= nowUTCTicks);

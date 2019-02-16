@@ -1,3 +1,4 @@
+
 /*****************************************************************************
 * Copyright [2018-2019] [3fellows]
 *
@@ -52,19 +53,19 @@ namespace mts {
 	{
 	}
 
-	//barʱ���ȣ�60�룬300���
+	//bar时间跨度，60秒，300秒等
 
-	//qint64 Bar::beginTicksSinceEpoch () const{ //��ʼʱ��
+	//qint64 Bar::beginTicksSinceEpoch () const{ //开始时间
 	//	return _coreBar->endTicksSinceEpoch - _intervalSec * 1000;
 	//}
 
-	MemberBarCopyMethodImpl(qint64, endTicksSinceEpoch, setEndTicksSinceEpoch); //����ʱ��
-	MemberBarCopyMethodImpl(double, openPrice, setOpenPrice);//���̼�
-	MemberBarCopyMethodImpl(double, highPrice, setHighPrice);//��߼۸�
-	MemberBarCopyMethodImpl(double, lowPrice, setLowPrice);//��ͼ۸�
-	MemberBarCopyMethodImpl(double, closePrice, setClosePrice);//���̼�
+	MemberBarCopyMethodImpl(qint64, endTicksSinceEpoch, setEndTicksSinceEpoch); //结束时间
+	MemberBarCopyMethodImpl(double, openPrice, setOpenPrice);//开盘价
+	MemberBarCopyMethodImpl(double, highPrice, setHighPrice);//最高价格
+	MemberBarCopyMethodImpl(double, lowPrice, setLowPrice);//最低价格
+	MemberBarCopyMethodImpl(double, closePrice, setClosePrice);//收盘价
 
-	//MemberBarCopyMethodImpl(double, volume, setVolume);//�ɽ����� //TODO check double
+	//MemberBarCopyMethodImpl(double, volume, setVolume);//成交总量 //TODO check double
 	double Bar::volume() const {
 		return *((double*)(&_coreBar->volume));
 	};
@@ -75,7 +76,7 @@ namespace mts {
 		jsonObj.insert("volume", this->volume());
 	}
 
-	MemberBarCopyMethodImpl(double, openInterest, setOpenInterest);//�ֲ���
+	MemberBarCopyMethodImpl(double, openInterest, setOpenInterest);//持仓量
 	MemberBarCopyMethodImpl(double, fairPrice, setFairPrice);
 	MemberBarCopyMethodImpl(double, turnover, setTurnover);
 
@@ -227,7 +228,7 @@ namespace mts {
 
 	bool Bar::updateQuote(QuoteSnapshot *qt, int interval) {
 		qint64 qtTicks = qt->ticksSinceEpoch();
-		if (qtTicks < this->endTicksSinceEpoch() - interval) { // ǰ�պ�
+		if (qtTicks < this->endTicksSinceEpoch() - interval) { // 前闭后开
 			return false;
 		}
 

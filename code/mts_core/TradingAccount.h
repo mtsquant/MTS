@@ -1,3 +1,4 @@
+
 /*****************************************************************************
 * Copyright [2018-2019] [3fellows]
 *
@@ -40,14 +41,14 @@ namespace mts
 
 		const TradingAccountId& accountId()const;
 		const QString& password()const;
-		double commission()const;//������
-		double available()const; //�����ʽ�
-		double positionProfit()const;//�ֲ�ӯ��
-		double closeProfit()const;//ƽ��ӯ��
-		double currMargin()const;//��ǰ��֤���ܶ�
-		double preBalance()const;//���ս��
-		double deposit() const;///�����
-		double withdraw() const;///������
+		double commission()const;//手续费
+		double available()const; //可用资金
+		double positionProfit()const;//持仓盈亏
+		double closeProfit()const;//平仓盈亏
+		double currMargin()const;//当前保证金总额
+		double preBalance()const;//上日结存
+		double deposit() const;///入金金额
+		double withdraw() const;///出金金额
 
 		double dynamicInterests()const;
 
@@ -67,14 +68,14 @@ namespace mts
 	private:
 		TradingAccountId _id;
 		QString _password;
-		double _commission;//������
-		double _available;//�����ʽ�
-		double _positionProfit;//�ֲ�ӯ��
-		double _closeProfit;//ƽ��ӯ��
-		double _currMargin;//��֤��	
-		double _preBalance;//���ս��
-		double	_deposit;//�����
-		double	_withdraw;//������
+		double _commission;//手续费
+		double _available;//可用资金
+		double _positionProfit;//持仓盈亏
+		double _closeProfit;//平仓盈亏
+		double _currMargin;//保证金	
+		double _preBalance;//上日结存
+		double	_deposit;//入金金额
+		double	_withdraw;//出金金额
 	};
 	typedef QSharedPointer<TradingAccount> TradingAccountPtr;
 }

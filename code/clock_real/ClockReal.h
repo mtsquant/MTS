@@ -1,3 +1,4 @@
+
 /*****************************************************************************
 * Copyright [2018-2019] [3fellows]
 *
@@ -48,7 +49,7 @@ namespace mts
 		virtual QObject* doCreateTimer(int id, qint64 beginTicks, int interval, TimerCallback*) override;
 		virtual bool doDestroyTimer(QObject*) override;
 
-		// ͨ�� Clock �̳�
+		// 通过 Clock 继承
 		virtual bool initialize(const QVariantMap & params) override;
 	};
 

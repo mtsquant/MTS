@@ -1,3 +1,4 @@
+
 /*****************************************************************************
 * Copyright [2018-2019] [3fellows]
 *
@@ -83,12 +84,12 @@ protected:
 		_isLogin = false;
 	}
 
-	///����Ӧ��
+	///错误应答
 	virtual void OnRspError(CThostFtdcRspInfoField * pRspInfo, int nRequestID, bool bIsLast) override {
 		processRspInfoField(pRspInfo, "OnRspError");
 	}
 
-	///��¼������Ӧ
+	///登录请求响应
 	virtual void OnRspUserLogin(CThostFtdcRspUserLoginField * pRspUserLogin, CThostFtdcRspInfoField * pRspInfo, int nRequestID, bool bIsLast) override {
 		if (processRspInfoField(pRspInfo, QString("login ") + _ADDRESS)) {
 			MTS_LOG("Login %s as %s, done\n", qPrintable(name()),qPrintable(_USER_ID));

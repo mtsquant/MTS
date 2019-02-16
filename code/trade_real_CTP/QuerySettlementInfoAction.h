@@ -1,3 +1,4 @@
+
 /*****************************************************************************
 * Copyright [2018-2019] [3fellows]
 *
@@ -29,7 +30,7 @@ Q_SIGNALS:
 	void responseQuerySettlementInfo(const QList<CThostFtdcSettlementInfoConfirmField>& settlementInfos);
 
 public :
-	///�����ѯͶ���߽�������Ӧ
+	///请求查询投资者结算结果响应
 	virtual void OnRspSettlementInfoConfirm(CThostFtdcSettlementInfoConfirmField *pSettlementInfo, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) override {
 		this->onResponse(pSettlementInfo, pRspInfo, bIsLast);
 	}

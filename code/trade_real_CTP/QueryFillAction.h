@@ -1,3 +1,4 @@
+
 /*****************************************************************************
 * Copyright [2018-2019] [3fellows]
 *
@@ -29,7 +30,7 @@ Q_SIGNALS:
 	void responseQueryFills(const QList<CThostFtdcTradeField>& fills);
 
 public:
-	///�����ѯ�ɽ���Ӧ
+	///请求查询成交响应
 	virtual void OnRspQryTrade(CThostFtdcTradeField *pTrade, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) override {
 		this->onResponse(pTrade, pRspInfo, bIsLast);
 	}

@@ -1,3 +1,4 @@
+
 /*****************************************************************************
 * Copyright [2018-2019] [3fellows]
 *
@@ -30,7 +31,7 @@ namespace mts
 		FeedsReal();
 		virtual ~FeedsReal();
 
-		// ͨ�� Feeds �̳�
+		// 通过 Feeds 继承
 		virtual bool initialize(const QVariantMap & params) override;
 
 		virtual int subscribe(const QList<InstrumentId>&)  override;

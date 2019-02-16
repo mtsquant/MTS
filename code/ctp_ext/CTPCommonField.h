@@ -1,3 +1,4 @@
+
 /*****************************************************************************
 * Copyright [2018-2019] [3fellows]
 *
@@ -25,9 +26,9 @@
 #include <QtCore/QJsonDocument>
 #include "ctp_ext_api.h"
 
-// ��װ CTP �� struct��
-// ����Ҫ�õĵ��ֶΰ�װ�ɷ����������
-// ���ԣ���Ҫ���κγ�Ա����
+// 包装 CTP 的 struct，
+// 把需要用的的字段包装成方法方便调用
+// 所以，不要有任何成员变量
 template<typename _CTPField>
 class CTPCommonField:public _CTPField
 {

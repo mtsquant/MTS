@@ -1,3 +1,4 @@
+
 /*****************************************************************************
 * Copyright [2018-2019] [3fellows]
 *
@@ -19,13 +20,13 @@
 
 QString CTPClientBase::returnValue2String(int ret) {
 	if (ret == 0) {
-		return "���ͳɹ�";
+		return "发送成功";
 	}	if (ret == -1) {
-		return "������ԭ����ʧ��";
+		return "因网络原因发送失败";
 	} else if (ret == -2) {
-		return "δ���������������������";
+		return "未处理请求队列总数量超限";
 	} else if (ret == -3) {
-		return "ÿ�뷢��������������";
+		return "每秒发送请求数量超限";
 	} else if (ret==-9){
 		return  "Not found valid data";
 	} else {

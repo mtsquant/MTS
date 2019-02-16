@@ -1,3 +1,4 @@
+
 /*****************************************************************************
 * Copyright [2018-2019] [3fellows]
 *
@@ -62,7 +63,7 @@
     /*static void asyncQueueCallback(uv_async_t* handle) {
         AsyncActiveQueue* queue = (AsyncActiveQueue*)(handle->data);
         queue->processAllData();
-        //uv_close((uv_handle_t*)&handle, nullptr);	//Èç¹ûasyncûÓйرգ¬ÏûϢ¶ÓÁÐÊǻá×èÈûµÄ
+        //uv_close((uv_handle_t*)&handle, nullptr);	//脠莽鹿没async没脫泄乇眨卢脧没息露脫脕脨脢腔谩脳猫脠没碌脛
     }*/
 //	void processAllData() {
 //		QList<_Ty> dataList;

@@ -1,3 +1,4 @@
+
 /*****************************************************************************
 * Copyright [2018-2019] [3fellows]
 *
@@ -221,8 +222,8 @@ bool CTPOrderMgr::hasOrderClientId(const QString & orderClientId) const {
 bool CTPOrderMgr::newOrder(mts::OrderActionNew* newAction)
 {
 	CTPInputOrderField req(this->_BROKER_ID, this->_USER_ID, this->_USER_ID);
-	req.setInstrumentID(newAction->instrumentId().symbol); //����
-	req.setOrderRef(mts::OrderIdImplCtp(newAction->referenceId()).ctpOrderReferenceId()); //����  
+	req.setInstrumentID(newAction->instrumentId().symbol); //锟斤拷锟斤拷
+	req.setOrderRef(mts::OrderIdImplCtp(newAction->referenceId()).ctpOrderReferenceId()); //锟斤拷锟斤拷  
 	mts::PriceType priceType = newAction->priceType();
 	if (priceType == mts::PRICE_LIMIT) {
 		req.setLimitPrice(newAction->price());
@@ -232,7 +233,7 @@ bool CTPOrderMgr::newOrder(mts::OrderActionNew* newAction)
 		return false;
 	}
 
-	req.VolumeTotalOriginal = int(qAbs(newAction->volume())); //����
+	req.VolumeTotalOriginal = int(qAbs(newAction->volume())); //锟斤拷锟斤拷
 	req.setDirection(newAction->directionSide());
 	req.setCombOffsetFlag(newAction->offsetFlag());
 
@@ -481,17 +482,17 @@ void CTPOrderMgr::onResponseQueryInstruments(const QList<CThostFtdcInstrumentFie
 				instrumentProperty->setMtsSymbol(mtsSym);
 			}
 		} else {
-			///�ڻ�
+			///锟节伙拷
 			//#define THOST_FTDC_PC_Futures '1'
-			///�ڻ���Ȩ
+			///锟节伙拷锟斤拷权
 			//#define THOST_FTDC_PC_Options '2'
-			///���
+			///锟斤拷锟�
 			//#define THOST_FTDC_PC_Combination '3'
-			///����
+			///锟斤拷锟斤拷
 			//#define THOST_FTDC_PC_Spot '4'
-			///��ת��
+			///锟斤拷转锟斤拷
 			//#define THOST_FTDC_PC_EFP '5'
-			///�ֻ���Ȩ
+			///锟街伙拷锟斤拷权
 			//#define THOST_FTDC_PC_SpotOption '6'
 			instrumentProperty->setInstrumentId(mts::InstrumentId(instrument.InstrumentID, mts::TYPE_UNKNOWN, mts::exchId(instrument.ExchangeID)));
 		}
@@ -518,17 +519,17 @@ void CTPOrderMgr::onResponseQueryPositions(const QList<CThostFtdcInvestorPositio
 	CTPTradeClientBase::onResponseQueryPositions(positions);
 
 	//PosiDirection:
-	///��
+	///锟斤拷
 	//#define THOST_FTDC_PD_Net '1'
-	///��ͷ
+	///锟斤拷头
 	//#define THOST_FTDC_PD_Long '2'
-	///��ͷ
+	///锟斤拷头
 	//#define THOST_FTDC_PD_Short '3'
 
 	//PositionDate:
-	///���ճֲ�
+	///锟斤拷锟秸持诧拷
 	//#define THOST_FTDC_PSD_Today '1'
-	///��ʷ�ֲ�
+	///锟斤拷史锟街诧拷
 	//#define THOST_FTDC_PSD_History '2'
 	QMap<QString, PositionDetail> posDetailMap;
 	for (int i = 0, size = positions.size(); i < size; ++i) {

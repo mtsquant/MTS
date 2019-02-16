@@ -1,3 +1,4 @@
+
 /*****************************************************************************
 * Copyright [2018-2019] [3fellows]
 *
@@ -27,7 +28,7 @@ namespace mts
 		TradeReal();
 		virtual ~TradeReal();
 
-		// ͨ�� Trade �̳�
+		// 通过 Trade 继承
 		virtual bool initialize(const QVariantMap & params) override;
 
 		virtual bool sendOrderNewAction(OrderActionNew*) override;

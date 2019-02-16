@@ -1,3 +1,4 @@
+
 /*****************************************************************************
 * Copyright [2018-2019] [3fellows]
 *
@@ -18,7 +19,7 @@
 #include "mts_core/const.h"
 #include "mts_core/enums.h"
 
-// ��װ CTP �� struct�����µ���Ҫ�õĵ��ֶΰ�װ�ɷ�������
+// 包装 CTP 的 struct，把下单需要用的的字段包装成方法调用
 class CTPInputOrderField :public CTPCommonField<CThostFtdcInputOrderField>
 {
 public:

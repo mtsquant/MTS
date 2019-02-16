@@ -1,3 +1,4 @@
+
 /*****************************************************************************
 * Copyright [2018-2019] [3fellows]
 *
@@ -23,10 +24,10 @@
 
 
 #define TIMEZONE_CODE_ENUM(declare) \
-	declare(TIMEZONE_UNKNOWN , "UNKNOWN", "��Чʱ��","UNKNOWN") \
-	declare(TIMEZONE_CST , "CST", "�й���׼ʱ��","Asia/Shanghai") \
-	declare(TIMEZONE_EST , "EST", "��������ʱ��", "America/New_York")	\
-	declare(TIMEZONE_UTC , "UTC", "��������ʱ��", "Atlantic/Reykjavik")	
+	declare(TIMEZONE_UNKNOWN , "UNKNOWN", "无效时区","UNKNOWN") \
+	declare(TIMEZONE_CST , "CST", "中国标准时间","Asia/Shanghai") \
+	declare(TIMEZONE_EST , "EST", "美国东部时间", "America/New_York")	\
+	declare(TIMEZONE_UTC , "UTC", "格林威治时间", "Atlantic/Reykjavik")	
 
 enum TimezoneCode { TIMEZONE_CODE_ENUM(SELECT_1_AND_COMMA_IN_4) COUNTRY_MAX };
 

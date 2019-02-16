@@ -1,3 +1,4 @@
+
 /*****************************************************************************
 * Copyright [2018-2019] [3fellows]
 *
@@ -50,7 +51,7 @@ namespace mts
 
 		virtual int openTradingTime(int dt=INVALID_DATE) const = 0; //get the open market time on the date ( diff on half trading date)
 		virtual int closeTradingTime(int dt = INVALID_DATE) const = 0;
-		virtual DateTime nextTime(int futureTime, const DateTime& baseTime) const = 0;// ����baseTime �õ�δ��ʱ�� futureTime ��Ӧ���������ں�ʱ�䣨timer �ã�
+		virtual DateTime nextTime(int futureTime, const DateTime& baseTime) const = 0;// 根据baseTime 得到未来时间 futureTime 对应的完整日期和时间（timer 用）
 	private:
 		static TradingDateMgr* _instance;
 	};

@@ -1,3 +1,4 @@
+
 /*****************************************************************************
 * Copyright [2018-2019] [3fellows]
 *
@@ -81,15 +82,15 @@ CTPTradeClientBase::~CTPTradeClientBase()
 }
 
 void CTPTradeClientBase::beforeRegisterFront() {
-	// ����˽����
-	///        THOST_TERT_RESTART:�ӱ������տ�ʼ�ش�
-	///        THOST_TERT_RESUME:���ϴ��յ�������
-	///        THOST_TERT_QUICK:ֻ���͵�¼��˽����������
+	// 订阅私有流
+	///        THOST_TERT_RESTART:从本交易日开始重传
+	///        THOST_TERT_RESUME:从上次收到的续传
+	///        THOST_TERT_QUICK:只传送登录后私有流的内容
 	_userApi->SubscribePrivateTopic(THOST_TERT_QUICK);
-	// ���Ĺ�����
-	///        THOST_TERT_RESTART:�ӱ������տ�ʼ�ش�
-	///        THOST_TERT_RESUME:���ϴ��յ�������
-	///        THOST_TERT_QUICK:ֻ���͵�¼��˽����������
+	// 订阅公共流
+	///        THOST_TERT_RESTART:从本交易日开始重传
+	///        THOST_TERT_RESUME:从上次收到的续传
+	///        THOST_TERT_QUICK:只传送登录后私有流的内容
 	_userApi->SubscribePublicTopic(THOST_TERT_QUICK);
 
 }

@@ -1,3 +1,4 @@
+
 /*****************************************************************************
 * Copyright [2018-2019] [3fellows]
 *
@@ -83,18 +84,18 @@ Q_SIGNALS:
 protected:
 	virtual void beforeRegisterFront() override;
 
-	///�����ѯͶ���߽�������Ӧ
+	///请求查询投资者结算结果响应
 	virtual void OnRspSettlementInfoConfirm(CThostFtdcSettlementInfoConfirmField *pSettlementInfo, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) override;
 
-	///�����ѯͶ���ֲ߳���Ӧ
+	///请求查询投资者持仓响应
 	virtual void OnRspQryInvestorPosition(CThostFtdcInvestorPositionField *pInvestorPosition, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) override;
-	///�����ѯ������Ӧ
+	///请求查询报单响应
 	virtual void OnRspQryOrder(CThostFtdcOrderField *pOrder, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) override;
-	///�����ѯ�ɽ���Ӧ
+	///请求查询成交响应
 	virtual void OnRspQryTrade(CThostFtdcTradeField *pTrade, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) override;
-	///�����ѯ��Լ��Ӧ
+	///请求查询合约响应
 	virtual void OnRspQryInstrument(CThostFtdcInstrumentField *pInstrument, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) override;
-	//��ѯ�ʽ��˻�
+	//查询资金账户
 	virtual void OnRspQryTradingAccount(CThostFtdcTradingAccountField *pTradingAccount, CThostFtdcRspInfoField *pRspInfo, int nRequestID, bool bIsLast) override;
 protected Q_SLOTS:
 	void onResponseQuerySettlementInfo(const QList<CThostFtdcSettlementInfoConfirmField>& settlementInfos);

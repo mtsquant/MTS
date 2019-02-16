@@ -1,3 +1,4 @@
+
 /*****************************************************************************
 * Copyright [2018-2019] [3fellows]
 *
@@ -47,7 +48,7 @@ CalcBar::~CalcBar()
 {
 }
 
-qint64 CalcBar::beginTicksSinceEpoch () const{ //��ʼʱ��
+qint64 CalcBar::beginTicksSinceEpoch () const{ //开始时间
 	return _bar->endTicksSinceEpoch() - _interval;
 }
 

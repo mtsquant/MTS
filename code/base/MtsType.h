@@ -1,3 +1,4 @@
+
 /*****************************************************************************
 * Copyright [2018-2019] [3fellows]
 *
@@ -41,15 +42,15 @@ public:
 
 
 //TODO: 
-//declare(TYPE_DC_SPOT,"DCS","�������ֻ���") 
-//declare(TYPE_DC_FUTR,"DCF","�������ֻ����ڻ�") 
+//declare(TYPE_DC_SPOT,"DCS","加密数字货币") 
+//declare(TYPE_DC_FUTR,"DCF","加密数字货币期货") 
 #define INSTRUMENT_ID_ENUM(declare)	\
-	declare(TYPE_UNKNOWN,"UNKNOWN","��Ч�������")	\
-	declare(TYPE_STOCK,"STK","��Ʊ")	\
-	declare(TYPE_FUTR,"FUT","�ڻ�") \
-	declare(TYPE_OPTION,"OPT","��Ȩ") \
-	declare(TYPE_HUOBI,"HUOBI","���") \
-	declare(TYPE_BITMEX,"BITMEX","BitMex")
+	declare(TYPE_UNKNOWN,"UNKNOWN","无效标的类型")	\
+	declare(TYPE_STOCK,"STK","股票")	\
+	declare(TYPE_FUTR,"FUT","期货") \
+	declare(TYPE_OPTION,"OPT","期权") \
+	declare(TYPE_HUOBI,"HUOBI","火币") \
+	declare(TYPE_BITMEX,"BITMEX","BitMEX")
 
 enum InstrumentType { INSTRUMENT_ID_ENUM(SELECT_1_AND_COMMA_IN_3) INSTRUMENT_TYPE_MAX };
 

@@ -1,3 +1,4 @@
+
 /*****************************************************************************
 * Copyright [2018-2019] [3fellows]
 *
@@ -37,12 +38,12 @@
 
 
 #define CURRENCY_ID_ENUM(declare) \
-	declare(CURRENCY_UNKNOWN , "UNKNOWN", "��Ч����") \
-	declare(CURRENCY_CNY , "CNY", "�����") \
-	declare(CURRENCY_USD , "USD", "��Ԫ")	\
-	declare(CURRENCY_HKD , "HKD", "��Ԫ")	\
-	declare(CURRENCY_EUR , "EUR", "ŷԪ")	\
-	declare(CURRENCY_GBP , "GBP", "Ӣ��") 
+	declare(CURRENCY_UNKNOWN , "UNKNOWN", "无效币种") \
+	declare(CURRENCY_CNY , "CNY", "人民币") \
+	declare(CURRENCY_USD , "USD", "美元")	\
+	declare(CURRENCY_HKD , "HKD", "港元")	\
+	declare(CURRENCY_EUR , "EUR", "欧元")	\
+	declare(CURRENCY_GBP , "GBP", "英镑") 
 
 enum CurrencyId { CURRENCY_ID_ENUM(SELECT_1_AND_COMMA_IN_3) CURRENCY_MAX };
 

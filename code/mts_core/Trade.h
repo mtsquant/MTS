@@ -1,3 +1,4 @@
+
 /*****************************************************************************
 * Copyright [2018-2019] [3fellows]
 *
@@ -26,7 +27,7 @@ namespace mts
 {
 
 	class TradeNotifier;
-	//ͳһ���׽ӿ�
+	//统一交易接口
 	class MTS_CORE_API TradeBase:public Component
 	{
 	public:
