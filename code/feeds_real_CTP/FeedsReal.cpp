@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -26,6 +26,7 @@ namespace mts
 	FeedsReal::FeedsReal()
 		:Feeds() , _feedsClient(nullptr)
 	{
+		this->setObjectName("FeedsRealCTP");
 		EventDispatcher::defaultDispatcher()->addCallback(this);
 	}
 
@@ -38,13 +39,12 @@ namespace mts
 
 	bool FeedsReal::initialize(const QVariantMap & params) {
 		assert(ConfigParams::isInitialized());
-
-		auto feedsFront = ConfigParams::instance()->feedsFront();
+		auto feedsFront = ConfigParams::instance()->feedsFront("CTP");
 		auto userName = feedsFront.userName();
 		auto password = feedsFront.password();
 		MTS_DEBUG ( "Login Feeds as '%s'\n" , qPrintable ( userName ) );
 		_feedsClient = new CTPFeedsClient(feedsFront.clearUserPassword()/*should not contains user and password*/,
-															ConfigParams::instance()->brokerId(),
+															ConfigParams::instance()->brokerId("CTP"),
 															userName,
 															password
 															);

@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -21,7 +21,10 @@ using namespace mts;
 
 
 extern "C" {
-	MTS_FEEDS_REAL_API mts::FeedsBase*  createFeeds() {
+	MTS_FEEDS_REAL_API mts::FeedsBase*  createFeeds(mts::EnvironmentMode mode) {
+		if (mode != ENVIR_REAL) {
+			return nullptr;
+		}
 		return new mts::FeedsReal();
 	}
 

@@ -111,6 +111,7 @@
     <ClCompile Include="ContinuousSymbolMgr.cpp" />
     <ClCompile Include="enums.cpp" />
     <ClCompile Include="Environment.cpp" />
+    <ClCompile Include="EnvironmentFactory.cpp" />
     <ClCompile Include="ExchOrderSet.cpp" />
     <ClCompile Include="Feeds.cpp" />
     <ClCompile Include="GeneratedFiles\Debug\moc_Component.cpp">
@@ -149,6 +150,7 @@
     <ClCompile Include="OrderSet.cpp" />
     <ClCompile Include="OrderType.cpp" />
     <ClCompile Include="Position.cpp" />
+    <ClCompile Include="PositionVolumeInfo.cpp" />
     <ClCompile Include="Quote.cpp" />
     <ClCompile Include="QuoteSet.cpp" />
     <ClCompile Include="SysConfigParams.cpp" />
@@ -170,6 +172,7 @@
     <ClInclude Include="ContinuousSymbolMgr.h" />
     <ClInclude Include="DateCallback.h" />
     <ClInclude Include="enums.h" />
+    <ClInclude Include="EnvironmentFactory.h" />
     <ClInclude Include="ExchOrderSet.h" />
     <ClInclude Include="Feeds.h" />
     <ClInclude Include="FeedsCallback.h" />
@@ -189,6 +192,7 @@
     <ClInclude Include="OrderType.h" />
     <ClInclude Include="ParamsFields.h" />
     <ClInclude Include="Position.h" />
+    <ClInclude Include="PositionVolumeInfo.h" />
     <ClInclude Include="Quote.h" />
     <ClInclude Include="QuoteSet.h" />
     <ClInclude Include="StrategyInterface.h" />

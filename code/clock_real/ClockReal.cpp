@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -83,9 +83,26 @@ namespace mts
 		}
 	}
 
+
+	qint64 ClockReal::getNextBeginTimeInterval() const {
+		int nextDate = TradingDateMgr::instance()->nextDate(this->currentTradingDay());
+		int beginTime = TradingDateMgr::instance()->openTradingTime(nextDate);
+		int realDate = TradingDateMgr::instance()->realDate(nextDate, beginTime);
+
+		return DateTime(beginTime, realDate) - DateTime::now();
+	}
+
 	bool ClockReal::initialize(const QVariantMap & params) {
+		auto interval = this->getNextBeginTimeInterval();
+		QTimer::singleShot(interval, this, SLOT(onTimeout()));
+
 		return true;
 	}
 
+	void ClockReal::onTimeout() {
+		this->notifyBusinessDateChanged(this->currentTradingDay());
+		auto interval = this->getNextBeginTimeInterval();
+		QTimer::singleShot(interval, this, SLOT(onTimeout()));
+	}
 
 }

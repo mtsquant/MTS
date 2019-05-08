@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -17,13 +17,16 @@
 #include "mts_core/Environment.h"
 #include "MtsMainThread.h"
 #include "PositionMgr.h"
+#include "mts_core/QuoteSet.h"
 
 namespace mts
 {
 
 
-	QuoteMgr::QuoteMgr() {
+	QuoteMgr::QuoteMgr() 
+	{
 		assert(Environment::instance()->isCurrentMtsThread());
+		this->_quoteSet = QuoteSetSingleton::instance();
 	}
 
 
@@ -43,6 +46,7 @@ namespace mts
 		if (!Environment::instance()->feeds()->hasCallback(this)) {
 			Environment::instance()->feeds()->addCallback(this);
 		}
+		Environment::instance()->trade()->subscribe(instrumentIds);
 		return Environment::instance()->feeds()->subscribe(instrumentIds);
 	}
 
@@ -51,7 +55,7 @@ namespace mts
 	}
 
 	void QuoteMgr::onQuoteUpdate(QuotePtr qt) {
-		auto cacheQuote=_quoteSet.updateQuote(qt);
+		auto cacheQuote=_quoteSet->updateQuote(qt);
 		if (_notify) {
 			_notify->onQuoteSnapshotUpdate(cacheQuote);
 		}
@@ -70,11 +74,11 @@ namespace mts
 	}
 
 	Quote* QuoteMgr::getQuote(const InstrumentId& instrumentId) {
-		return _quoteSet.getQuote(instrumentId).data();
+		return _quoteSet->getQuote(instrumentId).data();
 	}
 
 	int QuoteMgr::subscribedInstrumentCount() const {
-		return _quoteSet.size();
+		return _quoteSet->size();
 	}
 
 	void QuoteMgr::onBusinessDateChanged(int businessDate) {

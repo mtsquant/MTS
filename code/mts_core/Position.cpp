@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 #include "Position.h"
 #include "base/MtsLog.h"
 #include "mts_core/InstrumentPropertyDb.h"
+#include "mts_core/TradingDateMgr.h"
 
 namespace mts
 {
@@ -33,11 +34,11 @@ namespace mts
 	}
 
 	bool Position::isNull() const {
-		static VolumeInfo nullVolumeInfo;
-		if (memcmp(&_longInfo, &nullVolumeInfo, sizeof(VolumeInfo)) != 0) {
+		static PositionVolumeInfo nullVolumeInfo;
+		if (memcmp(&_longInfo, &nullVolumeInfo, sizeof(PositionVolumeInfo)) != 0) {
 			return false;
 		}
-		if (memcmp(&_shortInfo, &nullVolumeInfo, sizeof(VolumeInfo)) != 0) {
+		if (memcmp(&_shortInfo, &nullVolumeInfo, sizeof(PositionVolumeInfo)) != 0) {
 			return false;
 		}
 
@@ -295,6 +296,7 @@ namespace mts
 			fillAmountDelta -= lastOrder->fillAmount();
 		}
 
+		ExchId exchId = order->instrumentId().exchId;
 		switch (order->directionSide()) {
 		case DirectionSide::D_BUY:
 		{
@@ -316,7 +318,7 @@ namespace mts
 			setShortCloseVolume(shortCloseVolume() + (fillVolume - lastFillVolume));
 			setShortFillVolume(shortFillVolume() + (fillVolume - lastFillVolume));
 			setShortFillAmount(shortFillAmount() + fillAmountDelta);
-			if (exchHasBothPos(order->instrumentId().exchId)) {
+			if (exchHasBothPos(exchId)) {
 				if (isCombOffsetYesterdy(order->offsetFlag())) {
 					setShortCloseYesterdayVolume(shortCloseYesterdayVolume() + std::min(abs(shortOpenVolume() + shortCloseYesterdayVolume()), (fillVolume - lastFillVolume)));
 				}
@@ -326,7 +328,7 @@ namespace mts
 			if (isFinished&&!isLastFinished) {
 				setShortActiveVolume(shortActiveVolume() - lastLeftVolume);
 				setShortActiveCloseVolume(shortActiveCloseVolume() - lastLeftVolume);
-				if (exchHasBothPos(order->instrumentId().exchId)) {
+				if (exchHasBothPos(exchId)) {
 					if (isCombOffsetYesterdy(order->offsetFlag())) {
 						setShortActiveCloseYesterdayVolume(shortActiveCloseYesterdayVolume() - lastLeftVolume);
 					}
@@ -334,7 +336,7 @@ namespace mts
 			} else {
 				setShortActiveVolume(shortActiveVolume() + (leftVolume - lastLeftVolume));
 				setShortActiveCloseVolume(shortActiveCloseVolume() + (leftVolume - lastLeftVolume));
-				if (exchHasBothPos(order->instrumentId().exchId)) {
+				if (exchHasBothPos(exchId)) {
 					if (isCombOffsetYesterdy(order->offsetFlag())) {
 						setShortActiveCloseYesterdayVolume(shortActiveCloseYesterdayVolume() + (leftVolume - lastLeftVolume));
 					}
@@ -362,7 +364,7 @@ namespace mts
 			setLongCloseVolume(longCloseVolume() + (fillVolume - lastFillVolume));
 			setLongFillVolume(longFillVolume() + (fillVolume - lastFillVolume));
 			setLongFillAmount(longFillAmount() + fillAmountDelta);
-			if (exchHasBothPos(order->instrumentId().exchId)) {
+			if (exchHasBothPos(exchId)) {
 				if (isCombOffsetYesterdy(order->offsetFlag())) {
 					setLongCloseYesterdayVolume(longCloseYesterdayVolume() + std::max(-(longOpenVolume() + longCloseYesterdayVolume()), (fillVolume - lastFillVolume)));
 				}
@@ -372,7 +374,7 @@ namespace mts
 			if (isFinished&&!isLastFinished) {
 				setLongActiveVolume(longActiveVolume() - lastLeftVolume);
 				setLongActiveCloseVolume(longActiveCloseVolume() - lastLeftVolume);
-				if (exchHasBothPos(order->instrumentId().exchId)) {
+				if (exchHasBothPos(exchId)) {
 					if (isCombOffsetYesterdy(order->offsetFlag())) {
 						setLongActiveCloseYesterdayVolume(longActiveCloseYesterdayVolume() - lastLeftVolume);
 					}
@@ -380,7 +382,7 @@ namespace mts
 			} else {
 				setLongActiveVolume(longActiveVolume() + (leftVolume - lastLeftVolume));
 				setLongActiveCloseVolume(longActiveCloseVolume() + (leftVolume - lastLeftVolume));
-				if (exchHasBothPos(order->instrumentId().exchId)) {
+				if (exchHasBothPos(exchId)) {
 					if (isCombOffsetYesterdy(order->offsetFlag())) {
 						setLongActiveCloseYesterdayVolume(longActiveCloseYesterdayVolume() + (leftVolume - lastLeftVolume));
 					}
@@ -423,8 +425,12 @@ namespace mts
 
 	void Position::businessDateChanged(int businessDate)
 	{
-		_longInfo.businessDateChanged(businessDate);
-		_shortInfo.businessDateChanged(businessDate);
+		if (!TradingDateMgr::instance()->is24Hour()) {
+			MTS_LOG("roll position before:%s\n",qPrintable(this->toJsonString()));
+			_longInfo.businessDateChanged(businessDate);
+			_shortInfo.businessDateChanged(businessDate);
+			MTS_LOG("roll position after:%s\n", qPrintable(this->toJsonString()));
+		}
 	}
 
 	QString Position::toJsonString() const
@@ -473,5 +479,6 @@ namespace mts
 		qRegisterMetaType<Position>("Position");
 		qRegisterMetaType<PositionPtr>("PositionPtr");
 	}
+
 
 }

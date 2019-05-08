@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -14,7 +14,6 @@
 *  limitations under the License.
 *****************************************************************************/
 #pragma once
-#include "mts_core/OrderId.h"
 #include <QtCore/QHash>
 #include <QtCore/QObject>
 #include <QtCore/QSet>
@@ -29,21 +28,29 @@ namespace mts {
 	class MTS_CORE_API OrderSet
 	{
 	public:
-		static OrderSet* instance();
-		Order* getOrder(const OrderId& referentId, bool createIfNotExist = false);
+		OrderSet();
+		virtual ~OrderSet();
+
+		Order* getOrder(const QString& referentId, bool createIfNotExist = false);
 		Order* getOrder(const QString& exchId, ExchId exch);
 		QList<Order*> allOrders() const;
 		QList<Order*> allActiveOrders(const InstrumentId&) const;
 		void updateOrder(Order*, OrderReportType);
 		void clear();
 
-	protected:
-		OrderSet();
-		virtual ~OrderSet();
 	private:
-		QHash<OrderId, Order*> _orders;
+		QHash<QString, Order*> _orders;
 		QHash<QString, Order*> _exchOrders;
-		QHash<InstrumentId, QMap<OrderId,Order*> > _activeOrders;
-		static OrderSet* _instance;
+		QHash<InstrumentId, QMap<QString,Order*> > _activeOrders;
+	};
+
+
+	class MTS_CORE_API OrderSetSingleton :public OrderSet
+	{
+	public:
+		static OrderSet* instance();
+	private:
+		OrderSetSingleton();
+		~OrderSetSingleton();
 	};
 }

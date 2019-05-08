@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -36,12 +36,12 @@ namespace mts
 	bool TradeReal::initialize(const QVariantMap & params) {
 		assert(ConfigParams::isInitialized());
 
-		UrlPath tradeFront = ConfigParams::instance()->tradeFront();
+		UrlPath tradeFront = ConfigParams::instance()->tradeFront("CTP");
 		QString userName = tradeFront.userName();
 		QString password = tradeFront.password();
 		MTS_DEBUG ( "Login Trade as '%s'\n" , qPrintable(userName) );
 		_tradeOrderClient = new CTPOrderMgr(tradeFront.clearUserPassword(),
-																ConfigParams::instance()->brokerId(),
+																ConfigParams::instance()->brokerId("CTP"),
 																userName,
 																password);
 		connect(_tradeOrderClient, SIGNAL(loginDone()), this, SLOT(emitInitializeDone()));
@@ -68,12 +68,12 @@ namespace mts
 	}
 
 	bool TradeReal::sendOrderNewAction(OrderActionNew * newAction) {
-        MTS_DEBUG("TradeReal::doNewOrder - %s\n", qPrintable(newAction->referenceId().toString()));
+        MTS_DEBUG("TradeReal::doNewOrder - %s\n", qPrintable(newAction->referenceId()));
 		return _tradeOrderClient->newOrder(newAction);
 	}
 
 	bool TradeReal::sendOrderCancelAction(OrderActionCancel * cancelAction) {
-        MTS_DEBUG("TradeReal::doCancelOrder - %s\n", qPrintable(cancelAction->referenceId().toString()));
+        MTS_DEBUG("TradeReal::doCancelOrder - %s\n", qPrintable(cancelAction->referenceId()));
 		return _tradeOrderClient->cancelOrder(cancelAction);
 	}
 
@@ -81,21 +81,21 @@ namespace mts
 		return false;
 	}
 
-	OrderId TradeReal::createOrderId(int instanceId, int strategyId, int orderType, const InstrumentId& instrumentId) {
+	QString TradeReal::createOrderId(int instanceId, int strategyId, int orderType, int directionSide, int priceType, const InstrumentId& instrumentId) {
 		static int index = 0;
 		OrderIdImplCtp orderIdCtp(_tradeOrderClient->frontId(), _tradeOrderClient->sessionId(), instanceId, strategyId, orderType,++index);
 		assert(orderIdCtp.isMtsOrder());
-		return  OrderId(orderIdCtp.toString());
+		return  orderIdCtp.toString();
 	}
 
-	OrderId TradeReal::parseOrderId(const QString &idStr) {
+	/*OrderId TradeReal::parseOrderId(const QString &idStr) {
 
 		OrderIdImplCtp orderIdCtp;
 		if (orderIdCtp.fromString(idStr) && orderIdCtp.isMtsOrder()) {
 			return OrderId(idStr);
 		}
 		return OrderId();
-	}
+	}*/
 
 	bool TradeReal::isMtsOrder(const QString & idStr) {
 		OrderIdImplCtp orderIdCtp;

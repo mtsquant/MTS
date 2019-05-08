@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -44,17 +44,20 @@ namespace mts
 
 
 #define EXCH_ID_ENUM(declare) \
-	declare(EXCH_UNKNOWN ,"UNKNOWN","--","无效交易所ID")			\
-	declare(EXCH_SHSE	, "SHSE",	"SH"	,"上海证券交易所")			\
-	declare(EXCH_SZSE	, "SZSE",	"SZ"	,"深圳证券交易所" )		\
-	declare(EXCH_SHFE	, "SHFE",	"SC"	, "上海期货交易所")		\
-	declare(EXCH_DCE		, "DCE",		"DC"	, "大连商品交易所")		\
-	declare(EXCH_CZCE	, "CZCE",	"ZC"	, "郑州商品交易所")		\
-	declare(EXCH_CFFEX	, "CFFEX",	"SF"	,"中国金融期货交易所")	\
-	declare(EXCH_INE		, "INE",		"IN"	,"中国能源交易所")	\
-	declare(EXCH_HB		, "HB",		"HB"	,"火币Huobi") \
-	declare(EXCH_OKC		, "OKC",		"OK","OKCoin")\
-	declare(EXCH_BMEX	, "BMEX",	"BX"	,"BitMEX")
+	declare(EXCH_UNKNOWN ,"UNKNOWN","--",	"无效交易所ID")		\
+	declare(EXCH_SHSE	, "SHSE",	"SH",	"上海证券交易所")		\
+	declare(EXCH_SZSE	, "SZSE",	"SZ",	"深圳证券交易所" )	\
+	declare(EXCH_SHFE	, "SHFE",	"SC",	"上海期货交易所")		\
+	declare(EXCH_DCE	, "DCE",	"DC",	"大连商品交易所")		\
+	declare(EXCH_CZCE	, "CZCE",	"ZC",	 "郑州商品交易所")	\
+	declare(EXCH_CFFEX	, "CFFEX",	"SF",	"中国金融期货交易所")	\
+	declare(EXCH_INE	, "INE",	"IN",	"中国能源交易所")		\
+	declare(EXCH_HB		, "HB",		"HB",	"火币Huobi")			\
+	declare(EXCH_HBFUT	, "HBFUT",	"HBFUT", "火币合约")			\
+	declare(EXCH_OK		, "OK",		"OK",	"OKEX")				\
+	declare(EXCH_OKFUT	, "OKFUT",	"OKFUT","OKEX合约")			\
+	declare(EXCH_OKSWAP	, "OKSAWP",	"OKSAWP","OKEX永续合约")		\
+	declare(EXCH_BMEX	, "BMEX",	"BX",	"BitMEX")
 
 	enum ExchId { EXCH_ID_ENUM(SELECT_1_AND_COMMA_IN_4) EXCH_MAX };
 
@@ -71,7 +74,9 @@ namespace mts
 #define PRICE_TYPE_ENUM(declare)	\
 	declare(PRICE_UNKNOWN,"UNKNOWN","无效报价类型")	\
 	declare(PRICE_LIMIT,"limit","限价")	\
-	declare(PRICE_MKT,"market","市价") 
+	declare(PRICE_MKT,"market","市价") \
+	declare(PRICE_LIMIT_MAKER,"limit_maker","限价做市")	\
+	declare(PRICE_IOC, "IOC", "IOC")
 
 	enum PriceType { PRICE_TYPE_ENUM(SELECT_1_AND_COMMA_IN_3) PRICE_TYPE_MAX };
 
@@ -128,8 +133,11 @@ namespace mts
 	declare(FP_CTP,"CTP","CTP") \
 	declare(FP_TDF,"TDF","TDF") \
 	declare(FP_IB,"IB","IB") \
-	declare(FP_OKC,"OKC","OKCOIN") \
+	declare(FP_OK,"OK","OKEX") \
+	declare(FP_OKFUT,"OKFUT","OKEX_FUT") \
+	declare(FP_OKSWAP,"OKSWAP","OKEX_SWAP") \
 	declare(FP_HB,"HB","HUOBI") \
+	declare(FP_HBFUT,"HBFUT","HUOBI_FUT") \
 	declare(FP_BX,"BX","BITMEX")
 
 	enum FrontProtocol { FRONT_PROTOCOL_ENUM(SELECT_1_AND_COMMA_IN_3) FRONT_PROTOCOL_MAX };
@@ -192,7 +200,7 @@ namespace mts
 	declare(KIND_NORMAL,"NORMAL","普通合约")	\
 	declare(KIND_SERIES,"SERIES","连续合约")
 
-	enum InstrumentKind { INSTRUMENT_KIND_ENUM(SELECT_1_AND_COMMA_IN_3) INSTRUMENT_KIND_ENUM};
+	enum InstrumentKind { INSTRUMENT_KIND_ENUM(SELECT_1_AND_COMMA_IN_3) INSTRUMENT_KIND_MAX };
 
 	MTS_CORE_API const char* instrumentKindName(InstrumentKind);
 	MTS_CORE_API InstrumentKind instrumentKind(const char*);
@@ -206,7 +214,7 @@ namespace mts
 	declare(ALGO_STATUS_DELETED,"deleted","已删除")	\
 	declare(ALGO_STATUS_FINISHED,"finished","已完成")	
 
-	enum AlgoStatus {ALOG_STATUS_ENUM(SELECT_1_AND_COMMA_IN_3) ALOG_STATUS_ENUM};
+	enum AlgoStatus {ALOG_STATUS_ENUM(SELECT_1_AND_COMMA_IN_3) ALOG_STATUS_MAX};
 
 	MTS_CORE_API const char* algoStatusName(AlgoStatus);
 	MTS_CORE_API AlgoStatus algoStatus(const char*);
@@ -218,10 +226,21 @@ namespace mts
 	declare(ALGO_VOLUME_WEIDGH,"vwap","成交量加权均价")\
 	declare(ALGO_TIME_WEIDGH, "twap", "时间加权均价")
 
-	enum AlgoType {ALOG_TYPE_ENUM(SELECT_1_AND_COMMA_IN_3) ALOG_TYPE_ENUM};
+	enum AlgoType {ALOG_TYPE_ENUM(SELECT_1_AND_COMMA_IN_3) ALOG_TYPE_MAX};
 
 	MTS_CORE_API const char* algoTypeName(AlgoType);
 	MTS_CORE_API AlgoType algoType(const char*);
 	MTS_CORE_API const char* algoTypeDescription(AlgoType);
 	MTS_CORE_API AlgoType algoDescription2Type(const char*);
+
+
+#define MTS_COMPONENT_ENUM(declare) \
+	declare(MTS_COMP_CLOCK,"clock","Clock") \
+	declare(MTS_COMP_FEEDS,"feeds","Feeds") \
+	declare(MTS_COMP_TRADE,"trade","Trade")
+
+	enum MtsComponent { MTS_COMPONENT_ENUM(SELECT_1_AND_COMMA_IN_3) MTS_COMPONENT_MAX};
+	MTS_CORE_API const char* mtsComponentName(MtsComponent);
+	MTS_CORE_API MtsComponent mtsComponent(const char*);
+	MTS_CORE_API const char* mtsComponentDescription(MtsComponent);
 }

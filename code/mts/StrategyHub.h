@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -53,7 +53,7 @@ namespace mts
 		int newOnceTimer(StrategyInterface* strategy, int beginTime);
 		bool removeTimer(StrategyInterface* strategy,int id);
 
-		virtual OrderId newOrder(StrategyInterface* strategy, OrderActionNew* orderActionNew,int orderType);
+		virtual QString newOrder(StrategyInterface* strategy, OrderActionNew* orderActionNew,int orderType);
 		bool cancelOrder(StrategyInterface* strategy, OrderActionCancel* orderActionCancel);
 
 		bool subscribeQuotes(StrategyInterface* strategy, const QList<InstrumentId>& instruments);

@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -50,10 +50,10 @@ namespace mts
 		return _id;
 	}
 
-	bool OrderId::fromString(const QString & idStr) {
+	/*bool OrderId::fromString(const QString & idStr) {
 		_id=Environment::instance()->trade()->parseOrderId(idStr)._id;
 		return isValid();
-	}
+	}*/
 
 	bool OrderId::operator==(const OrderId& id) const {
 		return _id == id._id;

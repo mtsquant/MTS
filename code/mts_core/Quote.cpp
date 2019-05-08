@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 #include "Quote.h"
 #include <QtCore/QJsonDocument>
 #include "base/DateTime.h"
+#include "base/number.h"
 
 namespace mts
 {
@@ -25,6 +26,7 @@ namespace mts
 		:InstrumentObject(),
 		_tradingDay(0),
 		_ticksSinceEpoch(0),
+		_receiveTicksSinceEpoch(0),
 		_preClosePrice(0),
 		_openPrice(0),
 		_highPrice(0),
@@ -32,11 +34,12 @@ namespace mts
 		_closePrice(0),
 		_lastPrice(0),
 		_lastVolume(0),
+		_lastDirection(DirectionSide::D_UNKNOWN),
 		_totalVolume(0),
-		_bidPrice(0),
-		_askPrice(0),
-		_bidVolume(0),
-		_askVolume(0),
+		_bidPrices(QUOTE_DEPTH),
+		_askPrices(QUOTE_DEPTH),
+		_bidVolumes(QUOTE_DEPTH),
+		_askVolumes(QUOTE_DEPTH),
 		_upperLimitPrice(0),
 		_lowerLimitPrice(0),
 		_preSettlementPrice(0),
@@ -82,6 +85,7 @@ namespace mts
 		QJsonObject jsonObj;
 		jsonObj.insert ( "symbol" , this->instrumentId ().symbol );
 		this->ticksSinceEpochToJson ( jsonObj );
+		this->receiveTicksSinceEpochToJson(jsonObj);
 		if ( this->ticksSinceEpoch () > 0 ){
 			jsonObj.insert ( "dateTime" , DateTime ( this->ticksSinceEpoch () ).toLocalString () );
 		} else{
@@ -94,10 +98,13 @@ namespace mts
 		this->lastPriceToJson ( jsonObj );
 		this->lastVolumeToJson ( jsonObj );
 		this->totalVolumeToJson ( jsonObj );
-		this->bidPriceToJson ( jsonObj );
-		this->askPriceToJson ( jsonObj );
-		this->bidVolumeToJson ( jsonObj );
-		this->askVolumeToJson ( jsonObj );
+		for (int i = 1; i <= QUOTE_DEPTH; ++i) {
+			this->bidPriceToJson(jsonObj, i);
+			this->askPriceToJson(jsonObj, i);
+			this->bidVolumeToJson(jsonObj, i);
+			this->askVolumeToJson(jsonObj, i);
+		}
+		
 		return jsonObj;
 	}
 
@@ -193,6 +200,9 @@ namespace mts
 		if (qt->ticksSinceEpoch() > 0) {
 			this->setTicksSinceEpoch(qt->ticksSinceEpoch());
 		}
+		if (qt->receiveTicksSinceEpoch() > 0) {
+			this->setReceiveTicksSinceEpoch(qt->receiveTicksSinceEpoch());
+		}
 		if (qt->preClosePrice() > 0) {
 			this->setPreClosePrice(qt->preClosePrice());
 		}
@@ -221,36 +231,41 @@ namespace mts
 			}
 			this->setLastVolume(qt->lastVolume());
 		}
+		if (qt->lastDirection() != DirectionSide::D_UNKNOWN) {
+			this->setLastDirection(qt->lastDirection());
+		}
 		if (qt->totalVolume() > 0) {
             if (this->totalVolume()<qt->totalVolume()){
                 doTradeChg();
             }
 			this->setTotalVolume(qt->totalVolume());
 		}
+
 		if (qt->bidPrice() > 0) {
 			if (priceCompare(bidPrice(), qt->bidPrice())) {
 				doBidChg();
 			}
-			this->setBidPrice(qt->bidPrice());
 		}
 		if (qt->bidVolume() > 0) {
 			if (bidVolume() != qt->bidVolume()) {
 				doBidChg();
 			}
-			this->setBidVolume(qt->bidVolume());
 		}
 		if (qt->askPrice() > 0) {
 			if (priceCompare(askPrice(), qt->askPrice())) {
 				doAskChg();
 			}
-			this->setAskPrice(qt->askPrice());
 		}
 		if (qt->askVolume() > 0) {
 			if (askVolume() != qt->askVolume()) {
 				doAskChg();
 			}
-			this->setAskVolume(qt->askVolume());
 		}
+		this->setBidPrices(qt->getBidPrices());
+		this->setBidVolumes(qt->getBidVolumes());
+		this->setAskPrices(qt->getAskPrices());
+		this->setAskVolumes(qt->getAskVolumes());
+
 		if (qt->upperLimitPrice() > 0) 
 			this->setUpperLimitPrice(qt->upperLimitPrice());
 		if (qt->lowerLimitPrice() > 0) 

@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -16,11 +16,54 @@
 #include "AbstractConfigParams.h"
 #include <QtCore/QProcessEnvironment>
 #include "base/MtsUtils.h"
+#include <assert.h>
 
 namespace mts
 {
+
+
+	void addSysEnvirVarsTo(QVariantMap* params) {
+		auto envirs = QProcessEnvironment::systemEnvironment();
+		QStringList envirkeys = envirs.keys();
+		for (int i = 0, size = envirkeys.size(); i < size; ++i) {
+			const QString& key = envirkeys[i];
+			params->insert(key, envirs.value(key));
+		}
+
+		params->insert(MTS_VERSION, "mts_" + MtsUtils::getBuildDateStr());
+		params->insert(MTS_OS,
+#ifdef _WIN32
+			"Windows"
+#else
+			"Linux"
+#endif
+		);
+	}
+
+	void copySingleFieldsTo(const QVariantMap& src, QVariantMap* target) {
+		for (auto i = src.constBegin(); i != src.constEnd(); ++i) {
+			if (i.value().type() != QVariant::Map && !target->contains(i.key())) {
+				target->insert(i.key(), i.value());
+			}
+		}
+	}
+
+	QVariantMap AbstractConfigParams::expendAllSections(const QVariantMap& params) {
+		QVariantMap wholeParams = params;
+		addSysEnvirVarsTo(&wholeParams);
+		for (auto i = wholeParams.begin(); i != wholeParams.end(); ++i) {
+			if (i.value().type() == QVariant::Map) {
+				QVariantMap sectionParams = i.value().toMap();
+				copySingleFieldsTo(wholeParams, &sectionParams);
+				wholeParams[i.key()] = sectionParams;
+			}
+		}
+		return wholeParams;
+	}
+
+
 	AbstractConfigParams::AbstractConfigParams()
-		:_instanceId(999), _strategyPosCheck(0)
+		:_instanceId(999), _strategyPosCheck(0), _positionPersistenceEnable(false)
 	{
 	}
 	AbstractConfigParams::~AbstractConfigParams() 
@@ -29,27 +72,16 @@ namespace mts
 	}
 
 	bool AbstractConfigParams::load(const QVariantMap & params) {
-		QVariantMap allParams;
-		auto envirs=QProcessEnvironment::systemEnvironment();
-		QStringList envirkeys = envirs.keys();
-		for (int i = 0, size = envirkeys.size(); i < size; ++i) {
-			const QString& key = envirkeys[i];
-			allParams.insert(key, envirs.value(key));
-		}
-		
-		for (auto it = params.constBegin(), itEnd = params.constEnd(); it != itEnd; ++it) {
-			allParams.insert(it.key(), it.value());
-		}
 
-		allParams[MTS_VERSION] = "mts_" + MtsUtils::getBuildDateStr();
-#ifdef _WIN32
-		allParams[MTS_OS] = "Windows";
-#else
-		allParams[MTS_OS] = "Linux";
+		QVariantMap wholeParams = AbstractConfigParams::expendAllSections(params);
+#ifndef NDEBUG
+#ifndef MTS_UNIT_TEST
+		assert(wholeParams.size() == params.size());
 #endif
-		
-		if (doLoad(allParams)) {
-			_allValues = allParams;
+#endif
+
+		if (doLoad(wholeParams)) {
+			_allValues = wholeParams;
 			return true;
 		} else {
 			return false;
@@ -64,6 +96,7 @@ namespace mts
 			return false;
 		}
 		_strategyPosCheck = params.value(STRATEGY_POS_CHECK, 0).toInt();
+		_positionPersistenceEnable = params.value(POS_PERSISTENCE_ENABLE, 0).toInt();
 		_instanceId = params.value(INSTANCE_ID, (_mode == ENVIR_SIMU) ? 888 : -1).toInt();
 		if (_instanceId > 0 && _instanceId <= 999) {
 			return true;
@@ -77,6 +110,22 @@ namespace mts
 		return _mode;
 	}
 
+	EnvironmentMode AbstractConfigParams::componentMode(MtsComponent c) const {
+		if (_mode == ENVIR_REAL) {
+			return ENVIR_REAL;
+		} else if (_mode == ENVIR_SIMU) {
+			return ENVIR_SIMU;
+		} else if (_mode == ENVIR_BETA) {
+			if (c == MTS_COMP_CLOCK || c == MTS_COMP_FEEDS) {
+				return ENVIR_REAL;
+			} else {
+				return ENVIR_SIMU;
+			}
+		} else {
+			return ENVIR_UNKNOWN;
+		}
+	}
+
 	int AbstractConfigParams::instanceId() const {
 		return _instanceId;
 	}
@@ -84,6 +133,11 @@ namespace mts
 	int AbstractConfigParams::strategyPosCheck() const
 	{
 		return _strategyPosCheck;
+	}
+
+	bool AbstractConfigParams::positionPersistenceEnable() const
+	{
+		return _positionPersistenceEnable;
 	}
 
 	QVariant AbstractConfigParams::value(const QString & key, const QVariant & defaultValue) const {
@@ -94,9 +148,10 @@ namespace mts
 		return _allValues.keys();
 	}
 
-	bool AbstractConfigParams::isSimu() const {
-		return _mode== ENVIR_SIMU;
+	QVariantMap AbstractConfigParams::rawParams() const {
+		return _allValues;
 	}
+
 
 
 }

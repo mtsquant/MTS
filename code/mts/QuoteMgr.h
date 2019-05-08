@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -16,11 +16,13 @@
 #pragma once
 #include <QtCore/QObject>
 #include "mts_core/InstrumentId.h"
-#include "mts_core/QuoteSet.h"
+
 #include "mts_core/StrategyInterface.h"
+#include "mts_api.h"
 
 namespace mts
 {
+	class QuoteSet;
 	class QuoteMgr :public QObject,public FeedsCallback
 	{
 		Q_OBJECT;
@@ -39,7 +41,7 @@ namespace mts
 		virtual void onBusinessDateChanged(int businessDate) override;
 		virtual void onBarUpdate(CalcBarPtr) override;
 	private:
-		QuoteSet  _quoteSet;
+		QuoteSet*  _quoteSet;
 		StrategyInterface* _notify;
 
 	};

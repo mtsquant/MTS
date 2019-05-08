@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -21,7 +21,6 @@
 #include "mts_core/OrderReport.h"
 #include "mts_core/Order.h"
 #include "TradeCallback.h"
-#include "mts_core/OrderId.h"
 
 namespace mts
 {
@@ -32,8 +31,8 @@ namespace mts
 	public:
 		TradeBase();
 		virtual ~TradeBase();
-		virtual OrderId createOrderId(int instanceId, int strategyId, int orderType, const InstrumentId& instrumentId) = 0;
-		virtual OrderId parseOrderId(const QString& idStr) = 0;
+		virtual int subscribe(const QList<InstrumentId>&) { return 0; };
+		virtual QString createOrderId(int instanceId, int strategyId, int orderType, int directionSide, int priceType, const InstrumentId& instrumentId) = 0;
 		virtual bool isMtsOrder(const QString& idStr) = 0;
 
 		virtual int addCallback(TradeCallback*)=0;

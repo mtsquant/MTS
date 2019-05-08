@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@
 namespace mts {
 
 	Order::Order()
-		:OrderReportNewDone(OrderReportType::ORT_ORDER),_status(OrderStatus::OS_NULL), _lastCxlTimestamp(0)
+		:OrderReportNewDone(OrderReportType::ORT_ORDER),_status(OrderStatus::OS_NULL), _lastCxlTimestamp(0), _notifyToStrategy(false)
 	{
 
 	}
@@ -243,6 +243,15 @@ namespace mts {
 		jsonObj.insert("status", _status);
 		jsonObj.insert("statusString", statusString());
 		return jsonObj;
+	}
+
+	void Order::setNotifyToStrategy(bool v)
+	{
+		this->_notifyToStrategy = v;
+	}
+
+	bool Order::needNotifyToStrategy() const {
+		return _notifyToStrategy;
 	}
 
 }

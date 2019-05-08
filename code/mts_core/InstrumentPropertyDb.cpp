@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -44,6 +44,12 @@ namespace mts
 	InstrumentPropertyDb * InstrumentPropertyDb::instance() {
 		static InstrumentPropertyDb db;
 		return &db;
+	}
+
+	bool InstrumentPropertyDb::hasMtsSymbol(const QString & mtsSym)
+	{
+		QMutexLocker l(&_locker);
+		return _mtsSymbolProperties.contains(mtsSym);
 	}
 
 	bool InstrumentPropertyDb::insert(InstrumentBaseProperty * prop) {

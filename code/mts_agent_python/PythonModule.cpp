@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -186,10 +186,6 @@ void initializePythonModule() {
 	QStringList argv = getScriptArgv();
 
 
-	typedef bool(*InitializeByObj) (dict);
-	typedef bool(*InitializeByFile) (const std::string&);
-	typedef bool(*InitializeByFileAndObj) (const std::string&, dict);
-
 	def("mtsLog", &mtsLog);
 	def("mtsInfo", &mtsLog);
 	def("mtsWarn", &mtsWarn);
@@ -202,6 +198,9 @@ void initializePythonModule() {
 	def("isTradingDate", &isTradingDate);
 	def("nextNTradingDate", &nextNTradingDate);
 
+	typedef bool(*InitializeByObj) (dict);
+	typedef bool(*InitializeByFile) (const std::string&);
+	typedef bool(*InitializeByFileAndObj) (const std::string&, dict);
 	def("mtsInitialize", (InitializeByObj)(&PythonStrategy::initialize));
 	def("mtsInitialize", (InitializeByFile)(&PythonStrategy::initialize));
 	def("mtsInitialize", (InitializeByFileAndObj)(&PythonStrategy::initialize));
@@ -237,6 +236,14 @@ void initializePythonModule() {
 		.value(directionSideName(D_SELL), D_SELL)
 		.value(directionSideName(D_SHORT), D_SHORT)
 		.value(directionSideName(D_COVER), D_COVER)
+		;
+
+	enum_<PriceType>("PriceType")
+		.value(priceTypeName(PRICE_UNKNOWN), PRICE_UNKNOWN)
+		.value(priceTypeName(PRICE_LIMIT), PRICE_LIMIT)
+		.value(priceTypeName(PRICE_MKT), PRICE_MKT)
+		.value(priceTypeName(PRICE_LIMIT_MAKER), PRICE_LIMIT_MAKER)
+		.value(priceTypeName(PRICE_IOC), PRICE_IOC)
 		;
 
 	enum_<CombOffsetFlag>("OpenCloseFlag")
@@ -298,6 +305,8 @@ void initializePythonModule() {
 		.add_property("priceTick", &PyInstrumentProperty::priceTick)
 		.add_property("minOrderSize", &PyInstrumentProperty::minOrderSize)
 		.add_property("orderSizeIncrement", &PyInstrumentProperty::orderSizeIncrement)
+		.add_property("pricePrecision", &PyInstrumentProperty::pricePrecision)
+		.add_property("sizePrecision", &PyInstrumentProperty::sizePrecision)
 		.add_property("createdDate", &PyInstrumentProperty::createDate)
 		.add_property("openDate", &PyInstrumentProperty::openDate)
 		.add_property("expireDate", &PyInstrumentProperty::expireDate)
@@ -310,6 +319,8 @@ void initializePythonModule() {
 		.def("getPriceTick", &PyInstrumentProperty::priceTick)
 		.def("getMinOrderSize", &PyInstrumentProperty::minOrderSize)
 		.def("getOrderSizeIncrement", &PyInstrumentProperty::orderSizeIncrement)
+		.def("getPricePrecision", &PyInstrumentProperty::pricePrecision)
+		.def("getSizePrecision", &PyInstrumentProperty::sizePrecision)
 		.def("getCreatedDate", &PyInstrumentProperty::createDate)
 		.def("getOpenDate", &PyInstrumentProperty::openDate)
 		.def("getExpireDate", &PyInstrumentProperty::expireDate)
@@ -328,7 +339,6 @@ void initializePythonModule() {
 		.def("getPositions", &PyAccount::allPositions)
 		;
 
-
 	class_<PyQuote>("Quote", no_init)
 		.add_property("symbol", &PyQuote::pySymbol)
 		.add_property("mtsSymbol", &PyQuote::pyMtsSymbol)
@@ -336,6 +346,7 @@ void initializePythonModule() {
 		.add_property("dateTime", &PyQuote::pyDateTime)
 		.add_property("tradingDay", &PyQuote::tradingDay)
 		.add_property("ticksSinceEpoch", &PyQuote::ticksSinceEpoch)
+		.add_property("receiveTicksSinceEpoch", &PyQuote::receiveTicksSinceEpoch)
 		.add_property("preClosePrice", &PyQuote::preClosePrice)
 		.add_property("openPrice", &PyQuote::openPrice)
 		.add_property("highPrice", &PyQuote::highPrice)
@@ -343,6 +354,7 @@ void initializePythonModule() {
 		.add_property("closePrice", &PyQuote::closePrice)
 		.add_property("lastPrice", &PyQuote::lastPrice)
 		.add_property("lastVolume", &PyQuote::lastVolume)
+		.add_property("lastDirection", &PyQuote::lastDirection)
 		.add_property("totalVolume", &PyQuote::totalVolume)
 		.add_property("bidPrice", &PyQuote::bidPrice)
 		.add_property("askPrice", &PyQuote::askPrice)
@@ -361,6 +373,10 @@ void initializePythonModule() {
 		.def("isNull", &PyQuote::isNull)
 		.def("toString", &PyQuote::toString)
 		.def("__str__", &PyQuote::toString)
+		.def("getBidPrice", &PyQuote::getBidPrice)
+		.def("getAskPrice", &PyQuote::getAskPrice)
+		.def("getBidVolume", &PyQuote::getBidVolume)
+		.def("getAskVolume", &PyQuote::getAskVolume)
 		.add_property("fairPrice", &PyQuote::fairPrice)
 		.add_property("revMicrosecond", &PyQuote::revMicrosecond)
 		.add_property("cppRevMicrosecond", &PyQuote::cppRevMicrosecond)
@@ -613,6 +629,7 @@ void initializePythonModule() {
 		.add_property("openPnl", &PyPosition::openPnl)
 		.add_property("fillPnl", &PyPosition::fillPnl)
 		.add_property("totoalPnl", &PyPosition::totoalPnl)
+		.add_property("lastPrice", &PyPosition::lastPrice)
 		.def("isNull", &PyPosition::isNull)
 		.add_property("attribute", &PyPosition::pyAttribute)
 		.def("toString", &PyPosition::toString)

@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@ namespace mts
 		return QString("%1@%2").arg(id).arg(exch);
 	}
 
-	OrderSet* OrderSet::_instance = nullptr;
 	OrderSet::OrderSet()
 	{
 	}
@@ -33,14 +32,8 @@ namespace mts
 		clear();
 	}
 
-	OrderSet * OrderSet::instance() {
-		if (_instance == nullptr) {
-			_instance = new OrderSet;
-		}
-		return _instance;
-	}
 
-	Order* OrderSet::getOrder(const OrderId& referentId, bool createIfNotExist)
+	Order* OrderSet::getOrder(const QString& referentId, bool createIfNotExist/*=false*/)
 	{
 		auto it = _orders.find(referentId);
 		if (it != _orders.cend())
@@ -111,6 +104,26 @@ namespace mts
 		_orders.clear();
 		_exchOrders.clear();
 		_activeOrders.clear();
+	}
+
+
+	OrderSet * OrderSetSingleton::instance() {
+		static OrderSet* orders=nullptr;
+		if (orders == nullptr) {
+			orders = new OrderSetSingleton();
+		}
+		return orders;
+	}
+
+	OrderSetSingleton::OrderSetSingleton()
+		:OrderSet()
+	{
+		assert(Environment::instance()->isCurrentMtsThread());
+
+	}
+
+	OrderSetSingleton::~OrderSetSingleton()
+	{
 	}
 
 }

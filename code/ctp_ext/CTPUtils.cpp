@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@
 #include <iostream>
 #include <QtCore/QJsonDocument>
 #include "base/enum_ext.h"
+#include "base/MtsLog.h"
 
 #include "mts_core/InstrumentId.h"
 #include "mts_core/Quote.h"
@@ -500,10 +501,6 @@ QString CTPUtils::toJsonString(const CThostFtdcInstrumentField * instrumentField
 
 }
 
-
-
-
-
 template<class _Ty>
 inline _Ty getValue(_Ty v) {
 	return v;
@@ -958,21 +955,26 @@ QString CTPUtils::investorPositionField2String(const CThostFtdcInvestorPositionF
 		;
 }
 
-bool CTPUtils::convertMarketData2Quote(CThostFtdcDepthMarketDataField * md, mts::Quote * qt, const QString & asSymbol) {
-
-	static QHash<QString/*symbol*/, double /*volume*/>  preTotalVolumeMap; //TODO check double //TODO cross day for simu
-
+bool CTPUtils::convertMarketData2Quote(CThostFtdcDepthMarketDataField * md, mts::Quote * qt, qint64 receiveTmsp,const QString & asSymbol) {
+	static QHash<QString/*symbol*/, double /*volume*/>  preTotalVolumeMap; //TODO check double
 	mts::InstrumentId id = mts::InstrumentPropertyDb::instance()->findInstrumentId(md->InstrumentID);
 	if (!asSymbol.isNull() && id.symbol != asSymbol) {
 		id.symbol = asSymbol;
 	}
 	qt->setInstrumentId(id);
-	QString  updateTimeStr = QString(md->UpdateTime);
 	int actionDay = atoi(md->ActionDay);
 	int tradingDay = atoi(md->TradingDay);
-	int hour = updateTimeStr.left(2).toInt();
-	int minute = updateTimeStr.mid(3, 2).toInt();
-	int second = updateTimeStr.right(2).toInt();
+	if (tradingDay==0 || actionDay==0) {
+		MTS_WARN("Ignore the invalid quote (empty tradingDay or actionDay):%s\n", qPrintable(CTPUtils::depthMarketData2String(md)));
+		return false;
+	}
+	QTime quoteTime = QTime::fromString(md->UpdateTime, "hh:mm:ss");
+	if (!quoteTime.isValid()) {
+		MTS_WARN("Ignore the invalid quote(invalid updateTime):%s\n", qPrintable(CTPUtils::depthMarketData2String(md)));
+		return false;
+	}
+	quoteTime.addMSecs(md->UpdateMillisec);
+	int hour = quoteTime.hour();
 	if (id.exchId == mts::EXCH_DCE) {
 		if (hour > 20) {
 			actionDay = mts::TradingDateMgr::instance()->prevDate(tradingDay);
@@ -989,8 +991,24 @@ bool CTPUtils::convertMarketData2Quote(CThostFtdcDepthMarketDataField * md, mts:
 			tradingDay = mts::TradingDateMgr::instance()->nextDate(tradingDay);
 		}
 	}
-	DateTime dt(hour, minute, second, md->UpdateMillisec, actionDay);
-	qt->setTicksSinceEpoch(dt.toUTCMillisecsSinceEpoch());
+
+	static int lastTradingDay = 0;
+	if (lastTradingDay != tradingDay && lastTradingDay!=0) {
+		preTotalVolumeMap.clear();
+	}
+	lastTradingDay = tradingDay;
+	QDateTime receiveDt = QDateTime::fromMSecsSinceEpoch(receiveTmsp);
+	if (qAbs(receiveDt.time().secsTo(quoteTime)) > 3600) { //one hour
+		MTS_WARN("Ignore the invalid quote(replay quote) received at '%s':%s\n",qPrintable(receiveDt.toString("yyyyMMdd HH:mm:ss.zzz")), qPrintable(CTPUtils::depthMarketData2String(md)));
+		return false;
+	}
+	QDateTime quoteDt(QDate(actionDay / 10000, actionDay / 100 % 100, actionDay % 100),quoteTime);
+	if (!quoteDt.isValid()) {
+		MTS_WARN("Ignore the invalid quote(invalid  actionDay):%s\n", qPrintable(CTPUtils::depthMarketData2String(md)));
+		return false;
+	}
+	qt->setTicksSinceEpoch(quoteDt.toMSecsSinceEpoch());
+	qt->setReceiveTicksSinceEpoch(receiveTmsp);
 	qt->setTradingDay(tradingDay);
 	qt->setPreClosePrice(md->PreClosePrice);
 	qt->setOpenPrice(md->OpenPrice);
@@ -1004,11 +1022,12 @@ bool CTPUtils::convertMarketData2Quote(CThostFtdcDepthMarketDataField * md, mts:
 	preTotalVolume = md->Volume;
 	double bidprice = mts::Double::isValidPrice(md->BidPrice1)?md->BidPrice1: md->LowerLimitPrice;
 	double askprice = mts::Double::isValidPrice(md->AskPrice1)?md->AskPrice1: md->UpperLimitPrice;
-	qt->setBidPrice(md->BidPrice1);
-	qt->setAskPrice(md->AskPrice1);
+	qt->setBidPrice(md->BidPrice1,1);
+	qt->setAskPrice(md->AskPrice1,1);
+	qt->setBidVolume(md->BidVolume1, 1);
+	qt->setAskVolume(md->AskVolume1, 1);
 
-	qt->setBidVolume(md->BidVolume1);
-	qt->setAskVolume(md->AskVolume1);
+
 
 	qt->setUpperLimitPrice(md->UpperLimitPrice);
 	qt->setLowerLimitPrice(md->LowerLimitPrice);
@@ -1016,6 +1035,6 @@ bool CTPUtils::convertMarketData2Quote(CThostFtdcDepthMarketDataField * md, mts:
 	qt->setSettlementPrice(md->SettlementPrice);
 	qt->setOpenInterest(md->OpenInterest);
 	qt->setTurnover(md->Turnover);
-	qt->setRevMicrosecond(DateTime::nowToUTCMicrosecsSinceEpoch());
+	qt->setRevMicrosecond(DateTime::nowToUTCMicrosecsSinceEpoch());//for performance testing , so need to use real timestamp
 	return true;
 }

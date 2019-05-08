@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -26,28 +26,31 @@ namespace mts
 class BASE_API Double
 {
 public:
-	static bool isValidPrice(double v){
-		return !isEqual(v, DBL_MAX) && isGreaterThan(v,0);
-	}
+	static bool isDoubleMax(double v);
+	static bool isValidPrice(double v);
 	static bool isZero(double);
-	static QString toString(double v);
+	static QString toReadableString(double v,int prec=10);
+	static QString toString(double v, int prec);
 	static bool isEqual(double v1, double v2);
 	static bool isGreaterThan(double v1, double v2);
 	static bool isLessThan(double v1, double v2);
 	static bool isGreaterThanOrEqual(double v1, double v2);
 	static bool isLessThanOrEqual(double v1, double v2);
-
+	static double floor(double val,int precision);
+	static double ceil(double val, int precision);
+	static int getPrecision(double val, int precision);
 };
 
 
 
 #define INSTRUMENT_ID_ENUM(declare)	\
 	declare(TYPE_UNKNOWN,"UNKNOWN","无效标的类型")	\
-	declare(TYPE_STOCK,"STK","股票")	\
+	declare(TYPE_STK_SPOT,"STK","股票")	\
 	declare(TYPE_FUTR,"FUT","期货") \
 	declare(TYPE_OPTION,"OPT","期权") \
-	declare(TYPE_HUOBI,"HUOBI","火币") \
-	declare(TYPE_BITMEX,"BITMEX","BitMEX")
+	declare(TYPE_HUOBI,"HUOBI","火币现货") \
+	declare(TYPE_BITMEX,"BITMEX","BitMEX") \
+	declare(TYPE_OKEX,"OKEX","OKEX")
 
 enum InstrumentType { INSTRUMENT_ID_ENUM(SELECT_1_AND_COMMA_IN_3) INSTRUMENT_TYPE_MAX };
 
@@ -55,4 +58,5 @@ BASE_API const char* instrumentTypeName(InstrumentType);
 BASE_API InstrumentType instrumentType(const char*);
 BASE_API const char* instrumentTypeDescription(InstrumentType);
 
+BASE_API int prec(InstrumentType);
 }

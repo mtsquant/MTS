@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -41,7 +41,7 @@ private:
 };
 
 
-#define LOGEX(format) "[%s@%s] " format,__FUNCTION__,qPrintable(ThreadNameRegister::currentThreadName())
+#define LOGEX(format) "[%s@%s] " format,__FUNCTION__,qPrintable(ThreadNameRegister::instance()->currentThreadName())
 
 void BASE_API SET_MTS_LOG_LEVEL(int);  //DEBUG/INFO/WARNING level - 2: log to screen and file (default) ; 1: only to file ; 0: non output
 int BASE_API MTS_LOG_LEVEL();
@@ -73,10 +73,10 @@ BASE_API FILE *MTS_FP_PREFIX(const char* prefix);
         #define MTS_LOG_FILE
     #endif
 #else
-#define MTS_LOG(format, ...) qInfo(format,##__VA_ARGS__)
-#define MTS_WARN(format, ...) qWarning(format,##__VA_ARGS__)
-#define MTS_ERROR(format, ...) qCritical(format,##__VA_ARGS__)
-#define MTS_FILE(format, ...) qInfo(format,##__VA_ARGS__)
+#define MTS_LOG(format, ...) qInfo(LOGEX(format),##__VA_ARGS__)
+#define MTS_WARN(format, ...) qWarning(LOGEX(format),##__VA_ARGS__)
+#define MTS_ERROR(format, ...) qCritical(LOGEX(format),##__VA_ARGS__)
+#define MTS_FILE(format, ...) qInfo(LOGEX(format),##__VA_ARGS__)
 #define MTS_FILE_RAW(format, ...) \
 	fprintf(MTS_FP(),format,##__VA_ARGS__);\
 	fflush(MTS_FP());

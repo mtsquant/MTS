@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -23,70 +23,15 @@
 #include "base/MtsUtils.h"
 #include "mts_core/InstrumentPropertyDb.h"
 
-#include "mts_core/InstrumentPropertyDb.h"
-
 #include "mts_core/OrderType.h"
 #include "base/MtsPath.h"
 #include "mts_core/ConfigParams.h"
 #include "PyTradingAccount.h"
 #include "PythonUtil.h"
-#include <Poco/Net/HTTPClientSession.h>
-#include <Poco/Net/HTTPRequest.h>
-#include <Poco/Net/HTTPResponse.h>
-#include <Poco/Net/HTMLForm.h>
-#include <Poco/Exception.h>
-#include <Poco/StreamCopier.h>
-#include<Poco/Timespan.h>
+#include "mts/CrossThreadNotifier.h"
 
 namespace p = boost::python;
-using namespace Poco::Net;
 
-bool remoteReportAndCheck() {
-	assert(ConfigParams::isInitialized());
-	if (ConfigParams::instance()->mode() != mts::EnvironmentMode::ENVIR_REAL) {
-		return true;
-	}
-
-	try
-	{
-		HTTPClientSession session("www.mtsquant.com", 3006);
-		session.setTimeout(Poco::Timespan(5,0));
-		HTTPRequest request(HTTPRequest::HTTP_POST, "/mts/check", HTTPRequest::HTTP_1_1);
-		HTMLForm form;
-		form.add(MTS_VERSION, ConfigParams::instance()->value(MTS_VERSION).toString().toStdString());
-		form.add(MTS_OS, ConfigParams::instance()->value(MTS_OS).toString().toStdString());
-		form.add(MODE_PARAM_NAME, ConfigParams::instance()->value(MODE_PARAM_NAME).toString().toStdString());
-		form.add(INSTANCE_ID, ConfigParams::instance()->value(INSTANCE_ID).toString().toStdString());
-		QUrl feedsFront(ConfigParams::instance()->value(FEEDS_FRONT).toString());
-		feedsFront.setPassword("");
-		form.add(FEEDS_FRONT, feedsFront.toString().toStdString());
-		QUrl tradeFront(ConfigParams::instance()->value(TRADE_FRONT).toString());
-		tradeFront.setPassword("");
-		form.add(TRADE_FRONT, tradeFront.toString().toStdString());
-		QString broker = ConfigParams::instance()->value(BROKER).toString();
-		if (broker.isEmpty()) {
-			broker = ConfigParams::instance()->value(FEEDS_BROKER).toString();
-		}
-		form.add(BROKER, broker.toStdString());
-		form.prepareSubmit(request);
-		form.write(session.sendRequest(request));
-		HTTPResponse response;
-		std::istream& rs = session.receiveResponse(response);
-		char* recvBuffer = new char[1024];
-		memset(recvBuffer, 0, sizeof(char)*1024);
-		rs.read(recvBuffer,1024);
-		QJsonObject retJson = MtsUtils::str2Json(recvBuffer);
-		int ok = retJson.value("ok").toInt(1);
-		delete []recvBuffer;
-		if (!ok) {
-			return false;
-		}
-	}
-	catch (Poco::Exception & ex)
-	{
-	}
-	return true;
-}
 
 
 bool PythonStrategy::initialize(dict params) {
@@ -149,7 +94,7 @@ bool PythonStrategy::initialize ( const std::string & paramsJsonFile , dict para
 		}
 	}
 
-	if ( !StrategyMgr::instance ()->initialize ( paramMap ) || !remoteReportAndCheck()){
+	if ( !StrategyMgr::instance ()->initialize ( paramMap )){
 		MTS_ERROR ( "Failed to initialize MTS\n" );
 		return false;
 	}
@@ -164,45 +109,31 @@ void PythonStrategy::exit(int code) {
 	StrategyMgr::instance()->exit(code);
 }
 
+static
+QCoreApplication* getApplicationInstance() {
+	auto app = QCoreApplication::instance();
+	if (app == nullptr) {
+		int argc = 1;
+		char** argv = new char*[argc];
+		char * arg = new char[255];
+		strcpy(arg, "mts");
+		argv[0] = arg;
+		app = new QCoreApplication(argc, argv);
+	}
+	return app;
+}
+
 
 PythonStrategy::PythonStrategy(const std::string& name , int strategyId, const std::string& strategyPath)
-	:QObject() , _notifier(name,strategyId,strategyPath)
+	:AbsStrategy(name, strategyId, strategyPath) 
 {
-	_notifier.connectSignalInitializedl(this);
-	int argc = 1;
-	char** argv = new char*[argc];
-	char * arg = new char[255];
-	strcpy(arg, "mts");
-	argv[0] = arg;
-	_app = QCoreApplication::instance();
-	if (_app == nullptr) {
-		_app = new QCoreApplication(argc, argv);
-	}
-	StrategyMgr::instance()->registerStrategy(&_notifier);
-
+	getApplicationInstance();
 	MTS_DEBUG("appPath() %s\n", qPrintable(MtsPath::appDirPath()));
-
 }
 
 
 PythonStrategy::~PythonStrategy() 
 {
-	StrategyMgr::instance()->unregisterStrategy(&_notifier);
-}
-
-
-int PythonStrategy::newTimer(int beginTime, int interval)
-{
-	return StrategyMgr::instance()->newTimer(&_notifier,beginTime, interval);
-}
-
-int PythonStrategy::newOnceTimer(int beginTime) {
-	return StrategyMgr::instance()->newOnceTimer(&_notifier, beginTime);
-}
-
-bool PythonStrategy::removeTimer(int id)
-{
-	return StrategyMgr::instance()->removeTimer(&_notifier, id);
 }
 
 bool PythonStrategy::checkParamsNewOrder ( const dict& params ){
@@ -213,6 +144,16 @@ bool PythonStrategy::checkParamsNewOrder ( const dict& params ){
 
 std::string PythonStrategy::newOrder ( dict params ){
 	if ( !checkParamsNewOrder ( params ) ){
+		return "";
+	}
+
+	if (!params.contains("priceType")) {
+		MTS_ERROR("Missing param 'priceType'\n");
+		return "";
+	}
+	PriceType priceType = extract<PriceType>(params["priceType"]);
+	if (priceType <= PRICE_UNKNOWN || priceType > PRICE_IOC) {
+		MTS_ERROR("Unknown price type %d\n", priceType);
 		return "";
 	}
 
@@ -238,6 +179,7 @@ std::string PythonStrategy::newOrder ( dict params ){
 	actNewOrder->setInstrumentId(id);
 	actNewOrder->setVolume(extract<double>(params["volume"])); //TODO check double
 	actNewOrder->setPrice(ordPrice);
+	actNewOrder->setPriceType(priceType);
 	if ( ot == OT_DIRECT ){
 		if ( !params.contains ( "direction" ) ){
 			MTS_ERROR ( "Missing param 'direction'\n");
@@ -266,7 +208,7 @@ std::string PythonStrategy::newOrder ( dict params ){
 		qint64 us = extract<qint64>(params["neword"]);
 		actNewOrder->setPerfNote(QString("%1|neword=%2").arg(actNewOrder->perfNote()).arg(us));
 	}
-	return StrategyMgr::instance()->newOrder(&_notifier, actNewOrder,ot).toString().toStdString();
+	return StrategyMgr::instance()->newOrder(_notifier, actNewOrder,ot).toStdString();
 }
 
 bool PythonStrategy::cancelOrder(dict params)
@@ -274,10 +216,10 @@ bool PythonStrategy::cancelOrder(dict params)
 	OrderActionCancel* actCancelOrder = new OrderActionCancel;
 	std::string symbol = extract<std::string>(params["symbol"]);
 	std::string referenceId = extract<std::string>(params["referenceId"]);
-	actCancelOrder->setReferenceId(mts::OrderId(referenceId.c_str()));
+	actCancelOrder->setReferenceId(referenceId.c_str());
 	actCancelOrder->setInstrumentId(mts::InstrumentPropertyDb::instance()->findInstrumentId(symbol.c_str()));
 	actCancelOrder->setPerfNote(QString("clxord=%1").arg(DateTime::nowToUTCMicrosecsSinceEpoch()));
-	return StrategyMgr::instance()->cancelOrder(&_notifier, actCancelOrder);
+	return StrategyMgr::instance()->cancelOrder(_notifier, actCancelOrder);
 }
 
 bool PythonStrategy::subscribeQuotes(list symbols)
@@ -289,7 +231,7 @@ bool PythonStrategy::subscribeQuotes(list symbols)
 		auto id=InstrumentPropertyDb::instance()->findInstrumentId(sym.c_str());
 		ids << id;
 	}
-	return StrategyMgr::instance()->subscribeQuotes(&_notifier, ids);
+	return StrategyMgr::instance()->subscribeQuotes(_notifier, ids);
 }
 
 
@@ -300,16 +242,16 @@ bool PythonStrategy::unsubscribeQuotes(list symbols)
 		std::string sym = call_method<std::string>(symbols.ptr(), "__getitem__", i);
 		ids << mts::InstrumentPropertyDb::instance()->findInstrumentId(sym.c_str());
 	}
-	return StrategyMgr::instance()->unsubscribeQuotes(&_notifier, ids);
+	return StrategyMgr::instance()->unsubscribeQuotes(_notifier, ids);
 }
 
 void PythonStrategy::unsubscribeAllQuotes (){
-	StrategyMgr::instance ()->unsubscribeAllQuotes ( &_notifier );
+	StrategyMgr::instance ()->unsubscribeAllQuotes (_notifier );
 }
 
 
 
-list PythonStrategy::getAllTradingCounts() const {
+list PythonStrategy::getAllTradingAccounts() const {
 	QList<TradingAccount*> accounts = StrategyMgr::instance()->getAllTradingAccounts();
 	list l;
 	for (int i = 0, size = accounts.size(); i < size; ++i) {
@@ -332,7 +274,7 @@ PyPosition PythonStrategy::getPosition(const std::string& symbol) const
 
 list PythonStrategy::getAllOrders() const
 {
-	QList<Order*> orders = StrategyMgr::instance()->getAllOrders(const_cast<mts::CrossThreadNotifier*>(&_notifier));
+	QList<Order*> orders = StrategyMgr::instance()->getAllOrders(const_cast<mts::CrossThreadNotifier*>(_notifier));
 	list l;
 	for (int i = 0, size = orders.size(); i < size; ++i) {
 		l.append(PyOrder(*orders[i]));
@@ -343,7 +285,7 @@ list PythonStrategy::getAllOrders() const
 list PythonStrategy::getActiveOrders(const std::string& symbol) const
 {
 	mts::InstrumentId id = mts::InstrumentPropertyDb::instance()->findInstrumentId(symbol.c_str());
-	QList<Order*> orders = StrategyMgr::instance()->getActiveOrders(const_cast<mts::CrossThreadNotifier*>(&_notifier), id);
+	QList<Order*> orders = StrategyMgr::instance()->getActiveOrders(const_cast<mts::CrossThreadNotifier*>(_notifier), id);
 	list l;
 	for (auto it = orders.begin(), itEnd = orders.end(); it != itEnd; ++it) {
 		l.append(PyOrder(**it));
@@ -404,14 +346,14 @@ qint64 PythonStrategy::getNowMicrosecs() const
 
 
 void PythonStrategy::doEnvirInitialized() {
-	onEnvirInitialized();
+	this->onEnvirInitialized();
 }
 
 void PythonStrategy::doInitialized(AccountPtr account) {
 	MTS_DEBUG ( "PythonStrategy::doInitialized\n" );
-	_notifier.connectSignals ( this );
-	onInitialized(PyAccount(*account,this->getAllOrders(),this->getAllPositions()));
-	_notifier.onBusinessDateChanged ( StrategyMgr::instance ()->currentTradingDay () );
+	_notifier->connectSignals ( this );
+	this->onInitialized(PyAccount(*account,this->getAllOrders(),this->getAllPositions()));
+	_notifier->onBusinessDateChanged ( StrategyMgr::instance ()->currentTradingDay () );
 	if (mts::ConfigParams::instance()->mode() == mts::ENVIR_SIMU && StrategyMgr::instance()->subscribedInstrumentCount() == 0) {
 		MTS_ERROR("please subscribe instrument\n");
 		QCoreApplication::instance()->exit(1);
@@ -422,40 +364,40 @@ void PythonStrategy::doTimeout(int timerId) {
 	this->onTimer ( timerId );
 }
 
+void PythonStrategy::doQuoteSnapshotUpdate(QuoteSnapshotPtr quote) {
+	this->onQuoteSnapshotUpdate(PyQuote(*quote.data()));
+}
+
 void PythonStrategy::doOrderNewDone(OrderReportNewDonePtr report) {
-	onOrderNewDone(PyOrderNewDone(*report.data()));
+	this->onOrderNewDone(PyOrderNewDone(*report.data()));
 }
 
 void PythonStrategy::doOrderNewReject(OrderReportNewRejectPtr report) {
-	onOrderNewReject( PyOrderNewReject ( *report.data () ) );
+	this->onOrderNewReject( PyOrderNewReject ( *report.data () ) );
 }
 
 void PythonStrategy::doOrderFill(OrderReportFillPtr report) {
-	onOrderFill( PyOrderFill(*report.data()));
+	this->onOrderFill( PyOrderFill(*report.data()));
 }
 
 void PythonStrategy::doOrderCancelDone(OrderReportCancelDonePtr report) {
-	onOrderCancelDone( PyOrderCancelDone(*report.data()));
+	this->onOrderCancelDone( PyOrderCancelDone(*report.data()));
 }
 
 void PythonStrategy::doOrderCancelReject(OrderReportCancelRejectPtr report) {
-	onOrderCancelReject ( PyOrderCancelReject ( *report.data ()));
+	this->onOrderCancelReject ( PyOrderCancelReject ( *report.data ()));
 }
 
 void PythonStrategy::doOrderOtherReport(OrderReportPtr report) {
-	onOrderOtherReport( PyOrderReport(*report.data()));
-}
-
-void PythonStrategy::doQuoteSnapshotUpdate(QuoteSnapshotPtr quote) {
-	onQuoteSnapshotUpdate(PyQuote(*quote.data()));
+	this->onOrderOtherReport( PyOrderReport(*report.data()));
 }
 
 void PythonStrategy::doPositionUpdate(PositionPtr pos) {
-	onPositionUpdate(PyPosition(*pos.data()));
+	this->onPositionUpdate(PyPosition(*pos.data()));
 }
 
 void PythonStrategy::doOrderUpdate(OrderPtr order) {
-	onOrderUpdate(PyOrder(*order.data()));
+	this->onOrderUpdate(PyOrder(*order.data()));
 }
 
 
@@ -464,6 +406,6 @@ void PythonStrategy::doBusinessDateChanged(int date) {
 }
 
 void PythonStrategy::doBarUpdate(CalcBarPtr bar) {
-	onBarUpdate(PyBar(*bar.data()));
+	this->onBarUpdate(PyBar(*bar.data()));
 }
 

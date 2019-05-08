@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -18,21 +18,18 @@
 #include "OrderAction.h"
 
 namespace mts {
-	class MTS_CORE_API OrderReport :public OrderActionNew
+	class MTS_CORE_API OrderReport :public OrderActionCancel
 	{
 	public:
 		OrderReport(OrderReportType type);
 		OrderReport(const OrderReport&);
 		virtual ~OrderReport();
-		QString orderExchId()const;
-		void setOrderExchId(const QString&);
 		const QString& note()const;
 		void setNote(const QString&);
 		virtual OrderReport* clone() const;
 		virtual QJsonObject& toJson(QJsonObject& jsonObj) const override;
 		static void registerMetaType();
 	private:
-		QString _ordExchId;
 		QString _note;
 	};
 

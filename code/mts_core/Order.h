@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -50,9 +50,14 @@ namespace mts {
 
 		void setLastCancelSinceEpoch(qint64);
 		qint64 lastCancelSinceEpoch()const;
+
+		void setNotifyToStrategy(bool v);
+		bool needNotifyToStrategy() const;
 	private:
+		bool _notifyToStrategy;
 		int _status;
 		qint64 _lastCxlTimestamp;
+
 	};
 
 	typedef QSharedPointer<Order> OrderPtr;

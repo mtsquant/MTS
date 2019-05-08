@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -13,7 +13,7 @@
 *  See the License for the specific language governing permissions and
 *  limitations under the License.
 *****************************************************************************/
-#include "CTPOrderMgr.h"
+锘�#include "CTPOrderMgr.h"
 #include "CTPInputOrderField.h"
 #include "CTPCancelOrderField.h"
 #include <assert.h>
@@ -27,6 +27,7 @@
 
 #include "base/PerfTest.h"
 #include "base/MtsPath.h"
+#include "ctp_ext/TradeUtils.h"
 
 
 static const int exchOrderInfo = qRegisterMetaType<ExchOrderInfo>("ExchOrderInfo");
@@ -86,28 +87,6 @@ void CTPOrderMgr::OnRtnTrade(CThostFtdcTradeField * pTrade) {
 	iid.typeId = mts::TYPE_FUTR;
 	orderReport->setInstrumentId(iid);
 }*/
-
-static void buildOrderReport(mts::Order *pOrder, mts::OrderReport* orderReport)
-{
-	orderReport->setVolume(pOrder->volume());
-	orderReport->setPrice(pOrder->price());
-	orderReport->setFillVolume(pOrder->fillVolume());
-	orderReport->setPriceType(pOrder->priceType());
-	orderReport->setDirectonSide(pOrder->directionSide());
-	orderReport->setOffsetFlag(pOrder->offsetFlag());
-	orderReport->setTimeCondition(pOrder->timeCondition());
-	orderReport->setCreateSrc(pOrder->createSrc());
-	orderReport->setStrategyId(pOrder->strategyId());
-	orderReport->setInstanceId(pOrder->instanceId());
-	orderReport->setReferenceId(pOrder->referenceId());
-	orderReport->setTradingAccountId(pOrder->tradingAccountId());
-	orderReport->setInstrumentId(pOrder->instrumentId());
-	orderReport->setBook(pOrder->book());
-	orderReport->setTradingDay(pOrder->tradingDay());
-	orderReport->setCreateTicksSinceEpoch(pOrder->createTicksSinceEpoch());
-	orderReport->setOrderExchId(pOrder->orderExchId());
-}
-
 
 static int getMtsOrderSide(char direct, char offsetFlag)
 {
@@ -190,14 +169,14 @@ void CTPOrderMgr::OnErrRtnOrderAction(CThostFtdcOrderActionField * pOrderAction,
 }
 
 bool CTPOrderMgr::hasOrderClientId(const QString & orderClientId) const {
-	return _allOrders.contains(orderClientId);
+	return _cacheOrders.contains(orderClientId);
 }
 
 bool CTPOrderMgr::newOrder(mts::OrderActionNew* newAction)
 {
 	CTPInputOrderField req(this->_BROKER_ID, this->_USER_ID, this->_USER_ID);
-	req.setInstrumentID(newAction->instrumentId().symbol); //锟斤拷锟斤拷
-	req.setOrderRef(mts::OrderIdImplCtp(newAction->referenceId()).ctpOrderReferenceId()); //锟斤拷锟斤拷  
+	req.setInstrumentID(newAction->instrumentId().symbol); 
+	req.setOrderRef(mts::OrderIdImplCtp(newAction->referenceId()).ctpOrderReferenceId()); 
 	mts::PriceType priceType = newAction->priceType();
 	if (priceType == mts::PRICE_LIMIT) {
 		req.setLimitPrice(newAction->price());
@@ -207,16 +186,16 @@ bool CTPOrderMgr::newOrder(mts::OrderActionNew* newAction)
 		return false;
 	}
 
-	req.VolumeTotalOriginal = int(qAbs(newAction->volume())); //锟斤拷锟斤拷
+	req.VolumeTotalOriginal = int(qAbs(newAction->volume())); 
 	req.setDirection(newAction->directionSide());
 	req.setCombOffsetFlag(newAction->offsetFlag());
 
 	MTS_LOG_FILE("ctp", TIMESTAMP("OrderActionNew - %s\n"), utf8Printable(req.toJsonString()));
 	CThostFtdcOrderField ord = convertInputOrder2OrderField(req);
-	if (mts::Order* mtsOrder = mts::OrderSet::instance()->getOrder(newAction->referenceId(), false)) {
+	if (mts::Order* mtsOrder = mts::OrderSetSingleton::instance()->getOrder(newAction->referenceId(), false)) {
 		mtsOrder->setPerfNote(QString("%1|apineword=%2").arg(mtsOrder->perfNote()).arg(DateTime::nowToUTCMicrosecsSinceEpoch()));
 	}
-	updateOrder(ord);
+	updateCacheOrder(ord);
 #if 0
     qlonglong nowUtcTicks=boost::chrono::high_resolution_clock::now().time_since_epoch().count();
 #ifdef _WIN32
@@ -236,12 +215,12 @@ bool CTPOrderMgr::newOrder(mts::OrderActionNew* newAction)
 
 bool CTPOrderMgr::cancelOrder(mts::OrderActionCancel * cancelAction)
 {
-	QString clientId = cancelAction->referenceId().toString();
+	QString clientId = cancelAction->referenceId();
 	if (!hasOrderClientId(clientId)) {
 		MTS_ERROR( "cancelOrder error:can not find order:%s\n", qPrintable(clientId));
 		return false;
 	}
-	CThostFtdcOrderField order = _allOrders[clientId];
+	CThostFtdcOrderField order = _cacheOrders[clientId];
 
 	MTS_LOG_FILE("ctp", TIMESTAMP("OrderActionCancel: ClientId:%s,OrderRef:%s,OrderSysID:%s,InstrumentID%s\n"), qPrintable(clientId), order.OrderRef, order.OrderSysID,order.InstrumentID);
 
@@ -293,22 +272,22 @@ void CTPOrderMgr::onResponseQueryOrders(const QList<CThostFtdcOrderField>& order
 {
 	CTPTradeClientBase::onResponseQueryOrders(orders);
 	for (int i = 0, size = _orders.size(); i < size; ++i) {
-		updateOrder(_orders[i]);
+		updateCacheOrder(_orders[i]);
 	}
 }
 
-void CTPOrderMgr::updateOrder(const CThostFtdcOrderField& pOrder)
+void CTPOrderMgr::updateCacheOrder(const CThostFtdcOrderField& pOrder)
 {
 	mts::OrderIdImplCtp cOrderId( pOrder.FrontID, pOrder.SessionID,QString(pOrder.OrderRef).toLongLong() );
-	_allOrders[cOrderId.toString()] = pOrder;
+	_cacheOrders[cOrderId.toString()] = pOrder;
 }
 
 void CTPOrderMgr::updateOrder(ExchOrderInfo info)
 {
-	mts::Order* order = mts::OrderSet::instance()->getOrder(info.exchOrderId.c_str(), mts::exchId(info.exch.c_str()));
+	mts::Order* order = mts::OrderSetSingleton::instance()->getOrder(info.exchOrderId.c_str(), mts::exchId(info.exch.c_str()));
 	mts::OrderIdImplCtp clientId(info.frontId, info.sessionId, QString(info.clientId.c_str()).toLongLong());
 	if (!order) {
-		order = mts::OrderSet::instance()->getOrder(clientId.id(),false);
+		order = mts::OrderSetSingleton::instance()->getOrder(clientId.id(),false);
 	}
 	if (!order) {
 		MTS_ERROR("can not find order:%s\n", qPrintable(clientId.toString()));
@@ -329,7 +308,7 @@ void CTPOrderMgr::updateOrder(ExchOrderInfo info)
 	if (order->isFinished()) {
 		if( info.status== mts::OS_CANCEL_REJECT){ //for cancel cancelled or filled order , should be call cancelReject
 			mts::OrderReportCancelReject* rpt = new mts::OrderReportCancelReject ();
-			buildOrderReport ( order , rpt );
+			TradeUtils::buildBasicOrderReport( order , rpt );
 			rpt->setInstrumentId ( mts::InstrumentId ( info.instrument.c_str () , mts::TYPE_FUTR , mts::exchId ( info.exch.c_str () ) ) );
 			rpt->setOrderExchId (exchOrderId);
 			rpt->setNote ( info.errMsg );
@@ -341,7 +320,7 @@ void CTPOrderMgr::updateOrder(ExchOrderInfo info)
 
 	if (info.status == mts::OS_NEW_REJECT) {
 		mts::OrderReportNewReject* rpt = new mts::OrderReportNewReject();
-		buildOrderReport(order, rpt);
+		TradeUtils::buildBasicOrderReport(order, rpt);
 		rpt->setInstrumentId(mts::InstrumentId(info.instrument.c_str(),mts::TYPE_FUTR,mts::exchId(info.exch.c_str())));
 		rpt->setOrderExchId(exchOrderId);
 		rpt->setNote(info.errMsg);
@@ -355,7 +334,7 @@ void CTPOrderMgr::updateOrder(ExchOrderInfo info)
 
 	if (!(order->status() & mts::OS_NEW_DONE)) {
 		mts::OrderReportNewDone* rpt = new mts::OrderReportNewDone();
-		buildOrderReport(order, rpt);
+		TradeUtils::buildBasicOrderReport(order, rpt);
 		rpt->setInstrumentId(mts::InstrumentId(info.instrument.c_str(), mts::TYPE_FUTR, mts::exchId(info.exch.c_str())));
 		rpt->setOrderExchId(exchOrderId);
 		rpt->setPerfNote(QString("apinewdone=%1").arg(info.perfUs));
@@ -367,7 +346,7 @@ void CTPOrderMgr::updateOrder(ExchOrderInfo info)
 	case mts::OS_CANCEL_REJECT:
 	{
 		mts::OrderReportCancelReject* rpt = new mts::OrderReportCancelReject();
-		buildOrderReport(order, rpt);
+		TradeUtils::buildBasicOrderReport(order, rpt);
 		rpt->setInstrumentId(mts::InstrumentId(info.instrument.c_str(), mts::TYPE_FUTR, mts::exchId(info.exch.c_str())));
 		rpt->setOrderExchId(exchOrderId);
 		rpt->setNote(info.errMsg);
@@ -379,7 +358,7 @@ void CTPOrderMgr::updateOrder(ExchOrderInfo info)
 	case mts::OS_CANCEL_DONE:
 	{
 		mts::OrderReportCancelDone* rpt = new mts::OrderReportCancelDone();
-		buildOrderReport(order, rpt);
+		TradeUtils::buildBasicOrderReport(order, rpt);
 		rpt->setInstrumentId(mts::InstrumentId(info.instrument.c_str(), mts::TYPE_FUTR, mts::exchId(info.exch.c_str())));
 		rpt->setOrderExchId(exchOrderId);
 		rpt->setNote(info.errMsg);
@@ -447,6 +426,8 @@ void CTPOrderMgr::onResponseQueryInstruments(const QList<CThostFtdcInstrumentFie
 		instrumentProperty->setPriceTick(instrument.PriceTick);
 		instrumentProperty->setMinOrderSize(1);
 		instrumentProperty->setOrderSizeIncrement(1);
+		instrumentProperty->setPricePrecision(0);
+		instrumentProperty->setSizePrecision(0);
 		instrumentProperty->setCreateDate(atoi(instrument.CreateDate));
 		instrumentProperty->setOpenDate(atoi(instrument.OpenDate));
 		instrumentProperty->setExpireDate(atoi(instrument.ExpireDate));
@@ -510,9 +491,9 @@ void CTPOrderMgr::onResponseQueryPositions(const QList<CThostFtdcInvestorPositio
 
 void CTPOrderMgr::removeOrder(const QString& clientId)
 {
-	auto it = _allOrders.find(clientId);
-	if (it != _allOrders.end()) {
-		_allOrders.erase(it);
+	auto it = _cacheOrders.find(clientId);
+	if (it != _cacheOrders.end()) {
+		_cacheOrders.erase(it);
 	}
 }
 
@@ -668,7 +649,7 @@ void CTPOrderMgr::restoreOrdersAndFills()
 		if (orderMap.contains(ctpFill.OrderSysID)) {
 			mts::Order* order = orderMap[ctpFill.OrderSysID];
 			mts::OrderReportFill* rpt = new mts::OrderReportFill;
-			buildOrderReport(order, rpt);
+			TradeUtils::buildBasicOrderReport(order, rpt);
 			ctpFillToMtsFillReport(ctpFill,rpt);
 			Q_EMIT signalOrderReport(rpt);
 
@@ -682,14 +663,17 @@ void CTPOrderMgr::restoreOrdersAndFills()
 void CTPOrderMgr::onOrderFilled(QByteArray trade) {
 	MTS_DEBUG("onOrderFilled\n");
 	CThostFtdcTradeField* pTrade = (CThostFtdcTradeField *)trade.data();
-
-	mts::Order* order = mts::OrderSet::instance()->getOrder(pTrade->OrderSysID,mts::exchId(pTrade->ExchangeID));
+	mts::Order* order = mts::OrderSetSingleton::instance()->getOrder(pTrade->OrderSysID,mts::exchId(pTrade->ExchangeID));
 	if (!order) {
-		MTS_ERROR("can not find order:exchOrderId=%s,exch=%s,fillId=%s\n", pTrade->OrderSysID,pTrade->ExchangeID,pTrade->TradeID);
-		return;
+		mts::OrderIdImplCtp clientId(this->frontId(), this->sessionId(), QString(pTrade->OrderRef).toLongLong());
+		order = mts::OrderSetSingleton::instance()->getOrder(clientId.id(),false);
+		if (!order) {
+			MTS_ERROR("can not find order:exchOrderId=%s,exch=%s,fillId=%s\n", pTrade->OrderSysID, pTrade->ExchangeID, pTrade->TradeID);
+			return;
+		}
 	}
 	mts::OrderReportFill* rpt = new mts::OrderReportFill();
-	buildOrderReport(order, rpt);
+	TradeUtils::buildBasicOrderReport(order, rpt);
 	int volume = pTrade->Volume;
 	if (order->directionSide() == mts::D_SELL || order->directionSide() == mts::D_SHORT) {
 		volume = -volume;
@@ -722,9 +706,9 @@ void CTPOrderMgr::doRtnOrder(QByteArray order)
 	if (!pOrder) {
 		return;
 	}
-	updateOrder(*pOrder);
+	updateCacheOrder(*pOrder);
 
-	mts::Order* mtsOrder = mts::OrderSet::instance()->getOrder(mts::OrderIdImplCtp(pOrder->FrontID, pOrder->SessionID, QString(pOrder->OrderRef).toLongLong()).id(), false);
+	mts::Order* mtsOrder = mts::OrderSetSingleton::instance()->getOrder(mts::OrderIdImplCtp(pOrder->FrontID, pOrder->SessionID, QString(pOrder->OrderRef).toLongLong()).id(), false);
 	if (!mtsOrder) {
 		mtsOrder = ctpOrderToMtsOrder(*pOrder);
 		Q_EMIT signalRestoreOrder(mtsOrder);

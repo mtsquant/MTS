@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -129,7 +129,7 @@ namespace mts
 		);
 	}
 
-	bool MtsProxyBase::initialize(StrategyInterface* callbacks, const QVariantMap & params) {
+	bool MtsProxyBase::initialize(StrategyInterface* strategyHub, const QVariantMap & params) {
 		if (_callback) {//avoid to call the function multi times
 			return true;
 		}
@@ -155,7 +155,7 @@ namespace mts
 		}
 
 
-		_callback = callbacks;// the following initialize functions will be use the _callback
+		_callback = strategyHub;// the following initialize functions will be use the _callback
 		if (!initMtsMgrs()) {
 			MtsMainThread::instance(_mode)->exitEventLoop();
 			return false;
@@ -195,15 +195,15 @@ namespace mts
 		return ret;
 	}
 
-	mts::OrderId MtsProxyBase::newOrder(OrderActionNew* orderActionNew, int orderType) {
-		mts::OrderId ret;
+	QString MtsProxyBase::newOrder(OrderActionNew* orderActionNew, int orderType) {
+		QString ret;
 		QMetaObject::invokeMethod(OrderMgr::instance(), "sendOrder", this->connectionType(),
-			Q_RETURN_ARG(mts::OrderId, ret),
+			Q_RETURN_ARG(QString, ret),
 			Q_ARG(OrderActionNew*, orderActionNew),
 			Q_ARG(int, orderType)
 		);
 
-		if (!ret.isValid()) {
+		if (ret.isEmpty()) {
 			MTS_FILE("NewOrderFail:%s\n", qPrintable(orderActionNew->toJsonString()));
 		}
 		return ret;

@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 #include <QtCore/QDir>
 #include <QtCore/QDateTime>
 #include <QtCore/QStandardPaths>
+#include <QtCore/QUrl>
 #include "MtsPath.h"
 #include "MtsLog.h"
 #include "base/enum_ext.h"
@@ -27,6 +28,7 @@
 
 #include <QtCore/QJsonParseError>
 #include <QtCore/QJsonDocument>
+#include <QtCore/QSysInfo>
 
 QString MtsUtils::getUserName() {
 	QString userName = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
@@ -174,6 +176,11 @@ QJsonObject MtsUtils::str2Json(const QString& str)
 	}
 }
 
+QString MtsUtils::json2Str(const QJsonObject& obj)
+{
+	return QJsonDocument(obj).toJson(QJsonDocument::Compact).simplified();
+}
+
 QString MtsUtils::getBuildDateStr()
 {
 	QStringList monthList = QStringList() << "" << "Jan" << "Feb" << "Mar" << "Apr" << "May" << "Jun" 
@@ -191,4 +198,42 @@ QString MtsUtils::getBuildDateStr()
 		return __DATE__;
 	}
 	return dt.toString("yyyyMMdd");
+}
+
+QString MtsUtils::getMachineHostName()
+{
+	QString hostName = QSysInfo::machineHostName();
+	if (hostName.isEmpty()) {
+		hostName = "UNKNOWN";
+	}
+	return hostName;
+}
+
+QString MtsUtils::buildUrlQueryString(const QMap<QString, QString>& params)
+{
+	QStringList items;
+	for (auto it = params.constBegin(),itEnd = params.constEnd(); it != itEnd; ++it) {
+		items.append(it.key() + "=" + QUrl::toPercentEncoding(it.value()));
+	}
+	return items.join('&');
+}
+
+QDateTime MtsUtils::getUTCTimeFromISO8601(const QString& tmsp)
+{
+	QDateTime utcDt = QDateTime::fromString(tmsp, "yyyy-MM-ddTHH:mm:ss.zzzZ");
+	utcDt.setTimeSpec(Qt::UTC);
+	return utcDt;
+}
+
+qint64 MtsUtils::getTimeStampFromISO8601(const QString& tmsp)
+{
+	QDateTime utcDt = getUTCTimeFromISO8601(tmsp);
+	return utcDt.toMSecsSinceEpoch();
+}
+
+QString MtsUtils::getISO8601TimeString(qint64 tmsp)
+{
+	QDateTime utcDt = QDateTime::fromMSecsSinceEpoch(tmsp);
+	utcDt.setTimeSpec(Qt::UTC);
+	return utcDt.toString("yyyy-MM-ddTHH:mm:ss.zzzZ");
 }

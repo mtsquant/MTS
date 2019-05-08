@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -49,12 +49,11 @@ namespace mts
 		virtual ~CommonConfigParams();
 		virtual bool doLoad(const QVariantMap & params) override;
 	public:
-		bool isProxyMode() const;
 		QStringList allExchSessions() const;
-		UrlPath feedsFront(const QString& exchSession="*") const;
-		UrlPath tradeFront(const QString& exchSession = "*") const;
-		FrontProtocol feedsFrontProtocol(const QString& exchSession = "*") const;
-		FrontProtocol tradeFrontProtocol(const QString& exchSession = "*") const;
+		UrlPath feedsFront(const QString& exchSession) const;
+		UrlPath tradeFront(const QString& exchSession) const;
+		FrontProtocol feedsFrontProtocol(const QString& exchSession ) const;
+		FrontProtocol tradeFrontProtocol(const QString& exchSession ) const;
 
 		int feedsGrade() const;
 		FeedsType feedsType() const;
@@ -63,16 +62,16 @@ namespace mts
 
 		QString marketTradingTimeType() const;  /*'24H' or not*/
 	protected:
-		QString brokerId(const QString& exchSession = "*") const;
+		QString brokerId(const QString& exchSession ) const;
 	private:
-		bool readExchParamsSection(const QVariantMap & params,const QString& exchSession);
-		struct Front{
+		struct Front {
 			UrlPath _feedsFront;
 			UrlPath _tradeFront;
 			FrontProtocol _tradeFrontProtocol;
 			FrontProtocol _feedsFrontProtocol;
 			QString _brokerId;
 		};
+		bool readExchParamsSection(const QVariantMap & params, Front& front);
 
 		QMap<QString/*exchSession*/, Front>  _fronts;
 		int _feedsGrade;

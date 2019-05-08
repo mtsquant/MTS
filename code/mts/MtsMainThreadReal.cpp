@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -16,6 +16,7 @@
 #include "./MtsMainThreadReal.h"
 #include <QtCore/qcoreapplication.h>
 #include "base/EventDispatcher.h"
+#include "base/MtsLog.h"
 #include <QtCore/QAbstractEventDispatcher>
 
 namespace mts
@@ -68,6 +69,7 @@ namespace mts
 	}
 
 	void MtsMainThreadReal::exitEventLoop() {
+		MTS_WARN("exitEventLoop\n");
 		this->quit();
 		_quitFlag = 1;
 		this->wait();

@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -18,6 +18,7 @@
 #include <QtCore/QObject>
 #include "mts_core/OrderSet.h"
 #include "mts_core/StrategyInterface.h"
+#include "mts_core/OrderType.h"
 
 namespace mts {
 	class Trade;
@@ -32,10 +33,10 @@ namespace mts {
 	public Q_SLOTS:
 		QList<Order*> allOrders()const;
 		QList<Order*> allActiveOrders(const InstrumentId&)const;
-		Order* getOrder(const mts::OrderId& referenceId);
+		Order* getOrder(const QString& referenceId);
 		Order* getOrder(const QString& exchId, ExchId exch);
 
-		mts::OrderId sendOrder(OrderActionNew*, int orderType = OT_DIRECT); //return refrenceId if success, return -1 if failed
+		QString sendOrder(OrderActionNew*, int orderType = OT_DIRECT); //return refrenceId if success, return -1 if failed
 		bool cancelOrder(OrderActionCancel*);
 
 		void initStrategyPos(int strategyId, const QString& dir);

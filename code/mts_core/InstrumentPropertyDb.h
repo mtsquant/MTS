@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ namespace mts
 		static InstrumentPropertyDb*  instance();
 
 		InstrumentId findInstrumentId(const QString& symbol) const; //from exch symbol
-
+		bool hasMtsSymbol(const QString& mtsSym);
 
 		bool insert(InstrumentBaseProperty*);   //The class will own the pointer,you do not delete it
 		InstrumentBaseProperty* find(const InstrumentId& id) const;

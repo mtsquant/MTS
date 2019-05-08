@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -34,8 +34,7 @@ namespace mts
 		virtual bool sendOrderCancelAction(OrderActionCancel*) override;
 		virtual bool sendOrderOtherAction(OrderAction*) override;
 
-		virtual OrderId createOrderId(int instanceId, int strategyId, int orderType, const InstrumentId& instrumentId) override;
-		virtual OrderId parseOrderId(const QString &) override;
+		virtual QString createOrderId(int instanceId, int strategyId, int orderType, int directionSide, int priceType, const InstrumentId& instrumentId) override;
 		virtual bool isMtsOrder(const QString&) override;
 
 	private:

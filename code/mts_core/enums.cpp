@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -343,7 +343,7 @@ namespace mts
 		}
 	}
 
-	MTS_CORE_API const char* instrumentKindName(InstrumentKind type)
+	const char* instrumentKindName(InstrumentKind type)
 	{
 		static const char* names[] = {
 			INSTRUMENT_KIND_ENUM(SELECT_2_AND_COMMA_IN_3)
@@ -356,7 +356,7 @@ namespace mts
 		}
 	}
 
-	MTS_CORE_API InstrumentKind instrumentKind(const char* typeName)
+	InstrumentKind instrumentKind(const char* typeName)
 	{
 		static QHash<QString, InstrumentKind> map;
 		if (map.isEmpty()) {
@@ -365,7 +365,7 @@ namespace mts
 		return map[typeName];
 	}
 
-	MTS_CORE_API const char* instrumentKindDescription(InstrumentKind type)
+	const char* instrumentKindDescription(InstrumentKind type)
 	{
 		static const char* names[] = {
 			INSTRUMENT_KIND_ENUM(SELECT_3_AND_COMMA_IN_3)
@@ -378,7 +378,7 @@ namespace mts
 		}
 	}
 
-	MTS_CORE_API const char* algoStatusName(AlgoStatus type)
+	const char* algoStatusName(AlgoStatus type)
 	{
 		static const char* names[] = {
 			ALOG_STATUS_ENUM(SELECT_2_AND_COMMA_IN_3)
@@ -391,7 +391,7 @@ namespace mts
 		}
 	}
 
-	MTS_CORE_API AlgoStatus algoStatus(const char* typeName)
+	AlgoStatus algoStatus(const char* typeName)
 	{
 		static QHash<QString, AlgoStatus> map;
 		if (map.isEmpty()) {
@@ -400,7 +400,7 @@ namespace mts
 		return map[typeName];
 	}
 
-	MTS_CORE_API const char* algoStatusDescription(AlgoStatus type)
+	const char* algoStatusDescription(AlgoStatus type)
 	{
 		static const char* names[] = {
 			ALOG_STATUS_ENUM(SELECT_3_AND_COMMA_IN_3)
@@ -413,7 +413,7 @@ namespace mts
 		}
 	}
 
-	MTS_CORE_API const char* algoTypeName(AlgoType type)
+	const char* algoTypeName(AlgoType type)
 	{
 		static const char* names[] = {
 			ALOG_TYPE_ENUM(SELECT_2_AND_COMMA_IN_3)
@@ -426,7 +426,7 @@ namespace mts
 		}
 	}
 
-	MTS_CORE_API AlgoType algoType(const char* typeName)
+	AlgoType algoType(const char* typeName)
 	{
 		static QHash<QString, AlgoType> map;
 		if (map.isEmpty()) {
@@ -435,7 +435,7 @@ namespace mts
 		return map[typeName];
 	}
 
-	MTS_CORE_API const char* algoTypeDescription(AlgoType type)
+	const char* algoTypeDescription(AlgoType type)
 	{
 		static const char* names[] = {
 			ALOG_TYPE_ENUM(SELECT_3_AND_COMMA_IN_3)
@@ -448,7 +448,7 @@ namespace mts
 		}
 	}
 
-	MTS_CORE_API AlgoType algoDescription2Type(const char* description)
+	AlgoType algoDescription2Type(const char* description)
 	{
 		static QHash<QString, AlgoType> map;
 		if (map.isEmpty()) {
@@ -457,4 +457,35 @@ namespace mts
 		return map[description];
 	}
 
+
+	const char* mtsComponentName(MtsComponent c) {
+		static const char* names[] = {
+			MTS_COMPONENT_ENUM(SELECT_2_AND_COMMA_IN_3)
+		};
+		if (c >= 0 && c < ARRAY_SIZE(names)) {
+			return names[c];
+		}else {
+			return names[0];
+		}
+
+	}
+
+	MtsComponent mtsComponent(const char* name) {
+		static QHash<QString, MtsComponent> map;
+		if (map.isEmpty()) {
+			MTS_COMPONENT_ENUM(DEFINE_NAME_ENUM_MAP3_KEY_2);
+		}
+		return map[name];
+	}
+
+	const char* mtsComponentDescription(MtsComponent c) {
+		static const char* names[] = {
+			MTS_COMPONENT_ENUM(SELECT_3_AND_COMMA_IN_3)
+		};
+		if (c >= 0 && c < ARRAY_SIZE(names)) {
+			return names[c];
+		}else {
+			return names[0];
+		}
+	}
 }

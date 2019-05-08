@@ -53,12 +53,18 @@
     <ClInclude Include="CTPUtils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="TradeUtils.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CTPClientBase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="CTPUtils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TradeUtils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -45,7 +45,7 @@ BOOST_PYTHON_MODULE(mts_agent_python)
 		.def("getPosition", &PythonStrategyWrap::getPosition)
 		.def("getActiveOrders", &PythonStrategyWrap::getActiveOrders)
 		.def("getQuote", &PythonStrategyWrap::getQuote)
-		.def("getAllTradingCounts", &PythonStrategyWrap::getAllTradingCounts)
+		.def("getAllTradingAccounts", &PythonStrategyWrap::getAllTradingAccounts)
 
 		.add_property("allOrders", &PythonStrategyWrap::getAllOrders)
 		.def("getAllOrders", &PythonStrategyWrap::getAllOrders)

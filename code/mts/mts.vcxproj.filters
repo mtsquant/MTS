@@ -166,6 +166,21 @@
     <ClCompile Include="AccountMgr.cpp">
       <Filter>inner</Filter>
     </ClCompile>
+    <ClCompile Include="AbsStrategy.cpp">
+      <Filter>inner</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\DebugWithTest\moc_AbsStrategy.cpp">
+      <Filter>Generated Files\DebugWithTest</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Debug\moc_AbsStrategy.cpp">
+      <Filter>Generated Files\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\ReleaseWithTest\moc_AbsStrategy.cpp">
+      <Filter>Generated Files\ReleaseWithTest</Filter>
+    </ClCompile>
+    <ClCompile Include="GeneratedFiles\Release\moc_AbsStrategy.cpp">
+      <Filter>Generated Files\Release</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mts_api.h" />
@@ -211,6 +226,9 @@
       <Filter>inner</Filter>
     </CustomBuild>
     <CustomBuild Include="OrderMgrBase.h">
+      <Filter>inner</Filter>
+    </CustomBuild>
+    <CustomBuild Include="AbsStrategy.h">
       <Filter>inner</Filter>
     </CustomBuild>
   </ItemGroup>

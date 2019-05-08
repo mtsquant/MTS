@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -20,6 +20,7 @@
 #include <assert.h>
 #include "mts_core/InstrumentPropertyDb.h"
 #include "base/DateTime.h"
+#include "mts_core/OrderType.h"
 
 namespace mts {
 	OrderAction::OrderAction(char type)
@@ -225,7 +226,7 @@ namespace mts {
 		return _params;
 	}
 
-	const OrderId& OrderActionNew::referenceId() const
+	QString OrderActionNew::referenceId() const
 	{
 		return _refId;
 	}
@@ -292,7 +293,7 @@ namespace mts {
 		_params = params;
 	}
 
-	void OrderActionNew::setReferenceId(const OrderId& id)
+	void OrderActionNew::setReferenceId(const QString& id)
 	{
 		_refId = id;
 	}
@@ -325,7 +326,7 @@ namespace mts {
 		jsonObj.insert("offsetFlag", combOffsetFlagName(this->offsetFlag()));
 		jsonObj.insert("timeCondition", timeConditionName(this->timeCondition()));
 		jsonObj.insert("createSrc", this->createSrc());
-		jsonObj.insert("referenceId", this->referenceId().toString());
+		jsonObj.insert("referenceId", this->referenceId());
 		jsonObj.insert ( "strategyId" , this->strategyId () );
 		return jsonObj;
 	}
@@ -336,15 +337,39 @@ namespace mts {
 							.arg(this->price()).arg(this->volume())
 		);
 	}
-	OrderActionCancel::OrderActionCancel()
-		:OrderActionNew(OrderStatus::OS_CANCEL_REQUEST)
+	OrderActionCancel::OrderActionCancel(char type)
+		:OrderActionNew(type)
 	{
 
+	}
+
+	OrderActionCancel::OrderActionCancel(const OrderActionCancel& cxl)
+		:OrderActionNew(cxl)
+	{
+		_ordExchId = cxl._ordExchId;
 	}
 
 	OrderActionCancel::~OrderActionCancel()
 	{
 
+	}
+
+
+	QJsonObject& OrderActionCancel::toJson(QJsonObject& jsonObj) const
+	{
+		OrderActionNew::toJson(jsonObj);
+		jsonObj.insert("orderExchId", this->orderExchId());
+		return jsonObj;
+	}
+
+	QString OrderActionCancel::orderExchId() const
+	{
+		return _ordExchId;
+	}
+
+	void OrderActionCancel::setOrderExchId(const QString& id) 
+	{
+		_ordExchId = id;
 	}
 
 

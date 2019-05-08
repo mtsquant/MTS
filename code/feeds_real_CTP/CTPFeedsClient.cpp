@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -78,8 +78,7 @@ void CTPFeedsClient::setSubscribeInstruments(const QList<mts::InstrumentId> & in
 
 void CTPFeedsClient::onDepthMarketData(CThostFtdcDepthMarketDataField * md) {
 	mts::Quote* qt = new mts::Quote();
-	static QString nullStr;
-	if (!CTPUtils::convertMarketData2Quote(md, qt, nullStr) ) {
+	if (!CTPUtils::convertMarketData2Quote(md, qt,QDateTime::currentMSecsSinceEpoch(),QString::null) ) {
 		MTS_ERROR("Failed to convert FutQuote from CThostFtdcDepthMarketDataField\n");
 		delete qt;
 		return;

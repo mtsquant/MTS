@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -110,12 +110,12 @@ private Q_SLOTS: // the following will be called in main thread
 	virtual void onResponseQueryFills(const QList<CThostFtdcTradeField>& fills) override;
 	virtual void onResponseQueryTradingAccounts(const QList<CThostFtdcTradingAccountField>& tradingAccounts) override;
 private:
-	void updateOrder(const CThostFtdcOrderField& pOrder);
+	void updateCacheOrder(const CThostFtdcOrderField& pOrder);
 	void removeOrder(const QString& clientId);
 	void restoreOrdersAndFills();
 	CTPOrderMgr& operator = (const CTPOrderMgr&);
 	CTPOrderMgr(const CTPOrderMgr&);
-	QHash<QString/*orderClientId*/, CThostFtdcOrderField> _allOrders;
+	QHash<QString/*orderClientId*/, CThostFtdcOrderField> _cacheOrders;
 
 	struct PositionInfo
 	{

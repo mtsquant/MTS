@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -66,6 +66,8 @@ namespace mts
 		MemberCopyMethodDefine (double, priceTick, setPriceTick);//最小变动价位
 		MemberCopyMethodDefine(double, minOrderSize, setMinOrderSize);//最小 Order Size
 		MemberCopyMethodDefine(double, orderSizeIncrement, setOrderSizeIncrement);//Order Size增长单位
+		MemberCopyMethodDefine(double, pricePrecision, setPricePrecision);//价格精度
+		MemberCopyMethodDefine(double, sizePrecision, setSizePrecision);//数量精度
 
 		MemberMethodDefine(CurrencyId, currencyId, setCurrencyId);//货币代码
 		MemberMethodDefine(TradingSections, tradingSection, setTradingSection);//交易小结

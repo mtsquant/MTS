@@ -212,15 +212,15 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(SolutionDir)\build\$(Configuration)\</OutDir>
     <TargetName>$(ProjectName)_d</TargetName>
-    <IncludePath>$(QTDIR)\include;$(BOOSTDIR);$(SolutionDir);C:\Anaconda3\include;$(POCODIR)\Net\include;$(POCODIR)\Foundation\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(QTDIR)\lib;$(BOOSTDIR)\stage\lib;$(MTSDIR)\code\opnsrc\build\debug;C:\Anaconda3\libs;$(POCODIR)\lib64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(QTDIR)\include;$(BOOSTDIR);$(SolutionDir);C:\Anaconda3\include;$(MTSDIR)\third_party\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(QTDIR)\lib;$(BOOSTDIR)\stage\lib;$(MTSDIR)\code\opnsrc\build\debug;C:\Anaconda3\libs;$(MTSDIR)\third_party\lib;$(LibraryPath)</LibraryPath>
     <TargetExt>.dll</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='DebugWithTest|x64'">
     <OutDir>$(SolutionDir)\build\$(Configuration)\</OutDir>
     <TargetName>$(ProjectName)_d</TargetName>
-    <IncludePath>$(QTDIR)\include;$(BOOSTDIR);$(SolutionDir);C:\Anaconda3\include;$(POCODIR)\Net\include;$(POCODIR)\Foundation\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(QTDIR)\lib;$(BOOSTDIR)\stage\lib;$(MTSDIR)\code\opnsrc\x64\debug;C:\Anaconda3\libs;$(POCODIR)\lib64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(QTDIR)\include;$(BOOSTDIR);$(SolutionDir);C:\Anaconda3\include;$(MTSDIR)\third_party\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(QTDIR)\lib;$(BOOSTDIR)\stage\lib;$(MTSDIR)\code\opnsrc\x64\debug;C:\Anaconda3\libs;$(MTSDIR)\third_party\lib;$(LibraryPath)</LibraryPath>
     <TargetExt>.dll</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -231,14 +231,14 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)\build\$(Configuration)\</OutDir>
-    <IncludePath>$(QTDIR)\include;$(BOOSTDIR);$(SolutionDir);C:\Anaconda3\include;$(POCODIR)\Net\include;$(POCODIR)\Foundation\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(QTDIR)\lib;$(BOOSTDIR)\stage\lib;$(MTSDIR)\code\opnsrc\build\release;C:\Anaconda3\libs;$(POCODIR)\lib64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(QTDIR)\include;$(BOOSTDIR);$(SolutionDir);C:\Anaconda3\include;$(MTSDIR)\third_party\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(QTDIR)\lib;$(BOOSTDIR)\stage\lib;$(MTSDIR)\code\opnsrc\build\release;C:\Anaconda3\libs;$(MTSDIR)\third_party\lib;$(LibraryPath)</LibraryPath>
     <TargetExt>.dll</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='ReleaseWithTest|x64'">
     <OutDir>$(SolutionDir)\build\$(Configuration)\</OutDir>
-    <IncludePath>$(QTDIR)\include;$(BOOSTDIR);$(SolutionDir);C:\Anaconda3\include;$(POCODIR)\Net\include;$(POCODIR)\Foundation\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(QTDIR)\lib;$(BOOSTDIR)\stage\lib;$(MTSDIR)\code\opnsrc\x64\release;C:\Anaconda3\libs;$(POCODIR)\lib64;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(QTDIR)\include;$(BOOSTDIR);$(SolutionDir);C:\Anaconda3\include;$(MTSDIR)\third_party\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(QTDIR)\lib;$(BOOSTDIR)\stage\lib;$(MTSDIR)\code\opnsrc\x64\release;C:\Anaconda3\libs;$(MTSDIR)\third_party\lib;$(LibraryPath)</LibraryPath>
     <TargetExt>.dll</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">

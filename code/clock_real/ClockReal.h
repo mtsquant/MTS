@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -39,6 +39,7 @@ namespace mts
 
 	class ClockReal :public Clock
 	{
+		Q_OBJECT
 	public:
 		ClockReal(void);
 		virtual ~ClockReal(void);
@@ -50,6 +51,10 @@ namespace mts
 		virtual bool doDestroyTimer(QObject*) override;
 
 		virtual bool initialize(const QVariantMap & params) override;
+	private Q_SLOTS:
+		void onTimeout();
+	private:
+		qint64 getNextBeginTimeInterval() const;
 	};
 
 }

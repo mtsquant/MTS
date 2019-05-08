@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -22,7 +22,6 @@
 #include "Feeds.h"
 #include "Trade.h"
 #include "StrategyInterface.h"
-#include "mts_core/OrderId.h"
 
 namespace mts
 {
@@ -33,7 +32,6 @@ namespace mts
 
 	public:
 		static Environment* instance(); //The first call should be in MtsThread
-		static QString getLibraryFileName(const QString& componentName, const QString& mode);
 	public Q_SLOTS:
 		bool load(EnvironmentMode,  const QString& libraryPath); //根据mode来load不同的component dll
 		bool initialize(FeedsCallback*, TradeCallback*, AccountCallback* ,const QVariantMap & params);
@@ -42,10 +40,11 @@ namespace mts
 		EnvironmentMode mode() const;
 		bool isCurrentMainThread() const;
 		bool isCurrentMtsThread() const;
-		mts::OrderId genOrderReferenceId(int strategyId/*1-9*/,int orderType, const InstrumentId& instrumentId) const;
+		QString genOrderReferenceId(int strategyId/*1-9*/,int orderType, int directionSide, int priceType, const InstrumentId& instrumentId) const;
 		bool isCurrentInstanceInstanceId(int instanceId) const;
 		int instanceId()const;
 		int strategyPosCheck() const;
+		bool positionPersistenceEnable() const;
 
 		bool isValid() const;
 		Clock*	clock() const;
@@ -74,6 +73,7 @@ namespace mts
 		Trade* 	_trade;
 		int _instanceId;
 		int _strategyPosCheck;
+		bool _positionPersistenceEnable;
 	};
 
 

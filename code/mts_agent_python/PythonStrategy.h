@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -49,6 +49,7 @@
 #ifdef _WIN32
 #include <boost/python/numpy.hpp>
 #endif
+#include "mts/AbsStrategy.h"
 
 using namespace boost::python;
 using namespace boost;
@@ -59,8 +60,28 @@ namespace np=boost::python::numpy;
 
 using namespace mts;
 
+
+class PythonStrategyInterface 
+{
+public:
+	virtual void onEnvirInitialized() =0;
+	virtual void onInitialized(const PyAccount& data) =0;
+	virtual void onTimer(int) =0;
+	virtual void onQuoteSnapshotUpdate(const PyQuote& quote) =0;
+	virtual void onOrderNewDone(const PyOrderNewDone& orderNewDone) =0;
+	virtual void onOrderNewReject(const PyOrderNewReject& orderNewReject) =0;
+	virtual void onOrderFill(const PyOrderFill&) =0;
+	virtual void onOrderCancelDone(const PyOrderCancelDone&) =0;
+	virtual void onOrderCancelReject(const PyOrderCancelReject&) =0;
+	virtual void onOrderOtherReport(const PyOrderReport&) =0;
+	virtual void onPositionUpdate(const PyPosition&) =0;
+	virtual void onOrderUpdate(const PyOrder&) =0;
+	virtual void onBusinessDateChanged(int) = 0;
+	virtual void onBarUpdate(const PyBar& data) =0;
+};
+
 class QCoreApplication;
-class PythonStrategy :public QObject
+class PythonStrategy :public AbsStrategy,public PythonStrategyInterface
 {
 	Q_OBJECT
 public:
@@ -74,10 +95,6 @@ public:
 	static int exec();
 	static void exit(int code);
 
-	int newTimer(int beginTime,int interval);
-	int newOnceTimer(int beginTime);
-	bool removeTimer(int id);
-
 	std::string newOrder(dict params);
 	bool cancelOrder(dict params);
 
@@ -87,7 +104,7 @@ public:
 
 	PyQuote getQuote(const std::string& symbol) const;
 
-	list getAllTradingCounts() const;
+	list getAllTradingAccounts() const;
 	PyPosition getPosition(const std::string& symbol) const;
 	list getAllPositions() const;
 
@@ -101,39 +118,38 @@ public:
 	qint64 getNowMicrosecs() const;
 
 private Q_SLOTS:
-	void doEnvirInitialized();
-	void doInitialized(AccountPtr);
-	void doTimeout(int);
-	void doOrderNewDone(OrderReportNewDonePtr);
-	void doOrderNewReject(OrderReportNewRejectPtr);
-	void doOrderFill(OrderReportFillPtr);
-	void doOrderCancelDone(OrderReportCancelDonePtr);
-	void doOrderCancelReject(OrderReportCancelRejectPtr);
-	void doOrderOtherReport(OrderReportPtr);
-	void doQuoteSnapshotUpdate(QuoteSnapshotPtr);
-	void doPositionUpdate(PositionPtr);
-	void doOrderUpdate(OrderPtr);
-	void doBusinessDateChanged(int);
-	void doBarUpdate(CalcBarPtr);
-public:
-	virtual void onEnvirInitialized() {};
-	virtual void onInitialized(const PyAccount& data) {};
-	virtual void onTimer ( int ){};
-	virtual void onQuoteSnapshotUpdate(const PyQuote& quote) {};
-	virtual void onOrderNewDone(const PyOrderNewDone& orderNewDone) {};
-	virtual void onOrderNewReject(const PyOrderNewReject& orderNewReject) {};
-	virtual void onOrderFill(const PyOrderFill&) {};
-	virtual void onOrderCancelDone(const PyOrderCancelDone& ) {};
-	virtual void onOrderCancelReject(const PyOrderCancelReject& ) {};
-	virtual void onOrderOtherReport(const PyOrderReport& ) {};
-	virtual void onPositionUpdate(const PyPosition&) {};
-	virtual void onOrderUpdate(const PyOrder& ) {};
-	virtual void onBusinessDateChanged(int) {}
-	virtual void onBarUpdate(const PyBar& data) {};
+	virtual void doEnvirInitialized() override;
+	virtual void doInitialized(AccountPtr) override;
+	virtual void doTimeout(int) override;
+	virtual void doOrderNewDone(OrderReportNewDonePtr) override;
+	virtual void doOrderNewReject(OrderReportNewRejectPtr) override;
+	virtual void doOrderFill(OrderReportFillPtr) override;
+	virtual void doOrderCancelDone(OrderReportCancelDonePtr) override;
+	virtual void doOrderCancelReject(OrderReportCancelRejectPtr) override;
+	virtual void doOrderOtherReport(OrderReportPtr) override;
+	virtual void doQuoteSnapshotUpdate(QuoteSnapshotPtr) override;
+	virtual void doPositionUpdate(PositionPtr) override;
+	virtual void doOrderUpdate(OrderPtr) override;
+	virtual void doBusinessDateChanged(int) override;
+	virtual void doBarUpdate(CalcBarPtr) override;
+
+public: //the following callback will be overrided by python script
+	virtual void onEnvirInitialized() override {};
+	virtual void onInitialized(const PyAccount& data) override {};
+	virtual void onTimer ( int ) override {};
+	virtual void onQuoteSnapshotUpdate(const PyQuote& quote) override {};
+	virtual void onOrderNewDone(const PyOrderNewDone& orderNewDone) override {};
+	virtual void onOrderNewReject(const PyOrderNewReject& orderNewReject) override {};
+	virtual void onOrderFill(const PyOrderFill&)  override {};
+	virtual void onOrderCancelDone(const PyOrderCancelDone& )  override {};
+	virtual void onOrderCancelReject(const PyOrderCancelReject& ) override {};
+	virtual void onOrderOtherReport(const PyOrderReport& ) override {};
+	virtual void onPositionUpdate(const PyPosition&)  override {};
+	virtual void onOrderUpdate(const PyOrder& )  override {};
+	virtual void onBusinessDateChanged(int) override {}
+	virtual void onBarUpdate(const PyBar& data)  override {};
 private:
     friend class mts::CrossThreadNotifier;
-	CrossThreadNotifier _notifier;
-	QCoreApplication* _app;
 
 	bool checkParamsNewOrder ( const dict& params );
 };

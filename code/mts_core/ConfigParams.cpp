@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -31,8 +31,6 @@
 	#define MATCH_MODEL_PATH_PREFIX	"/libmm_"
 #endif
 
-
-
 namespace mts
 {
 	CommonConfigParams::CommonConfigParams()
@@ -44,46 +42,34 @@ namespace mts
 	{
 	}
 
-	bool CommonConfigParams::readExchParamsSection(const QVariantMap & fullParams, const QString& exchSession){
-		QVariant session = fullParams.value(exchSession);
-		QVariantMap params;
-		if (session.isNull()) {
-			if (exchSession != "*") { //for backward compatible
-				return false;
+	QStringList findSubSections(const QVariantMap& params) {
+		QStringList sections;
+		for (auto i = params.constBegin(); i != params.constEnd(); ++i) {
+			if (i.value().type() == QVariant::Map) {
+				sections.append(i.key());
 			}
-			params = fullParams;
-		}else {
-			params = session.toMap();
 		}
+		return sections;
+	}
 
-		Front& front = _fronts[exchSession];
-		if (isSimu()){
-			QString matchModel = params.value(SIMU_MATCH_MODEL, DEFAULT_MATCH_MODEL).toString();
-			QString feedsFrontStr = params.value ( FEEDS_FRONT ).toString ();
-			if ( feedsFrontStr.isEmpty () ){
-				QString dataPath = MtsPath::dataDirPath(); 
+	bool CommonConfigParams::readExchParamsSection(const QVariantMap & params, Front& front){
+		auto feedsMode = this->componentMode(MtsComponent::MTS_COMP_FEEDS);
+		if (feedsMode == ENVIR_SIMU) {
+			QString feedsFrontStr = params.value(FEEDS_FRONT).toString();
+			if (feedsFrontStr.isEmpty()) {
+				QString dataPath = MtsPath::dataDirPath();
 				if (dataPath.isEmpty()) {
-					MTS_ERROR("Can not found data dir from '%s' and missing config item '%s' in json file \n", qPrintable(MtsPath::appDirPath()),FEEDS_FRONT);
+					MTS_ERROR("Can not found data dir from '%s' and missing config item '%s' in json file \n", qPrintable(MtsPath::appDirPath()), FEEDS_FRONT);
 					return false;
 
 				}
-				front._feedsFront = UrlPath::fromLocalPath (dataPath);
-			} else{
+				front._feedsFront = UrlPath::fromLocalPath(dataPath);
+			} else {
 				front._feedsFront = UrlPath(feedsFrontStr);
 			}
-			QString tradeFrontStr = params.value ( TRADE_FRONT ).toString ();
-			if ( tradeFrontStr.isEmpty () ){
-				front._tradeFront = UrlPath::fromLocalPath ( MtsPath::mtsDirPath () + MATCH_MODEL_PATH_PREFIX + matchModel );
-			} else{
-				front._tradeFront = UrlPath(tradeFrontStr );
-			}
-		}else{
+		} else {
 			if (!params.contains(FEEDS_FRONT)) {
-				MTS_ERROR("Missing param '%s'\n",FEEDS_FRONT);
-				return false;
-			}
-			if (!params.contains(TRADE_FRONT)) {
-				MTS_ERROR("Missing param '%s'\n", TRADE_FRONT);
+				MTS_ERROR("Missing param '%s'\n", FEEDS_FRONT);
 				return false;
 			}
 
@@ -91,13 +77,38 @@ namespace mts
 				MTS_WARN("Use default feeds front protocol : CTP\n");
 				front._feedsFrontProtocol = DEFAULT_FEEDS_PROTOCOL;
 			} else {
-				QString tpStr = params.value(TAG_FEEDS_FRONT_PROTOCOL).toString();
+				QString tpStr = params.value( TAG_FEEDS_FRONT_PROTOCOL).toString();
 				front._feedsFrontProtocol = mts::frontProtocol(qPrintable(tpStr));
 				if (front._feedsFrontProtocol == FP_UNKNOWN) {
 					MTS_ERROR("Invalid feeds front protocol '%s'\n", qPrintable(tpStr));
 					return false;
 				}
 			}
+			QString feedsFrontStr = params.value(FEEDS_FRONT).toString();
+			front._feedsFront = UrlPath(feedsFrontStr);
+		}
+		if (!front._feedsFront.isValid()) {
+			MTS_ERROR("Invalid param '%s' - '%s'\n", FEEDS_FRONT, qPrintable(front._feedsFront.toString()));
+			return false;
+		}
+
+
+		auto tradeMode = this->componentMode(MtsComponent::MTS_COMP_TRADE);
+
+		if (tradeMode==ENVIR_SIMU){
+			QString matchModel = params.value(SIMU_MATCH_MODEL,DEFAULT_MATCH_MODEL).toString();
+			QString tradeFrontStr = params.value(TRADE_FRONT).toString ();
+			if ( tradeFrontStr.isEmpty () ){
+				front._tradeFront = UrlPath::fromLocalPath ( MtsPath::mtsDirPath () + MATCH_MODEL_PATH_PREFIX + matchModel );
+			} else{
+				front._tradeFront = UrlPath(tradeFrontStr );
+			}
+		}else{
+			if (!params.contains(TRADE_FRONT)) {
+				MTS_ERROR("Missing param '%s'\n", TRADE_FRONT);
+				return false;
+			}
+
 
 			if (!params.contains(TAG_TRADE_FRONT_PROTOCOL)) {
 				MTS_WARN("Use default trade front protocol : CTP\n");
@@ -111,28 +122,26 @@ namespace mts
 				}
 			}
 
-			QString feedsFrontStr = params.value(FEEDS_FRONT).toString();
-			QString tradeFrontStr = params.value(TRADE_FRONT).toString();
-			front._feedsFront = UrlPath(feedsFrontStr);
+			QString tradeFrontStr = params.value( TRADE_FRONT).toString();
 			front._tradeFront = UrlPath(tradeFrontStr);
 
-			auto it = params.constFind(TRADE_BROKER);
-			if (it != params.constEnd()) {
-				front._brokerId = it.value().toString();
-			}else {
-				auto it = params.constFind(FEEDS_BROKER);
-				if (it != params.constEnd()) {
-					front._brokerId = it.value().toString();
-				}else {
-					front._brokerId = params.value(BROKER).toString();
-				}
-			}
+			front._brokerId = params.value(TRADE_BROKER,
+				params.value(FEEDS_BROKER,
+					params.value(BROKER)
+				)
+			).toString();
 			if (front._brokerId.isEmpty()) {
 				MTS_ERROR("Missing or invalid 'broker'\n");
 				return false;
 			}
-
 		}
+
+
+		if (!front._tradeFront.isValid()) {
+			MTS_ERROR("Invalid param '%s' - '%s'\n", TRADE_FRONT, qPrintable(front._tradeFront.toString()));
+			return false;
+		}
+
 		return true;
 	}
 
@@ -141,23 +150,24 @@ namespace mts
 			return false;
 		}
 
-		if (!readExchParamsSection(params,"*")){
-			return false;
+		_fronts.clear();
+		QStringList sections = findSubSections(params);
+		if (sections.isEmpty()) {
+			if (!readExchParamsSection(params, _fronts["*"])) {
+				MTS_ERROR("Failed to load config \n");
+				return false;
+			}
+		}else {
+			for (const QString& section : sections) {
+				assert(params.contains(section));
+				assert(params.value(section).type() == QVariant::Map);
+				if (!readExchParamsSection(params.value(section).toMap(), _fronts[section])) {
+					MTS_ERROR("Failed to load section '%s' config \n", qPrintable(section));
+					return false;
+				}
+			}
 		}
-
-		const Front& front = _fronts["*"];
-		if (!front._feedsFront.isValid()) {
-            MTS_ERROR("Invalid param '%s' - '%s'\n", FEEDS_FRONT,qPrintable(front._feedsFront.toString()));
-			return false;
-		}
-
-		if (!front._tradeFront.isValid()) {
-            MTS_ERROR("Invalid param '%s' - '%s'\n", TRADE_FRONT, qPrintable(front._tradeFront.toString()));
-			return false;
-		}
-
 		_feedsGrade = params.value(FEEDS_GRADE, DEFAULT_FEEDS_GRADE).toInt();
-
 		_indicator = params.value(INDICATOR_FILE, MtsPath::mtsDirPath() + 
 #ifdef _WIN32
             "/std_indicator"
@@ -175,40 +185,39 @@ namespace mts
 	}
 
 	UrlPath CommonConfigParams::feedsFront(const QString& exchSession ) const {
-		if (isProxyMode()) {
+		if (!_fronts.contains(exchSession) ) {
+			if (exchSession == "*") {
+				return _fronts.first()._feedsFront;
+			} else {
+				return feedsFront("*");
+			}
+		}	else {
 			return _fronts.value(exchSession)._feedsFront;
-		} else {
-			return _fronts.value("*")._feedsFront;
 		}
 	}
 
 	UrlPath CommonConfigParams::tradeFront(const QString& exchSession) const {
-		if (isProxyMode()) {
-			return _fronts.value(exchSession)._tradeFront;
+		if (!_fronts.contains(exchSession)) {
+			if (exchSession == "*") {
+				return _fronts.first()._tradeFront;
+			} else {
+				return tradeFront("*");
+			}
 		} else {
-			return _fronts.value("*")._tradeFront;
+			return _fronts.value(exchSession)._tradeFront;
 		}
 	}
 
 	FrontProtocol CommonConfigParams::feedsFrontProtocol(const QString& exchSession) const {
-		if (isProxyMode()) {
-			return _fronts.value(exchSession)._feedsFrontProtocol;
-		} else {
-			return _fronts.value("*")._feedsFrontProtocol;
-		}
+		assert(_fronts.contains(exchSession));
+		return _fronts.value(exchSession)._feedsFrontProtocol;
 	}
 
 	FrontProtocol CommonConfigParams::tradeFrontProtocol(const QString& exchSession) const {
-		if (isProxyMode()) {
-			return _fronts.value(exchSession)._tradeFrontProtocol;
-		} else {
-			return _fronts.value("*")._tradeFrontProtocol;
-		}
+		assert(_fronts.contains(exchSession));
+		return _fronts.value(exchSession)._tradeFrontProtocol;
 	}
 
-	bool CommonConfigParams::isProxyMode() const {
-		return _fronts.size()>1;
-	}
 
 	QStringList CommonConfigParams::allExchSessions() const {
 		return _fronts.keys();
@@ -231,11 +240,8 @@ namespace mts
 	}
 
 	QString CommonConfigParams::brokerId(const QString& exchSession) const {
-		if (isProxyMode()) {
-			return _fronts.value(exchSession)._brokerId;
-		} else {
-			return _fronts.value("*")._brokerId;
-		}
+		assert(_fronts.contains(exchSession));
+		return _fronts.value(exchSession)._brokerId;
 	}
 
 
@@ -276,7 +282,7 @@ namespace mts
 			return false;
 		}
 
-		if (isSimu()) {
+		if (this->componentMode(MTS_COMP_FEEDS)==ENVIR_SIMU) {
 
 			_feedsBeginTime = params.value(SIMU_FEEDS_BEGIN_TIME, -1).toInt();
 

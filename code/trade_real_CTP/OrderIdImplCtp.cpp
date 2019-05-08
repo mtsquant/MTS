@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
 *****************************************************************************/
 #include "OrderIdImplCtp.h"
 #include "base/MtsLog.h"
+#include "mts_core/OrderType.h"
 
 
 #define REF_INDEX_MAX 100000
@@ -42,9 +43,9 @@ namespace mts
 	{
 	}
 
-	OrderIdImplCtp::OrderIdImplCtp(const mts::OrderId& id)
+	OrderIdImplCtp::OrderIdImplCtp(const QString& id)
 	{
-		fromString(id.toString());
+		fromString(id);
 	}
 
 	OrderIdImplCtp::~OrderIdImplCtp()
@@ -55,9 +56,9 @@ namespace mts
 		return QString::number(_refId);
 	}
 
-	mts::OrderId OrderIdImplCtp::id() const
+	QString OrderIdImplCtp::id() const
 	{
-		return mts::OrderId(toString());
+		return toString();
 	}
 
 	int OrderIdImplCtp::orderType() const {
@@ -65,7 +66,7 @@ namespace mts
 	}
 
 	int OrderIdImplCtp::instanceId() const {
-		return _refId / 1000000000;;
+		return _refId / 1000000000;
 	}
 
 	int OrderIdImplCtp::strategyId() const {

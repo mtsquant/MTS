@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -33,13 +33,13 @@ namespace mts
 		virtual int exec();
 		virtual void exit(int code);
 
-		virtual bool initialize(StrategyInterface* callbacks, const QVariantMap& params);
+		virtual bool initialize(StrategyInterface* strategyHub, const QVariantMap& params);
 		QVariantMap params() const;
 
 		int newTimer(int beginTime, int interval);
 		bool removeTimer(int id);
 
-		virtual mts::OrderId newOrder(OrderActionNew* orderActionNew, int orderType);
+		virtual QString newOrder(OrderActionNew* orderActionNew, int orderType);
 		bool cancelOrder(OrderActionCancel* orderActionCancel);
 
 		bool subscribeQuotes(const QList<InstrumentId>& instruments);
@@ -71,7 +71,7 @@ namespace mts
 		Qt::ConnectionType  connectionType() const;
 	private:
 		QVariantMap _params;
-		StrategyInterface* _callback;
+		StrategyInterface* _callback;//strategyHub
 
 		bool loadMtsComponents(const QString& libraryPath);
 		bool startRunMtsEnvir(const QVariantMap & params);

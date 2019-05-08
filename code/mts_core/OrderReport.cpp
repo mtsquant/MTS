@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -22,36 +22,26 @@
 namespace mts {
 
 	OrderReport::OrderReport(OrderReportType type)
-		:OrderActionNew(type)
+		:OrderActionCancel(type)
 	{
 	}
 
 	OrderReport::OrderReport(const OrderReport& rpt)
-		: OrderActionNew(rpt)
+		: OrderActionCancel(rpt)
 	{
-		_ordExchId = rpt._ordExchId;
 		_note = rpt._note;
 	}
 	
 	OrderReport::~OrderReport() {
 	}
-
-	QString OrderReport::orderExchId() const {
-		return _ordExchId;
-	}
-
-	void OrderReport::setOrderExchId(const QString& id) {
-		_ordExchId = id;
-	}
-
+	
 	OrderReport * OrderReport::clone() const {
 		return new OrderReport(*this);
 	}
 
 	QJsonObject& OrderReport::toJson(QJsonObject& jsonObj) const
 	{
-		OrderActionNew::toJson(jsonObj);
-		jsonObj.insert("orderExchId", this->orderExchId());
+		OrderActionCancel::toJson(jsonObj);
 		jsonObj.insert("note", this->note());
 		return jsonObj;
 	}

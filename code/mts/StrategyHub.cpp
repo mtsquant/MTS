@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -19,6 +19,8 @@
 #include "mts_core/Environment.h"
 #include "mts_core/ConfigParams.h"
 #include "MtsProxy.h"
+#include "mts_core/OrderType.h"
+#include "mts_core/InstrumentPropertyDb.h"
 
 namespace mts
 {
@@ -60,8 +62,10 @@ namespace mts
 		}
 	}
 
+
 	bool StrategyHub::initialize(const QVariantMap & params) {
-		return MtsProxy::instance()->initialize(this, params);
+		QVariantMap wholeParams = AbstractConfigParams::expendAllSections(params);
+		return MtsProxy::instance()->initialize(this, wholeParams);
 	}
 
 
@@ -85,11 +89,11 @@ namespace mts
 		return false;
 	}
 
-	OrderId StrategyHub::newOrder(StrategyInterface * strategy, OrderActionNew * orderActionNew, int orderType) {
+	QString StrategyHub::newOrder(StrategyInterface * strategy, OrderActionNew * orderActionNew, int orderType) {
 		orderActionNew->setStrategyId(strategy->strategyId());
 
-		mts::OrderId ordId = MtsProxy::instance()->newOrder(orderActionNew, orderType);
-		if (!ordId.isValid()) {
+		QString ordId = MtsProxy::instance()->newOrder(orderActionNew, orderType);
+		if (ordId.isEmpty()) {
 			assert(orderActionNew->strategyId() == strategy->strategyId());
 		}
 		return ordId;
@@ -99,7 +103,7 @@ namespace mts
 		orderActionCancel->setStrategyId(strategy->strategyId());
 		if (MtsProxy::instance()->cancelOrder(orderActionCancel)) {
 			auto id = orderActionCancel->referenceId();
-			assert(id.isValid());
+			assert(!id.isEmpty());
 			return true;
 		}
 		return false;
@@ -330,12 +334,6 @@ namespace mts
 		}
 	}
 
-	void StrategyHub::onOrderUpdate(Order * order) {
-		for (auto& strategy : getCallbacks(order->strategyId()))
-		{
-			strategy->onOrderUpdate(order);
-		}
-	}
 
 
 	void StrategyHub::onBarUpdate(CalcBarPtr bar) {
@@ -347,12 +345,31 @@ namespace mts
 		}
 	}
 
+	void StrategyHub::onOrderUpdate(Order * order) {
+		for (auto& strategy : getCallbacks(order->strategyId()))
+		{
+			strategy->onOrderUpdate(order);
+		}
+	}
+
 	void StrategyHub::onPositionUpdate(Position *pos) {
 		auto id = pos->instrumentId();
-		auto strategySet = _quoteStrategies.value(id);
-		for (auto it = strategySet.constBegin(), itEnd = strategySet.constEnd(); it != itEnd; ++it) {
-			StrategyInterface* strategy = (*it);
-			strategy->onPositionUpdate(pos);
+		mts::InstrumentBaseProperty* prop = mts::InstrumentPropertyDb::instance()->find(id);
+		if (!prop) {
+			MTS_ERROR("can not find instrument prop:%s\n", qPrintable(id.toString()));
+			return;
+		}
+		if (prop->createDate() < 0) { //鐏竵鏈変竴浜涜櫄鎷熶粨浣嶉渶瑕佸洖璋�
+			for (auto it = _idStrategies.constBegin(), itEnd = _idStrategies.constEnd(); it != itEnd; ++it) {
+				StrategyInterface* strategy = it.value();
+				strategy->onPositionUpdate(pos);
+			}
+		} else {
+			auto strategySet = _quoteStrategies.value(id);
+			for (auto it = strategySet.constBegin(), itEnd = strategySet.constEnd(); it != itEnd; ++it) {
+				StrategyInterface* strategy = (*it);
+				strategy->onPositionUpdate(pos);
+			}
 		}
 	}
 

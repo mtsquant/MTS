@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@
 #define MODE_PARAM_NAME "mode"
 #define INSTANCE_ID "instance_id"
 #define STRATEGY_POS_CHECK "strategy_pos_check"
+#define POS_PERSISTENCE_ENABLE "pos_persistence_enable"
 #define MTS_VERSION "mts_version"
 #define MTS_OS "mts_os"
 

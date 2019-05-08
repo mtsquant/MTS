@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -14,14 +14,25 @@
 *  limitations under the License.
 *****************************************************************************/
 #pragma once
-#include<QtCore/QtGlobal>
+#include <QtCore/QtGlobal>
 #include <QtCore/QSharedPointer>
+#include <QtCore/QVector>
+#include <QtCore/QJsonObject>
 
 #include "InstrumentObject.h"
 #include "base/PerfTest.h"
 
 
-#define PRICE_TINY 0.00000001
+#define MarketMethodDefine(Type,Container,name,setName,getName)	public:\
+				Type name() const{return _##name##s[0];};\
+				Type getName(int depth) const{return _##name##s[depth-1];};\
+				void setName(Type t,int depth=1){_##name##s[depth-1]=t;}\
+				const Container& getName##s() const{return _##name##s;}\
+				void setName##s(const Container& vals){ _##name##s=vals;}\
+				void name##ToJson(QJsonObject& jsonObj,int depth=1) const {jsonObj.insert(QString("%1%2").arg(#name).arg(depth),_##name##s[depth-1]);} \
+			private:\
+				Container _##name##s;
+
 namespace mts {
 	class MTS_CORE_API Quote:public InstrumentObject
 	{
@@ -31,7 +42,8 @@ namespace mts {
 
 		MemberCopyMethodDefine(int, tradingDay, setTradingDay);//交易日期
 
-		MemberCopyMethodDefine(qint64, ticksSinceEpoch, setTicksSinceEpoch);//当前日期时间
+		MemberCopyMethodDefine(qint64, ticksSinceEpoch, setTicksSinceEpoch);//报价时间戳
+		MemberCopyMethodDefine(qint64, receiveTicksSinceEpoch, setReceiveTicksSinceEpoch);//接收到报价时间戳
 		MemberCopyMethodDefine(double, preClosePrice, setPreClosePrice);//昨日收盘价
 		MemberCopyMethodDefine(double, openPrice, setOpenPrice);//开盘价格
 		MemberCopyMethodDefine(double, highPrice, setHighPrice);//最高价格
@@ -39,11 +51,13 @@ namespace mts {
 		MemberCopyMethodDefine(double, closePrice, setClosePrice);//今日收盘价
 		MemberCopyMethodDefine(double, lastPrice, setLastPrice);//最新价格
 		MemberCopyMethodDefine(double, lastVolume, setLastVolume);//最新成交量 //TODO check double		
+		MemberCopyMethodDefine(DirectionSide, lastDirection, setLastDirection); //最新成交方向
 		MemberCopyMethodDefine(double, totalVolume, setTotalVolume);//成交总量 //TODO check double
-		MemberCopyMethodDefine(double, bidPrice, setBidPrice);
-		MemberCopyMethodDefine(double, askPrice, setAskPrice);
-		MemberCopyMethodDefine(double, bidVolume, setBidVolume); //TODO check double
-		MemberCopyMethodDefine(double, askVolume, setAskVolume); //TODO check double
+
+		MarketMethodDefine(double, QVector<double>, bidPrice, setBidPrice, getBidPrice);
+		MarketMethodDefine(double, QVector<double>, askPrice, setAskPrice, getAskPrice);
+		MarketMethodDefine(double, QVector<double>, bidVolume, setBidVolume, getBidVolume); //TODO check double
+		MarketMethodDefine(double, QVector<double>, askVolume, setAskVolume, getAskVolume); //TODO check double
 
 		MemberCopyMethodDefine(double, upperLimitPrice, setUpperLimitPrice);//最高限价
 		MemberCopyMethodDefine(double, lowerLimitPrice, setLowerLimitPrice);//最低限价
@@ -53,7 +67,7 @@ namespace mts {
 		MemberCopyMethodDefine(double, openInterest, setOpenInterest);//持仓量
 
         MemberCopyMethodDefine(int, status, setStatus);//行情状态
-		MemberCopyMethodDefine(qint64, revMicrosecond, setRevMicrosecond);//
+		MemberCopyMethodDefine(qint64, revMicrosecond, setRevMicrosecond);//for performance test
 
 	public:
 		QString toJsonString() const;

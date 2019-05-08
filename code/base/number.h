@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -17,3 +17,4 @@
 
 #define Nan -99999
 #define isNan(v) (v==Nan)
+#define PRICE_TINY 0.0000000001

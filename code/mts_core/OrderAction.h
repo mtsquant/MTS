@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -18,7 +18,6 @@
 #include <QVariantMap>
 #include "mts_core/InstrumentObject.h"
 #include "mts_core/TradingAccount.h"
-#include "OrderId.h"
 #include "base/PerfTest.h"
 
 class QJsonObject;
@@ -74,7 +73,7 @@ namespace mts {
 		int orderType() const;
 		QString createSrc()const;
 		QVariantMap params()const;
-		const OrderId& referenceId()const;
+		QString referenceId()const;
 		int strategyId() const;
 		int instanceId() const;
 
@@ -89,7 +88,7 @@ namespace mts {
 		void setOrderType(int);
 		void setCreateSrc(const QString&);
 		void setParams(const QVariantMap&);
-		void setReferenceId(const OrderId&);
+		void setReferenceId(const QString&);
 		void setInstanceId(int);
 		bool setStrategyId ( int ); /*1~9*/
 
@@ -108,7 +107,7 @@ namespace mts {
 		int _orderType;
 		QString _createSrc;
 		QVariantMap _params;
-		OrderId _refId;
+		QString _refId;
 
 		int _strategyId; /*1~9*/
 		int _instanceId; /*1~9*/
@@ -117,8 +116,14 @@ namespace mts {
 	class MTS_CORE_API OrderActionCancel:public OrderActionNew
 	{
 	public:
-		OrderActionCancel();
+		OrderActionCancel(char type = OrderStatus::OS_CANCEL_REQUEST);
+		OrderActionCancel(const OrderActionCancel&);
 		virtual ~OrderActionCancel();
+		virtual QJsonObject& toJson(QJsonObject& jsonObj) const override;
+		QString orderExchId()const;
+		void setOrderExchId(const QString&);
+	private:
+		QString _ordExchId;
 
 	};
 

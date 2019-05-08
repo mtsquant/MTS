@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -121,26 +121,6 @@ void clearLogFixtureHook(QtMsgType type) {
 
 
 
-#ifndef NDEBUG
-inline
-QString genOutputText(QtMsgType type, const QMessageLogContext & context, const QString &msg) { //for debug version
-	auto localMsg = msg.endsWith('\n') ? msg : (msg + '\n');
-
-	auto nowStr = DateTime::now().toLocalString();
-	auto threadName = ThreadNameRegister::instance()->currentThreadName();
-	QRegExp regexp("(\\S*)\\(.*\\)");
-	QString simpleFunction = context.function;
-	if (regexp.indexIn(context.function) != -1) {
-		simpleFunction = regexp.cap(1);
-	}
-	if (simpleFunction.isEmpty()) {
-		simpleFunction = context.function;
-	}
-
-	return QString("[%1][%2@%3]%4: %5").arg(nowStr).arg(simpleFunction).arg(threadName).arg(LOG_FIXTURE_PREFIXS[type]).arg(localMsg);
-}
-
-#else
 
 inline
 QString genOutputText(QtMsgType type, const QMessageLogContext &, const QString &msg) {//for release version, so the performance is important
@@ -152,7 +132,6 @@ QString genOutputText(QtMsgType type, const QMessageLogContext &, const QString 
 	return QString("[%1] %2: %3").arg(nowStr).arg(LOG_FIXTURE_PREFIXS[type]).arg(localMsg);
 }
 
-#endif
 
 
 

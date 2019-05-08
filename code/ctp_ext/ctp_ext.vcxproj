@@ -41,10 +41,12 @@
     <ClInclude Include="CTPUtils.h" />
     <ClInclude Include="ctp_ext_api.h" />
     <ClInclude Include="ctp_md.h" />
+    <ClInclude Include="TradeUtils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CTPClientBase.cpp" />
     <ClCompile Include="CTPUtils.cpp" />
+    <ClCompile Include="TradeUtils.cpp" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <ProjectGuid>{99E404BF-D278-42FE-B9C2-FD6C5DB7041C}</ProjectGuid>

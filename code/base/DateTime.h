@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -31,7 +31,7 @@ public:
 	static int time2LocalTicksFromMidnight(int time/*hhmmsszzz*/);
 	static int localTicksFromMidnight2Time(int localTicksFromMidnight);
 	static DateTime localMillisecsSinceEpoch(qint64 millsecs, TimezoneCode = TIMEZONE_CST);
-	static qint64 nowToUTCMicrosecsSinceEpoch();
+	static qint64 nowToUTCMicrosecsSinceEpoch(); //NOTE: always from real time
 	static DateTime fromQDateTime(const QDateTime&);
 
 

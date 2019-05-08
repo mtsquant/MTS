@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -36,5 +36,14 @@ namespace mts
 
 	};
 
+
+	class MTS_CORE_API QuoteSetSingleton :public QuoteSet 
+	{
+	public:
+		static QuoteSet* instance();
+	private:
+		QuoteSetSingleton();
+		~QuoteSetSingleton();
+	};
 }
 

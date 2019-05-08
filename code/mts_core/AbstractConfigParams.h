@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -28,20 +28,25 @@ namespace mts
 		AbstractConfigParams();
 		virtual ~AbstractConfigParams();
 	public:
+		static QVariantMap expendAllSections(const QVariantMap& params);
+
 		bool load(const QVariantMap & params) ;
 		EnvironmentMode mode() const;
+		EnvironmentMode componentMode(MtsComponent) const;
 		int instanceId() const;
 		int strategyPosCheck() const;
+		bool positionPersistenceEnable() const;
 
 		QVariant  value(const QString& key, const QVariant& defaultValue=QVariant()) const;
 		QStringList keys() const;
+		QVariantMap rawParams() const;
 	protected:
 		virtual bool doLoad(const QVariantMap & params);
-		bool isSimu() const;
 	private:
 		EnvironmentMode _mode;
 		int _instanceId;
 		int _strategyPosCheck;
+		bool _positionPersistenceEnable;
 
 		QVariantMap _allValues;
 	};

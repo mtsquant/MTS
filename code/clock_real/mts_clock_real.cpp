@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,9 +15,13 @@
 *****************************************************************************/
 #include "clock_real_api.h"
 #include "ClockReal.h"
+#include "mts_core/enums.h"
 
 extern "C" {
-	MTS_CLOCK_REAL_API mts::Clock*  createClock(const QVariantMap& params) {
+	MTS_CLOCK_REAL_API mts::Clock*  createClock(mts::EnvironmentMode mode) {
+		if (mode != mts::ENVIR_REAL) {
+			return nullptr;
+		}
 		return new mts::ClockReal();
 	}
 

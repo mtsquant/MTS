@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -25,6 +25,11 @@ namespace mts
 {
 	struct MTS_CORE_API TradingAccountId
 	{
+		TradingAccountId(const QString& brokerid="",const QString& userName="",const CurrencyId& cur= CURRENCY_UNKNOWN)
+			:brokerId(brokerid),username(userName),currency(cur)
+		{
+
+		}
 		QString brokerId;
 		QString username;
 		CurrencyId currency;

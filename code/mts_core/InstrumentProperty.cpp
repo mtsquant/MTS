@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -38,6 +38,8 @@ namespace mts
 		obj->insert("PriceTick", priceTick());
 		obj->insert("MinOrderSize", minOrderSize());
 		obj->insert("OrderSizeIncrement", orderSizeIncrement());
+		obj->insert("PricePrecision", pricePrecision());
+		obj->insert("SizePrecision", sizePrecision());
 		obj->insert("CreateDate", createDate());
 	}
 
@@ -52,9 +54,12 @@ namespace mts
 		QJsonValue priceTick = obj.value("PriceTick");
 		QJsonValue minOrderSize = obj.value("MinOrderSize");
 		QJsonValue orderSizeIncrement = obj.value("OrderSizeIncrement");
+		QJsonValue pricePrecision = obj.value("PricePrecision");
+		QJsonValue sizePrecision = obj.value("SizePrecision");
 		QJsonValue createDate = obj.value("CreateDate");
 		if (id.isString() && instrumentType.isString() && exchangeID.isString() && volumeMultiple.isDouble() 
-			&& priceTick.isDouble() && minOrderSize.isDouble() && orderSizeIncrement.isDouble() && createDate.isDouble())
+			&& priceTick.isDouble() && minOrderSize.isDouble() && orderSizeIncrement.isDouble() && createDate.isDouble() 
+			&& pricePrecision.isDouble() && sizePrecision.isDouble())
 		{
 			auto instrumentId = mts::InstrumentId(id.toString(), mts::instrumentType(qPrintable(instrumentType.toString())), mts::exchId(qPrintable(exchangeID.toString())));
 			this->setInstrumentId(instrumentId);
@@ -64,6 +69,8 @@ namespace mts
 			this->setPriceTick(priceTick.toDouble());
 			this->setMinOrderSize(minOrderSize.toDouble());
 			this->setOrderSizeIncrement(orderSizeIncrement.toDouble());
+			this->setPricePrecision(pricePrecision.toInt());
+			this->setSizePrecision(sizePrecision.toInt());
 			this->setCreateDate(createDate.toInt());
 			auto it= obj.constFind("ProductId");
 			if (it != obj.constEnd()) {
@@ -130,9 +137,8 @@ namespace mts
 				<< TradingTimeRange(1300, 1500);
 			break;
 		case EXCH_HB:
-			secs << TradingTimeRange(0, 2359,true);
-			break;
 		case EXCH_BMEX:
+		case EXCH_OK:
 			secs << TradingTimeRange(0, 2359, true);
 			break;
 		default:

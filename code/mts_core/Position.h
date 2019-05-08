@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -15,80 +15,18 @@
 *****************************************************************************/
 #pragma once
 #include <QtCore/QSharedPointer>
-#include <QtCore/QJsonObject>
+
 #include <QtCore/QJsonDocument>
 
 #include "Order.h"
 #include "mts_core/Quote.h"
 #include "mts_core/InstrumentProperty.h"
+#include "mts_core/PositionVolumeInfo.h"
 
 namespace mts
 {
 
-	struct VolumeInfo {
-		double open; //TODO check double
-		double current; //TODO check double
-		double active; //TODO check double
-		double close;//平仓数量 //TODO check double
-		double activeClose; //TODO check double
-		double closeYesterdayVolume;//上期:平昨仓数量;其它为优先记作平昨仓 //TODO check double
-		double activeCloseYesterdayVolume; //TODO check double
-		double fillVolume; //TODO check double
-		double fillAmount;
-		double openPnl;
-		double fillPnl;
-		void clear() {
-			memset(this, 0, sizeof(VolumeInfo));
-		}
-		void businessDateChanged(int businessDate) {
-			double tmpCurrent = current; //TODO check double
-			clear();
-			open = tmpCurrent;
-			current = tmpCurrent;
-		}
-		QString toString() const {
-			QString str;
-			str.sprintf("open=%lf,current=%lf,active=%lf,close=%lf,activeClose=%lf,closeYesterdayVolume=%lf,activeCloseYesterdayVolume=%lf,fillVolume=%lf,fillAmount=%lf,openPnl=%lf,fillPnl=%lf\n",
-				open,
-				current,
-				active,
-				close,
-				activeClose,
-				closeYesterdayVolume,
-				activeCloseYesterdayVolume,
-				fillVolume,
-				fillAmount,
-				openPnl,
-				fillPnl); //TODO check format
-			return str;
-		}
-		void toJson(QJsonObject& obj)const {
-			obj.insert("open", open);
-			obj.insert("current", current);
-			obj.insert("active", active);
-			obj.insert("close", close);
-			obj.insert("activeClose", activeClose);
-			obj.insert("closeYesterdayVolume", closeYesterdayVolume);
-			obj.insert("activeCloseYesterdayVolume", activeCloseYesterdayVolume);
-			obj.insert("fillVolume", fillVolume);
-			obj.insert("fillAmount", fillAmount);
-			obj.insert("openPnl", openPnl);
-			obj.insert("fillPnl", fillPnl);
-		}
-		void fromJson(const QJsonObject& obj) {
-			open = obj.value("open").toDouble(); //TODO check double
-			current = obj.value("current").toDouble(); //TODO check double
-			active = obj.value("active").toDouble(); //TODO check double
-			close = obj.value("close").toDouble(); //TODO check double
-			activeClose = obj.value("activeClose").toDouble(); //TODO check double
-			closeYesterdayVolume = obj.value("closeYesterdayVolume").toDouble(); //TODO check double
-			activeCloseYesterdayVolume = obj.value("activeCloseYesterdayVolume").toDouble(); //TODO check double
-			fillVolume = obj.value("fillVolume").toDouble(); //TODO check double
-			fillAmount = obj.value("fillAmount").toDouble();
-			openPnl = obj.value("openPnl").toDouble();
-			fillPnl = obj.value("fillPnl").toDouble();
-		}
-	};
+
 
 	class MTS_CORE_API Position :public InstrumentObject {
 	public:
@@ -168,13 +106,15 @@ namespace mts
 		void clear();
 		static Position* fromJsonString(const QJsonObject&);
 		static void registerMetaType();
+
 	private:
 		double _lastPrice;
 		double _prePrice;
 		double _preSettlementPrice;
-		VolumeInfo _longInfo;
-		VolumeInfo _shortInfo;
+		PositionVolumeInfo _longInfo;
+		PositionVolumeInfo _shortInfo;
 		mutable InstrumentBaseProperty* _cachedInstrumentProperty;
+
 	};
 	typedef QSharedPointer<Position> PositionPtr;
 }

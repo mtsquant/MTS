@@ -1,6 +1,6 @@
 
 /*****************************************************************************
-* Copyright [2018-2019] [3fellows]
+* Copyright [2017-2019] [MTSQuant]
 *
 * Licensed under the Apache License, Version 2.0 (the "License");
 * you may not use this file except in compliance with the License.
@@ -43,18 +43,16 @@ namespace mts
 
 	void OrderMgrBase::doProcessOrder(Order* order, Order* lastorder, Position* pos)
 	{
-		if (pos) {
-			pos->processOrder(order, lastorder);
+		if (!pos) {
+			pos = getPosition(order->instrumentId());
 		}
-		else
-		{
-			getPosition(order->instrumentId())->processOrder(order, lastorder);
-		}
+		pos->processOrder(order, lastorder);
 		if (auto* strategyPos = getPosition(order->instrumentId(), order->instanceId(), order->strategyId()))
 		{
 			strategyPos->processOrder(order, lastorder);
 			doPersistPos(strategyPos, order->instanceId(), order->strategyId());
 		}
+		
 	}
 
 	OrderMgrBase::~OrderMgrBase()
@@ -68,7 +66,7 @@ namespace mts
 	_trader = trader;
 	}*/
 
-	void OrderMgrBase::setStrategy(StrategyInterface* notify)
+	void OrderMgrBase::setStrategy(StrategyInterface* notify/*StrategyMgr*/)
 	{
 		_notify = notify;
 	}
@@ -86,21 +84,21 @@ namespace mts
 
 	QList<Order*> OrderMgrBase::allOrders() const
 	{
-		return OrderSet::instance()->allOrders();
+		return OrderSetSingleton::instance()->allOrders();
 	}
 
 	QList<Order*> OrderMgrBase::allActiveOrders(const InstrumentId& id) const {
-		return OrderSet::instance()->allActiveOrders(id);
+		return OrderSetSingleton::instance()->allActiveOrders(id);
 	}
 
-	Order* OrderMgrBase::getOrder(const mts::OrderId&  referenceId)
+	Order* OrderMgrBase::getOrder(const QString&  referenceId)
 	{
-		return OrderSet::instance()->getOrder(referenceId);
+		return OrderSetSingleton::instance()->getOrder(referenceId);
 	}
 
 	Order* OrderMgrBase::getOrder(const QString& exchId, ExchId exch)
 	{
-		return OrderSet::instance()->getOrder(exchId, exch);
+		return OrderSetSingleton::instance()->getOrder(exchId, exch);
 	}
 	struct SplitOrdInfo
 	{
@@ -162,12 +160,12 @@ namespace mts
 		return ords;
 	}
 
-	mts::OrderId OrderMgrBase::sendOrder(OrderActionNew*  newaction, int orderType)
+	QString OrderMgrBase::sendOrder(OrderActionNew*  newaction, int orderType)
 	{
 		double volume = newaction->volume(); //TODO check double
 		if (volume == 0) {
 			MTS_ERROR("Missing volume %s\n", qPrintable(newaction->instrumentId().toString()));
-			return mts::OrderId();
+			return "";
 		}
 		newaction->setPrice(qAbs(newaction->price()));
 		switch (newaction->directionSide()) {
@@ -183,7 +181,7 @@ namespace mts
 			break;
 		}
 		newaction->setInstanceId(Environment::instance()->instanceId());
-		newaction->setReferenceId(Environment::instance()->genOrderReferenceId(newaction->strategyId(), orderType,newaction->instrumentId()));
+		newaction->setReferenceId(Environment::instance()->genOrderReferenceId(newaction->strategyId(), orderType, newaction->directionSide(), newaction->priceType(), newaction->instrumentId()));
 		Position* pos = getPosition(newaction->instrumentId());
 		if (newaction->tradingDay() <= 0) {
 			newaction->setTradingDay(TradingDateMgr::instance()->tradingDate(DateTime::now()));
@@ -193,7 +191,7 @@ namespace mts
 			return newaction->referenceId();
 		}
 		else {
-			return mts::OrderId();
+			return "";
 		}
 	}
 
@@ -203,7 +201,7 @@ namespace mts
 
 	bool OrderMgrBase::doSendOrder(OrderActionNew* newaction, Position* pos)
 	{
-		if (!newaction->referenceId().isValid()) {
+		if (newaction->referenceId().isEmpty()) {
 			OrderReportNewReject rjt;
 			rjt.copyFrom(newaction);
 			rjt.setNote("Failed GenOrderId");
@@ -212,37 +210,40 @@ namespace mts
 			}
 			return false;
 		}
-		Order* ord = OrderSet::instance()->getOrder(newaction->referenceId(), true);
+		Order* ord = OrderSetSingleton::instance()->getOrder(newaction->referenceId(), true);
 		ord->processOrderActionNew(newaction);
-		if (!checkStrategyPos(newaction))
-		{
-			OrderReportNewReject rjt;
-			rjt.copyFrom(newaction);
-			rjt.setNote("NotEnough Pos");
-			ord->processOrderReportNewReject(&rjt);
-			if (_notify && Environment::instance()->isCurrentInstanceInstanceId(rjt.instanceId())) {
-				_notify->onOrderNewReject(&rjt);
-			}
-			return false;
+		if (newaction->instrumentId().typeId == mts::TYPE_FUTR || newaction->instrumentId().typeId == mts::TYPE_STK_SPOT) { //TODO
+			if (!checkStrategyPos(newaction))
+			{
+				OrderReportNewReject rjt;
+				rjt.copyFrom(newaction);
+				rjt.setNote("NotEnough Pos");
+				ord->processOrderReportNewReject(&rjt);
+				if (_notify && Environment::instance()->isCurrentInstanceInstanceId(rjt.instanceId())) {
+					_notify->onOrderNewReject(&rjt);
+				}
+				return false;
 
-		}
-		if (!doCheckRisk(newaction, pos)) {
-			OrderReportNewReject rjt;
-			rjt.copyFrom(newaction);
-			rjt.setNote("RiskFailed");
-			ord->processOrderReportNewReject(&rjt);
-			OrderSet::instance()->updateOrder(ord, OrderReportType::ORT_NEW_REJECT);
-			if (_notify && Environment::instance()->isCurrentInstanceInstanceId(rjt.instanceId())) {
-				_notify->onOrderNewReject(&rjt);
 			}
-			return false;
+			if (!doCheckRisk(newaction, pos)) {
+				OrderReportNewReject rjt;
+				rjt.copyFrom(newaction);
+				rjt.setNote("RiskFailed");
+				ord->processOrderReportNewReject(&rjt);
+				OrderSetSingleton::instance()->updateOrder(ord, OrderReportType::ORT_NEW_REJECT);
+				if (_notify && Environment::instance()->isCurrentInstanceInstanceId(rjt.instanceId())) {
+					_notify->onOrderNewReject(&rjt);
+				}
+				return false;
+			}
 		}
+		
 		if (!Environment::instance()->trade()->sendOrderNewAction(newaction)) {
 			OrderReportNewReject rjt;
 			ord->copyTo(&rjt);
 			rjt.setNote("Failed to send");
 			ord->processOrderReportNewReject(&rjt);
-			OrderSet::instance()->updateOrder(ord, OrderReportType::ORT_NEW_REJECT);
+			OrderSetSingleton::instance()->updateOrder(ord, OrderReportType::ORT_NEW_REJECT);
 			if (_notify&& Environment::instance()->isCurrentInstanceInstanceId(rjt.instanceId())) {
 				_notify->onOrderNewReject(&rjt);
 			}
@@ -279,6 +280,7 @@ namespace mts
 		if (Order* ord = getOrder(cxlaction->referenceId())) {
 			cxlaction->setStrategyId(ord->strategyId());
 			cxlaction->setInstanceId(ord->instanceId());
+			cxlaction->setOrderExchId(ord->orderExchId());
 			Order lastorder = *ord;
 			ord->processOrderActionCancel(cxlaction);
 			if (!Environment::instance()->trade()->sendOrderCancelAction(cxlaction))
@@ -287,7 +289,7 @@ namespace mts
 				ord->copyTo(&rjt);
 				rjt.setNote("Failed to cancel");
 				ord->processOrderReportCancelReject(&rjt);
-				OrderSet::instance()->updateOrder(ord, OrderReportType::ORT_CANCEL_REJECT);
+				OrderSetSingleton::instance()->updateOrder(ord, OrderReportType::ORT_CANCEL_REJECT);
 				if (_notify&& Environment::instance()->isCurrentInstanceInstanceId(rjt.instanceId())) {
 					_notify->onOrderCancelReject(&rjt);
 				}
@@ -300,6 +302,11 @@ namespace mts
 
 	void OrderMgrBase::initStrategyPos(int strategyId, const QString& dir)
 	{
+		bool positionPersistenceEnable = Environment::instance()->positionPersistenceEnable();
+		MTS_LOG("position Persistence enable:%d\n", positionPersistenceEnable);
+		if (!positionPersistenceEnable) {
+			return;
+		}
 		if (dir.isEmpty()) {
 			return;
 		}
@@ -344,7 +351,7 @@ namespace mts
 		}
 		Order lastorder = *ord;
 		ord->processOrderReportNewDone(newdone);
-		OrderSet::instance()->updateOrder(ord, OrderReportType::ORT_NEW_DONE);
+		OrderSetSingleton::instance()->updateOrder(ord, OrderReportType::ORT_NEW_DONE);
 		Position* pos = getPosition(ord->instrumentId());
 		doProcessOrder(ord, &lastorder, pos);
 		newdone->setPerfNote(ord->perfNote());
@@ -370,7 +377,7 @@ namespace mts
 		}
 		Order lastorder = *ord;
 		ord->processOrderReportNewReject(newrjt);
-		OrderSet::instance()->updateOrder(ord, OrderReportType::ORT_NEW_REJECT);
+		OrderSetSingleton::instance()->updateOrder(ord, OrderReportType::ORT_NEW_REJECT);
 		Position* pos = getPosition(ord->instrumentId());
 		doProcessOrder(ord, &lastorder, pos);
 		if (_notify&& isCurrentInstanceReport) {
@@ -401,7 +408,7 @@ namespace mts
 		OrderReportFill* lastFillrpt = OrderFillMgr::instance()->getFill(fillrpt->fillId(), fillrpt->directionSide(), fillrpt->instrumentId().exchId);
 		ord->processOrderReportFill(fillrpt, lastFillrpt);
 		OrderFillMgr::instance()->updateFill(fillrpt);
-		OrderSet::instance()->updateOrder(ord, OrderReportType::ORT_FILL);
+		OrderSetSingleton::instance()->updateOrder(ord, OrderReportType::ORT_FILL);
 		Position* pos = getPosition(ord->instrumentId());
 		doProcessOrder(ord, &lastorder, pos);
 		MTS_FILE("Position:%s\n", qUtf8Printable(pos->toJsonString()));
@@ -427,7 +434,7 @@ namespace mts
 		}
 		Order lastorder = *ord;
 		ord->processOrderReportCancelDone(cxldone);
-		OrderSet::instance()->updateOrder(ord, OrderReportType::ORT_CANCEL_DONE);
+		OrderSetSingleton::instance()->updateOrder(ord, OrderReportType::ORT_CANCEL_DONE);
 		Position* pos = getPosition(ord->instrumentId());
 		doProcessOrder(ord, &lastorder, pos);
 		if (_notify&& isCurrentInstanceReport) {
@@ -452,7 +459,7 @@ namespace mts
 		}
 		Order lastorder = *ord;
 		ord->processOrderReportCancelReject(cxlrjt);
-		OrderSet::instance()->updateOrder(ord, OrderReportType::ORT_CANCEL_REJECT);
+		OrderSetSingleton::instance()->updateOrder(ord, OrderReportType::ORT_CANCEL_REJECT);
 		Position* pos = getPosition(ord->instrumentId());
 		doProcessOrder(ord, &lastorder, pos);
 		if (_notify&& isCurrentInstanceReport) {
@@ -461,34 +468,40 @@ namespace mts
 			_notify->onPositionUpdate(pos);
 		}
 	}
+
 	void OrderMgrBase::onOrderUpdate(Order* order)
 	{
 		if (Order* last = getOrder(order->referenceId())) {
 			doProcessOrder(order, last);
-		}
-		else {
-			Order* newOrd = OrderSet::instance()->getOrder(order->referenceId(), true);
+		}else {
+			Order* newOrd = OrderSetSingleton::instance()->getOrder(order->referenceId(), true);
 			order->copyTo(newOrd);
-			OrderSet::instance()->updateOrder(newOrd, OrderReportType::ORT_ORDER);
+			OrderSetSingleton::instance()->updateOrder(newOrd, OrderReportType::ORT_ORDER);
 			doProcessOrder(newOrd, nullptr);
 		}
 	}
+
 	void OrderMgrBase::onPositionUpdate(Position * position) {
 		doPositionUpdate(position, Environment::instance()->instanceId(), DEFAULT_STRATEGY_ID);
+		_notify->onPositionUpdate(position);
 	}
 
 	void OrderMgrBase::doPositionUpdate(Position* position, int instanceId, int strategyId)
 	{
 		if (Position* pos = getPosition(position->instrumentId(), instanceId, strategyId)) {
 			pos->setLongOpenVolume(position->longOpenVolume());
-			pos->setLongCurrentVolume(position->longOpenVolume());
+			pos->setLongCurrentVolume(position->longCurrentVolume());
 			pos->setShortOpenVolume(position->shortOpenVolume());
-			pos->setShortCurrentVolume(position->shortOpenVolume());
+			pos->setShortCurrentVolume(position->shortCurrentVolume());
 		}
 	}
 
 	void OrderMgrBase::doPersistPos(Position* pos, int instanceId, int strategyId)
 	{
+		static bool positionPersistenceEnable = Environment::instance()->positionPersistenceEnable();
+		if (!positionPersistenceEnable) {
+			return;
+		}
 		auto it = _persistence.find(PositionMgr::getStrategyKey(instanceId, strategyId));
 		if (it != _persistence.end()) {
 			it.value()->updateTodayPosition(pos);
@@ -502,7 +515,9 @@ namespace mts
 
 	void OrderMgrBase::onBusinessDateChanged(int businessDate)
 	{
-		OrderSet::instance()->clear();
+		if (!TradingDateMgr::instance()->is24Hour()) {
+			OrderSetSingleton::instance()->clear();
+		}
 		PositionMgr::instance()->businessDateChanged(businessDate);
 		if (_notify) {
 			_notify->onBusinessDateChanged(businessDate);
